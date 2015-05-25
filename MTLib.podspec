@@ -1,11 +1,11 @@
 Pod::Spec.new do |s|
-  s.name          = "MTLib"
-  s.version       = "1.0.0"
-  s.summary       = "Some useful classes"  
+  s.name          = 'MTLib'
+  s.version       = '1.0.0'
+  s.summary       = 'Some useful classes'
   s.license       = 'MIT'
-  s.homepage      = "http://bitbucket.org/plandem/mtlib"
-  s.author        = { "Andrey Gayvoronsky" => "plandem@gmail.com" }
-  s.source        = { :git => "https://plandem@bitbucket.org/plandem/mtlib.git", :tag => s.version.to_s }
+  s.homepage      = 'http://bitbucket.org/plandem/mtlib'
+  s.author        = { 'Andrey Gayvoronsky' => 'plandem@gmail.com' }
+  #s.source        = { :git => 'https://plandem@bitbucket.org/plandem/mtlib.git', :tag => s.version.to_s }
   s.requires_arc  = true
   s.framework     = 'Foundation'
   s.ios.deployment_target = '8.0'
