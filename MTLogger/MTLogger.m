@@ -3,10 +3,8 @@
 // Copyright (c) 2015 Melatonin LLC. All rights reserved.
 //
 
-#import <Crashlytics/Crashlytics.h>
-#import <CrashlyticsLogger.h>
-#include <libgen.h>
-#import "MTLogger.h"
+#import <libgen.h>
+#import <MTLib/MTLogger.h>
 
 #if DEBUG
 	static const DDLogLevel ddLogLevel = DDLogLevelVerbose;
@@ -14,12 +12,12 @@
 	static const DDLogLevel ddLogLevel = DDLogLevelWarning;
 #endif
 
-@interface MTLogger () <DDLogFormatter>
+@interface MTLogger ()
 @property(nonatomic, strong) NSDateFormatter *logFormatter;
 @end
 
 @implementation MTLogger
-+ (void)setup {
++ (MTLogger *)start {
 	static MTLogger *logger = nil;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
@@ -31,17 +29,12 @@
 		[DDTTYLogger sharedInstance].colorsEnabled = YES;
 		[DDTTYLogger sharedInstance].logFormatter = logger;
 		[DDASLLogger sharedInstance].logFormatter = logger;
-
-#ifndef DEBUG
-	#if TARGET_IPHONE_SIMULATOR == 0
-		[DDLog addLogger:[CrashlyticsLogger sharedInstance] withLevel:DDLogLevelWarning]; //error + warn to Crashlytics
-		[CrashlyticsLogger sharedInstance].logFormatter = logger;
-	#endif
-#endif
 	});
+
+	return logger;
 }
 
-- (id)init {
+- (instancetype)init {
 	self = [super init];
 
 	if (self) {
