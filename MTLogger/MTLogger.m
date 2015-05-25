@@ -2,9 +2,14 @@
 // Created by Andrey on 25/05/15.
 // Copyright (c) 2015 Melatonin LLC. All rights reserved.
 //
-
 #import <libgen.h>
 #import <MTLib/MTLogger.h>
+
+#ifndef DEBUG
+	#if TARGET_IPHONE_SIMULATOR == 0
+		#define MTLOGGER_PRODUCTION_BUILD 1
+	#endif
+#endif
 
 #if DEBUG
 	static const DDLogLevel ddLogLevel = DDLogLevelVerbose;

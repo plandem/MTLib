@@ -1,12 +1,10 @@
 //
 // Created by Andrey on 25/05/15.
+// Copyright (c) 2015 Melatonin LLC. All rights reserved.
 //
-
 #import <Foundation/Foundation.h>
 #import <CrashlyticsFramework/Crashlytics.h>
-//#import <MTLib/MTLogger.h>
-
-@class MTLogger;
+#import <MTLib/MTLogger.h>
 
 @interface MTLogger (Crashlytics)
 + (void)startWithAPIKey:(NSString *)apiKey;
