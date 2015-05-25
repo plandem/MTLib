@@ -10,15 +10,10 @@ Pod::Spec.new do |s|
   s.framework     = 'Foundation'
   s.ios.deployment_target = '8.0'
 
-    s.source_files = 'MTLogger/**/*.{h,m}'
-    s.dependency = 'CocoaLumberjack'
-    s.dependency = 'CrashlyticsFramework'
-    s.dependency = 'CrashlyticsLumberjack'
-
-  #s.subspec 'MTLogger' do |logger|
-  #  logger.source_files = 'MTLogger/**/*.{h,m}'
-  #  logger.dependency = 'CocoaLumberjack'
-  #  logger.dependency = 'CrashlyticsFramework'
-  #  logger.dependency = 'CrashlyticsLumberjack'
-  #end
+  s.subspec 'MTLogger' do |logger|
+    logger.source_files = 'MTLogger/**/*.{h,m}'
+    logger.dependency = 'CocoaLumberjack'
+    logger.dependency = 'CrashlyticsFramework'
+    logger.dependency = 'CrashlyticsLumberjack'
+  end
 end
