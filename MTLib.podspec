@@ -1,17 +1,19 @@
-Pod::Spec.new do |spec|
-  spec.name = 'MTLib'
-  #spec.source_files = 'Classes/ShareKit/{Configuration,Core,Customize UI,UI}/**/*.{h,m,c}'
-  # ...
+Pod::Spec.new do |s|
+  s.name          = "MTLib"
+  s.version       = "1.0.0"
+  s.summary       = "Some useful classes"  
+  spec.license    = 'MIT'
+  s.homepage      = "http://bitbucket.org/plandem/mtlib"
+  s.author        = { "Andrey Gayvoronsky" => "plandem@gmail.com" }
+  s.source        = { :git => "https://plandem@bitbucket.org/plandem/mtlib.git", :tag => s.version.to_s }
+  s.requires_arc  = true
+  s.framework     = 'Foundation'
+  s.ios.deployment_target = '8.0'
 
-  spec.subspec 'MTLogger' do |logger|
+  s.subspec 'MTLogger' do |logger|
     logger.source_files = 'MTLogger/**/*.{h,m}'
-    logger.dependency = 'CocoaLumberjack,CrashlyticsFramework,CrashlyticsLumberjack'
+    logger.dependency = 'CocoaLumberjack'
+    logger.dependency = 'CrashlyticsFramework'
+    logger.dependency = 'CrashlyticsLumberjack'
   end
-
-  #spec.subspec 'Facebook' do |facebook|
-  #  facebook.source_files = 'Classes/ShareKit/Sharers/Services/Facebook/**/*.{h,m}'
-  #  facebook.compiler_flags = '-Wno-incomplete-implementation -Wno-missing-prototypes'
-  #  facebook.dependency = 'Facebook-iOS-SDK'
-  #end
-  # ...
 end
