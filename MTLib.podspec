@@ -8,7 +8,11 @@ Pod::Spec.new do |s|
   s.requires_arc  = true
   s.framework     = 'Foundation', 'UIKit'
   s.ios.deployment_target = '8.0'
-  s.default_subspec = 'MTLogger', 'MTi18n', 'MTData'
+  s.default_subspec = 'MTCore', 'MTLogger', 'MTData'
+
+  s.subspec 'MTCore' do |ss|
+    ss.source_files = 'MTCore/**/*.{h,m}'
+  end
 
   s.subspec 'MTLogger' do |ss|
     ss.dependency 'CocoaLumberjack'

@@ -5,7 +5,6 @@
 
 #import <Realm/Realm.h>
 #import "MTRealmDataProvider.h"
-#import "MTRealmDataSort.h"
 
 @interface MTRealmDataProvider ()
 @property (nonatomic, strong) NSString *realmName;
@@ -15,8 +14,12 @@
 @end
 
 @implementation MTRealmDataProvider
+-(instancetype)initWithModelClass:(Class)modelClass {
+	return [self initWithModelClass:modelClass withRealm:@"default"];
+}
+
 -(instancetype)initWithModelClass:(Class)modelClass withRealm:(NSString *)realmName {
-	if((self = [self initWithModelClass:modelClass])) {
+	if((self = [super initWithModelClass:modelClass])) {
 		self.realmName = realmName;
 		self.realmPath = [NSString stringWithFormat:@"%@.realm", [[[RLMRealm defaultRealmPath] stringByDeletingLastPathComponent] stringByAppendingPathComponent:self.realmName]];
 		self.realm = [RLMRealm realmWithPath:self.realmPath readOnly:NO error:nil];
@@ -72,10 +75,10 @@
 	return [MTRealmDataSort class];
 }
 
--(void)saveModel:(MTDataObject *)model {
+-(void)saveModel:(NSObject<MTDataObject> *)model {
 	NSAssert([model isKindOfClass:self.modelClass], @"Model[%@] must be same class[%@] as model that was used to create DataProvider.", model.class, self.modelClass);
 
-	RLMObjectSchema *schema = model.objectSchema;
+	RLMObjectSchema *schema = ((MTRealmDataObject *)model).objectSchema;
 	BOOL inWriteTransaction = _realm.inWriteTransaction;
 
 	if(!(inWriteTransaction)) {
@@ -83,9 +86,9 @@
 	}
 
 	if (schema.primaryKeyProperty) {
-		[self.modelClass createOrUpdateInRealm:_realm withValue:model];
+		[self.modelClass createOrUpdateInRealm:_realm withValue:(id) model];
 	} else {
-		[_realm addObject:model];
+		[_realm addObject:(id) model];
 	}
 
 	if(!(inWriteTransaction)) {

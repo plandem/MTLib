@@ -22,7 +22,7 @@ typedef void (^MTDataProviderSaveBlock)(MTDataProvider *dataProvider);
 
 @optional
 -(void)moveFromIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath;
--(void)saveModel:(id<MTDataObject> *)model;
+-(void)saveModel:(NSObject<MTDataObject> *)model;
 -(void)withTransaction:(MTDataProviderSaveBlock)saveBlock;
 @end
 

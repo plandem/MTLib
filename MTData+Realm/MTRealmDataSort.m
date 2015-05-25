@@ -8,20 +8,18 @@
 
 @implementation MTRealmDataSort
 -(MTDataSort *(^)(NSString *attribute))asc {
-	@weakify(self);
+	__weak typeof(self) weakSelf = self;
 	return ^MTDataSort *(NSString *attribute) {
-		@strongify(self);
-		[(NSMutableArray *)self.sorters addObject: [RLMSortDescriptor sortDescriptorWithProperty:attribute ascending:YES]];
-		return self;
+		[(NSMutableArray *)weakSelf.sorters addObject: [RLMSortDescriptor sortDescriptorWithProperty:attribute ascending:YES]];
+		return weakSelf;
 	};
 }
 
 -(MTDataSort *(^)(NSString *attribute))desc {
-	@weakify(self);
+	__weak typeof(self) weakSelf = self;
 	return ^MTDataSort *(NSString *attribute) {
-		@strongify(self);
-		[(NSMutableArray *)self.sorters addObject: [RLMSortDescriptor sortDescriptorWithProperty:attribute ascending:NO]];
-		return self;
+		[(NSMutableArray *)weakSelf.sorters addObject: [RLMSortDescriptor sortDescriptorWithProperty:attribute ascending:NO]];
+		return weakSelf;
 	};
 }
 @end
