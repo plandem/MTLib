@@ -5,10 +5,10 @@ Pod::Spec.new do |s|
   s.license       = 'MIT'
   s.homepage      = 'http://bitbucket.org/plandem/mtlib'
   s.author        = { 'Andrey Gayvoronsky' => 'plandem@gmail.com' }
-  #s.source        = { :git => 'https://plandem@bitbucket.org/plandem/mtlib.git', :tag => s.version.to_s }
   s.requires_arc  = true
   s.framework     = 'Foundation', 'UIKit'
   s.ios.deployment_target = '8.0'
+  s.default_subspec = 'MTLogger', 'MTi18n', 'MTData'
 
   s.subspec 'MTLogger' do |ss|
     ss.dependency 'CocoaLumberjack'
