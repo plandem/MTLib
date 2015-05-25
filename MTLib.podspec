@@ -2,7 +2,7 @@ Pod::Spec.new do |s|
   s.name          = "MTLib"
   s.version       = "1.0.0"
   s.summary       = "Some useful classes"  
-  spec.license    = 'MIT'
+  s.license       = 'MIT'
   s.homepage      = "http://bitbucket.org/plandem/mtlib"
   s.author        = { "Andrey Gayvoronsky" => "plandem@gmail.com" }
   s.source        = { :git => "https://plandem@bitbucket.org/plandem/mtlib.git", :tag => s.version.to_s }
