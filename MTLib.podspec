@@ -24,25 +24,25 @@ Pod::Spec.new do |s|
   end
 
   s.subspec 'MTSlider' do |ss|
-    ss.source_files = 'MTSlider/**/*.{h,m}'
+    ss.source_files = 'MTLib/MTSlider/**/*.{h,m}'
   end
 
   s.subspec 'MTi18n' do |ss|
-    ss.source_files = 'MTi18n/**/*.{h,m}'
+    ss.source_files = 'MTLib/MTi18n/**/*.{h,m}'
   end
 
   s.subspec 'MTForm' do |ss|
     ss.dependency 'FXForms'
-    ss.source_files = 'MTForm/**/*.{h,m}'
+    ss.source_files = 'MTLib/MTForm/**/*.{h,m}'
   end
 
   s.subspec 'MTData' do |ss|
-    ss.source_files = 'MTData/**/*.{h,m}'
+    ss.source_files = 'MTLib/MTData/**/*.{h,m}'
   end
 
   s.subspec 'MTData+Realm' do |ss|
     ss.dependency 'Realm'
     ss.dependency 'MTLib/MTData'
-    ss.source_files = 'MTData+Realm/**/*.{h,m}'
+    ss.source_files = 'MTLib/MTData+Realm/**/*.{h,m}'
   end
 end
