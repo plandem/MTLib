@@ -3,8 +3,8 @@
 // Copyright (c) 2015 Andrey Gayvoronsky. All rights reserved.
 //
 
-#import "FXFormDefaultCell+MTForm.h"
-#import "NSObject+Swizzle.h"
+#import "MTForm.h"
+#import "NSObject+MTSwizzle.h"
 
 @implementation FXFormDefaultCell (MTForm)
 + (void)load {

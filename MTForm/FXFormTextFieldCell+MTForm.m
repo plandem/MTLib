@@ -3,7 +3,8 @@
 // Copyright (c) 2015 Andrey Gayvoronsky. All rights reserved.
 //
 
-#import "FXFormTextFieldCell+MTForm.h"
+#import "MTForm.h"
+#import "NSObject+MTSwizzle.h"
 
 @implementation FXFormTextFieldCell (MTForm)
 + (void)load {

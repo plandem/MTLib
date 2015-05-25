@@ -4,9 +4,8 @@
 //
 
 #import <objc/runtime.h>
-#import "FXFormBaseCell+MTForm.h"
-#import "MTFormToolbar.h"
-#import "NSObject+Swizzle.h"
+#import "MTForm.h"
+#import "NSObject+MTSwizzle.h"
 
 NSString *const MTFormFieldToolbarTitle = @"toolbar.title";
 NSString *const MTFormFieldToolbarButton = @"toolbar.button";

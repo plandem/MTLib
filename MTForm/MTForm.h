@@ -1,11 +1,16 @@
 #ifndef MTFormTextFont
 	#define MTFormTextFont \
- 		[UIFont fontWithName:[AppTheme fontNamePrimary] size:18.0f]
+ 		[UIFont systemFontOfSize:18.0f]
 #endif
 
 #ifndef MTFormDetailFont
 	#define MTFormDetailFont \
- 		[UIFont fontWithName:[AppTheme fontNameSecondary] size:14.0f]
+ 		[UIFont systemFontOfSize:14.0f]
+#endif
+
+#ifndef MTFormSectionFont
+	#define MTFormSectionFont \
+ 		[UIFont systemFontOfSize:14.0f]
 #endif
 
 #import "FXFormBaseCell+MTForm.h"

@@ -3,9 +3,8 @@
 // Copyright (c) 2015 Andrey Gayvoronsky. All rights reserved.
 //
 
-#import "MTFormController.h"
-#import "MTFormViewController.h"
-#import "MTFormNumberInputCell.h"
+#import "MTForm.h"
+#import "UILabel+MTAddons.h"
 
 @implementation MTFormController
 
@@ -31,7 +30,7 @@
 	if ([title length]) {
 		UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
 		label.text = title;
-		label.font = [UIFont fontWithName:[AppTheme fontNameSecondary] size:14.0f];
+		label.font = MTFormSectionFont;
 		label.edgeInsets = UIEdgeInsetsMake(10, 10, 0, 0);
 		[label sizeToFit];
 
