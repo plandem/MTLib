@@ -32,7 +32,7 @@ Pod::Spec.new do |s|
   end
 
   s.subspec 'MTForm' do |ss|
-    ss.dependency 'FXForm'
+    ss.dependency 'FXForms'
     ss.source_files = 'MTForm/**/*.{h,m}'
   end
 
@@ -41,6 +41,7 @@ Pod::Spec.new do |s|
   end
 
   s.subspec 'MTData+Realm' do |ss|
+    ss.dependency 'Realm'
     ss.dependency 'MTLib/MTData'
     ss.source_files = 'MTData+Realm/**/*.{h,m}'
   end

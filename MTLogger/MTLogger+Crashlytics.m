@@ -3,7 +3,7 @@
 // Copyright (c) 2015 Melatonin LLC. All rights reserved.
 //
 #import <CrashlyticsLumberjack/CrashlyticsLogger.h>
-#import <MTLib/MTLogger+Crashlytics.h>
+#import "MTLogger+Crashlytics.h"
 
 @implementation MTLogger (Crashlytics)
 + (void)setupLogger {

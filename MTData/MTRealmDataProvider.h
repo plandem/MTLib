@@ -4,8 +4,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "MTDataProvider.h"
-#import "MTDataQuery.h"
+#import <MTData/MTDataProvider.h>
 
 @interface MTRealmDataProvider: MTDataProvider
 @property (nonatomic, readonly) NSString *realmPath;

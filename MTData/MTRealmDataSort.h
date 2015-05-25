@@ -4,7 +4,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "MTDataSort.h"
+#import <MTData/MTDataSort.h>
 
 @interface MTRealmDataSort : MTDataSort
 @end

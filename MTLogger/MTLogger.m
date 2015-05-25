@@ -3,7 +3,7 @@
 // Copyright (c) 2015 Melatonin LLC. All rights reserved.
 //
 #import <libgen.h>
-#import <MTLib/MTLogger.h>
+#import "MTLogger.h"
 
 #ifndef DEBUG
 	#if TARGET_IPHONE_SIMULATOR == 0

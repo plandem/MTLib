@@ -4,8 +4,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <MTData/MTDataObject.h>
 #import <Realm/Realm.h>
+#import <MTData/MTDataObject.h>
 
 @interface MTRealmDataObject : RLMObject <MTDataObject>
 @end

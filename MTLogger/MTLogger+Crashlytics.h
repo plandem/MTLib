@@ -4,7 +4,7 @@
 //
 #import <Foundation/Foundation.h>
 #import <CrashlyticsFramework/Crashlytics.h>
-#import <MTLib/MTLogger.h>
+#import "MTLogger.h"
 
 @interface MTLogger (Crashlytics)
 + (void)startWithAPIKey:(NSString *)apiKey;
