@@ -1,6 +1,6 @@
 //
 // Created by Andrey on 11/04/15.
-// Copyright (c) 2015 Andrey Gayvoronsky. All rights reserved.
+// Copyright (c) 2015 Melatonin LLC. All rights reserved.
 //
 
 #import "UIBarItem+MTi18n.h"

@@ -1,3 +1,8 @@
+//
+// Created by Andrey on 24/04/15.
+// Copyright (c) 2015 Melatonin LLC. All rights reserved.
+//
+
 #ifndef MTFormTextFont
 	#define MTFormTextFont \
  		[UIFont systemFontOfSize:18.0f]

@@ -1,7 +1,8 @@
 //
-// Created by Andrey on 20/09/14.
-// Copyright (c) 2014 Andrey Gayvoronsky. All rights reserved.
+// Created by Andrey on 26/04/15.
+// Copyright (c) 2015 Melatonin LLC. All rights reserved.
 //
+
 #import <objc/runtime.h>
 #import "UILabel+MTAddons.h"
 

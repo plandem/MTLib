@@ -1,3 +1,7 @@
+//
+// Created by Andrey on 11/04/15.
+// Copyright (c) 2015 Melatonin LLC. All rights reserved.
+//
 #import "MTi18nMacros.h"
 #import "NSObject+MTi18n.h"
 #import "UIBarItem+MTi18n.h"
