@@ -9,6 +9,7 @@ Pod::Spec.new do |s|
   s.framework     = 'Foundation'
   s.ios.deployment_target = '8.0'
   s.default_subspec = 'MTCore', 'MTLogger', 'MTData'
+  #s.source   = { :git => 'https://github.com/AFNetworking/AFNetworking.git', :tag => "2.1.0", :submodules => true }
 
   s.subspec 'MTCore' do |ss|
     ss.source_files = 'MTCore/**/*.{h,m}'
@@ -39,7 +40,7 @@ Pod::Spec.new do |s|
     ss.dependency 'MTLib/MTCore'
     ss.source_files = 'MTForm/**/*.{h,m}'
   end
-  
+
   s.subspec 'MTi18n' do |ss|
     ss.framework = 'UIKit'
     ss.dependency 'MTLib/MTCore'
@@ -58,6 +59,7 @@ Pod::Spec.new do |s|
 
   s.subspec 'MTCoreData' do |ss|
     ss.framework = 'CoreData'
+    ss.dependency 'MTLib/MTLogger'
     ss.source_files = 'MTCoreData/**/*.{h,m}'
   end
 
