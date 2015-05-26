@@ -3,7 +3,7 @@
 // Copyright (c) 2015 Melatonin LLC. All rights reserved.
 //
 
-@import UIKit;
+#import <UIKit/UIKit.h>
 
 @interface UILabel (MTAddons)
 @property (nonatomic, assign) IBInspectable UIEdgeInsets edgeInsets;

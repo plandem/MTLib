@@ -15,8 +15,7 @@
 @implementation MTCoreDataContextWatcher
 
 - (id) initWithManagedObjectContext:(NSManagedObjectContext *)contextToWatch {
-	self = [super init];
-	if (self) {
+	if ((self = [super init])) {
 		self.contextToWatch = contextToWatch;
 		[self setup];
 	}
@@ -25,8 +24,7 @@
 }
 
 - (id) initWithPersistentStoreCoordinator:(NSPersistentStoreCoordinator *)coordinatorToWatch {
-	self = [super init];
-	if (self) {
+	if ((self = [super init])) {
 		self.persistentStoreCoordinatorToWatch = coordinatorToWatch;
 		[self setup];
 	}
@@ -50,11 +48,11 @@
 	NSEntityDescription *description;
 
 	if([entity isKindOfClass:[NSString class]]) {
-		if(self.contextToWatch) {
-			description = [NSEntityDescription entityForName:entity inManagedObjectContext:self.contextToWatch];
-		} else if(self.persistentStoreCoordinatorToWatch) {
-			NSManagedObjectModel *model = [self.persistentStoreCoordinatorToWatch managedObjectModel];
-			description = [[model entitiesByName] objectForKey:entity];
+		if(_contextToWatch) {
+			description = [NSEntityDescription entityForName:entity inManagedObjectContext:_contextToWatch];
+		} else if(_persistentStoreCoordinatorToWatch) {
+			NSManagedObjectModel *model = [_persistentStoreCoordinatorToWatch managedObjectModel];
+			description = [model entitiesByName][entity];
 		} else {
 			DDLogDebug(@"Can't get NSEntityDescription via NSString, because watcher was initialized without NSPersistentStoreCoordinator or NSManagedObjectContext");
 			exit(-1);
@@ -66,17 +64,15 @@
 		exit(-1);
 	}
 
-	if(description == nil) {
-		DDLogDebug(@"Failed to resolve Entity=%@", entity);
-		exit(-1);
+	NSAssert(description != nil, @"Failed to resolve Entity=%@", entity);
+
+	NSPredicate *newPredicate = [NSPredicate predicateWithFormat:@"entity.name == %@", [description name]];
+
+	if(predicate) {
+		newPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[newPredicate, predicate]];
 	}
 
-	NSPredicate *new_predicate = [NSPredicate predicateWithFormat:@"entity.name == %@", [description name]];
-
-	if(predicate)
-		new_predicate = [NSCompoundPredicate andPredicateWithSubpredicates: @[new_predicate, predicate]];
-
-	self.conditionToWatch = (self.conditionToWatch) ? [NSCompoundPredicate orPredicateWithSubpredicates:@[self.conditionToWatch, new_predicate]] : new_predicate;
+	_conditionToWatch = (_conditionToWatch) ? [NSCompoundPredicate orPredicateWithSubpredicates:@[_conditionToWatch, newPredicate]] : newPredicate;
 }
 
 //Fault in all updated objects
@@ -97,27 +93,27 @@
 	}
 }
 
-- (void) contextUpdated:(NSNotification *)notification {
+- (void)contextUpdated:(NSNotification *)notification {
 	NSManagedObjectContext *incomingContext = [notification object];
 	NSPersistentStoreCoordinator *incomingCoordinator = [incomingContext persistentStoreCoordinator];
 
-	if ((self.contextToWatch && incomingContext != self.contextToWatch) || (self.persistentStoreCoordinatorToWatch && incomingCoordinator != self.persistentStoreCoordinatorToWatch))
+	if ((_contextToWatch && incomingContext != _contextToWatch) || (_persistentStoreCoordinatorToWatch && incomingCoordinator != _persistentStoreCoordinatorToWatch))
 		return;
 
-	NSMutableSet *inserted = [[[notification userInfo] objectForKey:NSInsertedObjectsKey] mutableCopy];
-	NSMutableSet *deleted = [[[notification userInfo] objectForKey:NSDeletedObjectsKey] mutableCopy];
-	NSMutableSet *updated = [[[notification userInfo] objectForKey:NSUpdatedObjectsKey] mutableCopy];
+	NSMutableSet *inserted = [[notification userInfo][NSInsertedObjectsKey] mutableCopy];
+	NSMutableSet *deleted = [[notification userInfo][NSDeletedObjectsKey] mutableCopy];
+	NSMutableSet *updated = [[notification userInfo][NSUpdatedObjectsKey] mutableCopy];
 
-	if (self.conditionToWatch) {
-		[inserted filterUsingPredicate: self.conditionToWatch];
-		[deleted filterUsingPredicate: self.conditionToWatch];
-		[updated filterUsingPredicate: self.conditionToWatch];
+	if (_conditionToWatch) {
+		[inserted filterUsingPredicate: _conditionToWatch];
+		[deleted filterUsingPredicate: _conditionToWatch];
+		[updated filterUsingPredicate: _conditionToWatch];
 	}
 
 	NSInteger totalCount = [inserted count] + [deleted count]  + [updated count];
 
 	if (totalCount < 1) {
-		DDLogDebug(@"Unwatched content. %@", self.conditionToWatch);
+		DDLogDebug(@"Unwatched content. %@", _conditionToWatch);
 		return;
 	}
 
@@ -152,12 +148,16 @@
 //		[self refreshObjects:[notification userInfo][NSDeletedObjectsKey] inContext:incomingContext];
 	}
 
-	if ([[self delegate] respondsToSelector:[self action]]) {
-		[[self delegate] performSelectorOnMainThread:[self action] withObject:results waitUntilDone:YES];
+	if(_changesBlock) {
+		_changesBlock(_contextToWatch, results);
 	}
+
+//	if ([[self delegate] respondsToSelector:[self action]]) {
+//		[[self delegate] performSelectorOnMainThread:[self action] withObject:results waitUntilDone:YES];
+//	}
 }
 
-- (void)resetCondition {
-	self.conditionToWatch = nil;
+- (void)reset {
+	_conditionToWatch = nil;
 }
 @end

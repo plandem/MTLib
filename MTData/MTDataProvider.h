@@ -10,24 +10,27 @@
 
 @class MTDataProvider;
 
-typedef void (^MTDataProviderRefreshBlock)();
+typedef void (^MTDataProviderRefreshBlock)(MTDataProvider *dataProvider);
 typedef void (^MTDataProviderSaveBlock)(MTDataProvider *dataProvider);
 
 @protocol MTDataProviderProtocol <NSObject>
 //NB: fetching can be implemented at background thread, so we can use this only after data fetched.
 @required
 -(void)deleteAtIndexPath:(NSIndexPath *)indexPath;
--(id)modelAtIndexPath:(NSIndexPath *)indexPath;
+-(id<MTDataObject>)modelAtIndexPath:(NSIndexPath *)indexPath;
 -(id<NSFastEnumeration>)prepareModels;
 
 @optional
 -(void)moveFromIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath;
--(void)saveModel:(NSObject<MTDataObject> *)model;
+-(id<MTDataObject>)createModel;
+-(void)saveModel:(id<MTDataObject>)model;
 -(void)withTransaction:(MTDataProviderSaveBlock)saveBlock;
 @end
 
 @interface MTDataProvider : NSObject <MTDataProviderProtocol>
 @property (nonatomic, readonly) Class modelClass;
+@property (nonatomic, readonly) Class queryClass;
+@property (nonatomic, readonly) Class sortClass;
 @property (nonatomic, readonly) id<NSFastEnumeration> models;
 @property (nonatomic, copy) MTDataQuery *query;
 @property (nonatomic, copy) MTDataSort *sort;

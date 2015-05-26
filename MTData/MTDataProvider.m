@@ -15,6 +15,7 @@
 -(instancetype)initWithModelClass:(Class)modelClass {
 	if ((self = [super init])) {
 		self.modelClass = modelClass;
+		NSAssert([modelClass conformsToProtocol:@protocol(MTDataObject)], @"Class must conforms to protocol %@", NSStringFromProtocol(@protocol(MTDataObject)));
 	}
 
 	return self;
@@ -25,7 +26,7 @@
 	id viewModel = [className alloc];
 	NSAssert([viewModel respondsToSelector:@selector(initWithModel:)], @"You must implement the 'initWithModel:' selector for '%@'", NSStringFromClass(className));
 
-	id model;
+	id<MTDataObject> model;
 
 	if(indexPath) {
 		model = [self modelAtIndexPath:indexPath];
@@ -65,5 +66,19 @@
 
 -(Class)queryClass {
 	return [MTDataQuery class];
+}
+
+-(void)setQuery:(MTDataQuery *)query {
+	NSAssert([query isKindOfClass:self.queryClass], @"Query[%@] must be kind of [%@] class.", query.class, self.queryClass);
+	if(_query != query) {
+		_query = query;
+	}
+}
+
+-(void)setSort:(MTDataSort *)sort {
+	NSAssert([sort isKindOfClass:self.sortClass], @"Sort[%@] must be kind of [%@] class.", sort.class, self.sortClass);
+	if(_sort != sort) {
+		_sort = sort;
+	}
 }
 @end

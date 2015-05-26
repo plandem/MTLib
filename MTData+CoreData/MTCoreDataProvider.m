@@ -1,68 +1,70 @@
 //
-// Created by Andrey on 28/04/15.
+// Created by Andrey on 26/05/15.
 // Copyright (c) 2015 Andrey Gayvoronsky. All rights reserved.
 //
 
 #import "MTCoreDataProvider.h"
+#import "MTCoreDataQuery.h"
+#import "NSManagedObjectContext+MTAddons.h"
+#import "MTCoreDataContextWatcher.h"
 
 @interface MTCoreDataProvider ()
-//@property (nonatomic, strong) NSString *realmName;
-//@property (nonatomic, strong) NSString *realmPath;
-//@property (nonatomic, strong) RLMRealm *realm;
-//@property (nonatomic, strong) RLMNotificationToken *notificationToken;
+@property (nonatomic, strong) NSManagedObjectContext *context;
+@property (nonatomic, strong) MTCoreDataContextWatcher *watcher;
 @end
 
 @implementation MTCoreDataProvider
-/*-(instancetype)initWithModelClass:(Class)modelClass {
-	return [self initWithModelClass:modelClass withRealm:@"default"];
-}
 
--(instancetype)initWithModelClass:(Class)modelClass withRealm:(NSString *)realmName {
+-(instancetype)initWithModelClass:(Class)modelClass withContext:(NSManagedObjectContext *)context {
 	if((self = [super initWithModelClass:modelClass])) {
-		self.realmName = realmName;
-		self.realmPath = [NSString stringWithFormat:@"%@.realm", [[[RLMRealm defaultRealmPath] stringByDeletingLastPathComponent] stringByAppendingPathComponent:self.realmName]];
-		self.realm = [RLMRealm realmWithPath:self.realmPath readOnly:NO error:nil];
+		self.context = context;
+		self.limit = 0;
+		self.offset = 0;
+		self.batchSize = 0;
+		self.includesPendingChanges = YES;
+		self.includesPropertyValues = YES;
+		self.shouldRefreshRefetchedObjects = YES;
+		self.returnsObjectsAsFaults = YES;
+		self.returnsDistinctResults = NO;
+		self.resultType = NSManagedObjectResultType;
 
 		__weak typeof(self) weakSelf = self;
-		self.notificationToken = [weakSelf.realm addNotificationBlock:^(NSString *note, RLMRealm * realm) {
-			if([weakSelf refreshBlock])
-				[weakSelf refreshBlock]();
-		}];
-
+		self.watcher = [[MTCoreDataContextWatcher alloc] initWithPersistentStoreCoordinator:[context persistentStoreCoordinator]];
+		self.watcher.changesBlock = ^(NSDictionary *changes, NSManagedObjectContext *ctx) {
+			NSLog(@"%@", changes);
+			if([weakSelf refreshBlock]) {
+				[weakSelf refreshBlock](weakSelf);
+			}
+		};
 	}
 
 	return self;
 }
 
--(void)dealloc {
-	[self.realm removeNotification:_notificationToken];
-}
-
 -(void)deleteAtIndexPath:(NSIndexPath *)indexPath {
-	[_realm beginWriteTransaction];
-	[_realm deleteObject:[self modelAtIndexPath:indexPath]];
-	[_realm commitWriteTransaction];
+//	[_realm beginWriteTransaction];
+//	[_realm deleteObject:[self modelAtIndexPath:indexPath]];
+//	[_realm commitWriteTransaction];
 }
 
--(id)modelAtIndexPath:(NSIndexPath *)indexPath {
-	RLMResults *models = (RLMResults *)self.models;
-	return ((models && (indexPath.row < [models count] )) ? models[indexPath.row] : nil);
+-(id<MTDataObject>)modelAtIndexPath:(NSIndexPath *)indexPath {
+//	RLMResults *models = (RLMResults *)self.models;
+//	return ((models && (indexPath.row < [models count] )) ? models[indexPath.row] : nil);
+	return nil;
 }
 
 -(id<NSFastEnumeration>)prepareModels {
-	MTDataQuery *query = self.query;
 
-	RLMResults *result = ((query.predicate)
-			? [self.modelClass objectsInRealm:_realm withPredicate:self.query.predicate]
-			: [self.modelClass allObjectsInRealm:_realm]);
+	[_watcher addEntityToWatch:NSStringFromClass(self.modelClass) withPredicate: self.query.predicate];
 
+	__block NSError *error;
+	__block NSArray *result;
 
-	NSArray *sorters = self.sort.sorters;
+	[_context performBlock:^{
+		result = [_context executeFetchRequest:[self fetchRequest] error:&error];
+	} async:NO];
 
-	if(sorters && [sorters count]) {
-		result = [result sortedResultsUsingDescriptors:sorters];
-	}
-
+	NSAssert(error == nil, @"Fetching error %@, %@", error, [error userInfo]);
 	return result;
 }
 
@@ -70,34 +72,70 @@
 	NSAssert(false, @"There is no any implementation for 'moveFromIndexPath'");
 }
 
--(Class)sortClass {
-	return [MTRealmDataSort class];
+-(id<MTDataObject>)createModel {
+	return (id<MTDataObject>)[self.modelClass createInContext:_context];
 }
 
--(void)saveModel:(NSObject<MTDataObject> *)model {
-	NSAssert([model isKindOfClass:self.modelClass], @"Model[%@] must be same class[%@] as model that was used to create DataProvider.", model.class, self.modelClass);
-
-	RLMObjectSchema *schema = ((MTRealmDataObject *)model).objectSchema;
-	BOOL inWriteTransaction = _realm.inWriteTransaction;
-
-	if(!(inWriteTransaction)) {
-		[_realm beginWriteTransaction];
-	}
-
-	if (schema.primaryKeyProperty) {
-		[self.modelClass createOrUpdateInRealm:_realm withValue:(id) model];
-	} else {
-		[_realm addObject:(id) model];
-	}
-
-	if(!(inWriteTransaction)) {
-		[_realm commitWriteTransaction];
-	}
+-(void)saveModel:(id<MTDataObject>)model {
+	NSAssert(false, @"MTCoreDataProvider does not support saveModel...");
 }
 
 -(void)withTransaction:(MTDataProviderSaveBlock)saveBlock {
-	[_realm beginWriteTransaction];
-	saveBlock(self);
-	[_realm commitWriteTransaction];
-}*/
+	NSAssert(false, @"MTCoreDataProvider does not support transactions...");
+}
+
+-(NSFetchRequest *)fetchRequest {
+	NSEntityDescription *entity = [NSEntityDescription entityForName:NSStringFromClass(self.modelClass) inManagedObjectContext:_context];
+
+	//That's strange, but exception is not catching, so another manual checking :(
+	NSAssert(entity != nil && entity.name != nil && [entity.name length] > 1, @"There is no NSEntityDescription with name=%@ at provided context", NSStringFromClass(self.modelClass));
+
+	NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName: entity.name];
+	MTCoreDataQuery *query = (MTCoreDataQuery *)self.query;
+
+	[request setFetchLimit:_limit];
+	[request setFetchOffset:_offset];
+	[request setFetchBatchSize:_batchSize];
+	[request setResultType: _resultType];
+
+	[request setIncludesPendingChanges:_includesPendingChanges];
+	[request setIncludesPropertyValues:_includesPropertyValues];
+	[request setShouldRefreshRefetchedObjects:_shouldRefreshRefetchedObjects];
+	[request setReturnsObjectsAsFaults:_returnsObjectsAsFaults];
+
+//	if(criteria.select && [criteria.select count]) {
+//		[request setResultType: NSDictionaryResultType];
+//		[request setPropertiesToFetch: criteria.select];
+//		[request setReturnsDistinctResults:criteria.returnsDistinctResults];
+//	}
+
+//	if(query.groupList && [query.groupList count]) {
+//		[request setResultType: NSDictionaryResultType];
+//		[request setPropertiesToFetch: @[@"*"]];
+//		[request setPropertiesToGroupBy: query.groupList];
+//
+//		if(criteria.having)
+//			[request setHavingPredicate:criteria.having];
+//	}
+//
+//	if(query.withList && [query.withList count])
+//		[request setRelationshipKeyPathsForPrefetching:query.withList];
+//
+	if(query.predicate)
+		[request setPredicate:query.predicate];
+
+	if(self.sort && [self.sort.sorters count])
+		[request setSortDescriptors:self.sort.sorters];
+
+//	if([request resultType] == NSCountResultType) {
+//		NSLog(@"You must use countByCriteria method to count entities. Aborting");
+//		exit(-1);
+//	}
+
+	return request;
+}
+
+-(Class)queryClass {
+	return [MTCoreDataQuery class];
+}
 @end

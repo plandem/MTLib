@@ -5,14 +5,15 @@
 
 #import <CoreData/CoreData.h>
 
-@interface MTCoreDataContextWatcher : NSObject
-@property (nonatomic, assign) id delegate;
-@property (nonatomic, assign) SEL action;
-@property (nonatomic, readonly, strong) NSPredicate *conditionToWatch;
+typedef void (^MTCoreDataContextWatcherChangesBlock)(NSMutableDictionary *changes, NSManagedObjectContext *context);
 
-- (id)initWithManagedObjectContext:(NSManagedObjectContext *)contextToWatch;
-- (id)initWithPersistentStoreCoordinator:(NSPersistentStoreCoordinator *)coordinatorToWatch;
+@interface MTCoreDataContextWatcher : NSObject
+@property (nonatomic, readonly) NSPredicate *conditionToWatch;
+@property (nonatomic, copy) MTCoreDataContextWatcherChangesBlock changesBlock;
+
+- (instancetype)initWithManagedObjectContext:(NSManagedObjectContext *)contextToWatch;
+- (instancetype)initWithPersistentStoreCoordinator:(NSPersistentStoreCoordinator *)coordinatorToWatch;
 - (void)addEntityToWatch:(id)entity;
 - (void)addEntityToWatch:(id)entity withPredicate:(NSPredicate *)predicate;
-- (void)resetCondition;
+- (void)reset;
 @end

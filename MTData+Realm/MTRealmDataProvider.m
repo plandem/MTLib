@@ -26,10 +26,10 @@
 
 		__weak typeof(self) weakSelf = self;
 		self.notificationToken = [weakSelf.realm addNotificationBlock:^(NSString *note, RLMRealm * realm) {
-			if([weakSelf refreshBlock])
-				[weakSelf refreshBlock]();
+			if([weakSelf refreshBlock]) {
+				[weakSelf refreshBlock](weakSelf);
+			}
 		}];
-
 	}
 
 	return self;
@@ -41,13 +41,13 @@
 
 -(void)deleteAtIndexPath:(NSIndexPath *)indexPath {
 	[_realm beginWriteTransaction];
-	[_realm deleteObject:[self modelAtIndexPath:indexPath]];
+	[_realm deleteObject:(MTRealmDataObject *)[self modelAtIndexPath:indexPath]];
 	[_realm commitWriteTransaction];
 }
 
--(id)modelAtIndexPath:(NSIndexPath *)indexPath {
+-(id<MTDataObject>)modelAtIndexPath:(NSIndexPath *)indexPath {
 	RLMResults *models = (RLMResults *)self.models;
-	return ((models && (indexPath.row < [models count] )) ? models[indexPath.row] : nil);
+	return ((models && (indexPath.row < [models count] )) ? models[(NSUInteger)indexPath.row] : nil);
 }
 
 -(id<NSFastEnumeration>)prepareModels {
@@ -75,7 +75,7 @@
 	return [MTRealmDataSort class];
 }
 
--(void)saveModel:(NSObject<MTDataObject> *)model {
+-(void)saveModel:(id<MTDataObject>)model {
 	NSAssert([model isKindOfClass:self.modelClass], @"Model[%@] must be same class[%@] as model that was used to create DataProvider.", model.class, self.modelClass);
 
 	RLMObjectSchema *schema = ((MTRealmDataObject *)model).objectSchema;
@@ -94,6 +94,10 @@
 	if(!(inWriteTransaction)) {
 		[_realm commitWriteTransaction];
 	}
+}
+
+-(id<MTDataObject>)createModel {
+	return (id<MTDataObject>)[[self.modelClass alloc] init];
 }
 
 -(void)withTransaction:(MTDataProviderSaveBlock)saveBlock {

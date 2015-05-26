@@ -7,7 +7,7 @@
 
 @interface MTDataSort : NSObject
 //result info
-@property (nonatomic, readonly) NSArray *sorters;
+@property (readonly) NSArray *sorters;
 
 //chaining methods
 @property (readonly) MTDataSort *(^asc)(NSString *attribute);

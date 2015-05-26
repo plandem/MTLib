@@ -65,7 +65,8 @@ Pod::Spec.new do |s|
 
   s.subspec 'MTData+CoreData' do |ss|
     ss.dependency 'MTLib/MTData'
-    ss.dependency 'MTLib/MTCoreData'
+    ss.dependency 'MTLib/CoreData'
+    ss.dependency 'MTLib/MTLogger'
     ss.source_files = 'MTData+CoreData/**/*.{h,m}'
   end
 end

@@ -3,7 +3,6 @@
 // Copyright (c) 2015 Melatonin LLC. All rights reserved.
 //
 
-#import "MTLogger.h"
 #import "MTCoreDataStack.h"
 
 @interface MTCoreDataStack ()
@@ -13,7 +12,7 @@
 @end
 
 @implementation MTCoreDataStack
--(instancetype)initWithModelName:(NSString *)modelName {
+- (instancetype)initWithModelName:(NSString *)modelName {
 	if((self = [self init])) {
 		self.managedObjectModelName = modelName;
 	}
@@ -21,59 +20,71 @@
 	return self;
 }
 
++ (NSString *)defaultName {
+	static NSString *defaultName;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
+		if(info[@"CFBundleDisplayName"]) {
+			defaultName = info[@"CFBundleDisplayName"];
+		} else if(info[@"CFBundleName"]) {
+			defaultName = info[@"CFBundleName"];
+		}
+	});
+
+	return defaultName;
+}
+
 + (instancetype)defaultStack {
-	return [self setup:[[NSBundle mainBundle] infoDictionary][@"CFBundleDisplayName"]];
+	return [self setup:[MTCoreDataStack defaultName] inMemory:NO];
 }
 
 + (instancetype)defaultStackWithModel:(NSString *)modelFileName {
-	return [self setup:modelFileName];
+	return [self setup:modelFileName inMemory:NO];
 }
 
 + (instancetype)inMemoryStack {
-	return [self setupInMemory:[[NSBundle mainBundle] infoDictionary][@"CFBundleDisplayName"]];
+	return [self setup:[MTCoreDataStack defaultName] inMemory:YES];
 }
 
 + (instancetype)inMemoryStackWithModel:(NSString *)modelFileName {
-	return [self setupInMemory:modelFileName];
+	return [self setup:modelFileName inMemory:YES];
 }
 
-+ (instancetype)setup:(NSString *)modelName {
++ (instancetype)setup:(NSString *)modelName inMemory:(BOOL)inMemory {
 	static MTCoreDataStack *stack;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
 		stack = [[self alloc] initWithModelName:modelName];
+
+		@try {
+			NSError *error;
+			NSString *type;
+			NSURL *url;
+			NSDictionary *options;
+
+			if(inMemory) {
+				type = NSInMemoryStoreType;
+			} else {
+				type = NSSQLiteStoreType;
+				url = [stack persistentStoreURL];
+				options = [stack persistentStoreOptions];
+			}
+
+			if (![stack.persistentStoreCoordinator addPersistentStoreWithType:type configuration:nil URL:url options:options error:&error]) {
+				@throw([NSException exceptionWithName:@"MTCoreDataStack" reason:error.userInfo[@"reason"] userInfo:error.userInfo]);
+			}
+		} @catch(NSException *e) {
+			NSAssert(false, e.reason);
+		}
 	});
 
 	return stack;
 }
 
-+(instancetype)setupInMemory:(NSString *)modelName {
-	static MTCoreDataStack *stack = nil;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		stack = [[self alloc] initWithModelName:modelName];
-
-		NSPersistentStoreCoordinator *persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[stack managedObjectModel]];
-		NSError *error;
-
-		if (![persistentStoreCoordinator addPersistentStoreWithType:NSInMemoryStoreType configuration:nil URL:nil options:nil error:&error])
-			DDLogError(@"Unresolved error %@, %@", error, [error userInfo]);
-
-		stack.persistentStoreCoordinator = persistentStoreCoordinator;
-	});
-
-	return stack;
-}
-
-#pragma mark - Stack Setup
 - (NSPersistentStoreCoordinator *)persistentStoreCoordinator {
 	if (!_persistentStoreCoordinator) {
 		_persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:self.managedObjectModel];
-		NSError *error = nil;
-
-		if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:[self persistentStoreURL] options:[self persistentStoreOptions] error:&error]) {
-			DDLogError(@"Error adding persistent store. %@, %@", error, error.userInfo);
-		}
 	}
 
 	return _persistentStoreCoordinator;
@@ -89,14 +100,16 @@
 }
 
 - (NSURL *)persistentStoreURL {
-	NSString *appName = [[NSBundle mainBundle] infoDictionary][@"CFBundleDisplayName"];
-	appName = [appName stringByAppendingString:@".sqlite"];
-
-	return [[self applicationDocumentsDirectory] URLByAppendingPathComponent:appName];
+	NSString *url = [_managedObjectModelName stringByAppendingString:@".sqlite"];
+	return [[self applicationDocumentsDirectory] URLByAppendingPathComponent:url];
 }
 
 - (NSDictionary *)persistentStoreOptions {
-	return @{NSInferMappingModelAutomaticallyOption: @YES, NSMigratePersistentStoresAutomaticallyOption: @YES, NSSQLitePragmasOption: @{@"synchronous": @"OFF"}};
+	return @{
+			NSInferMappingModelAutomaticallyOption: @YES,
+			NSMigratePersistentStoresAutomaticallyOption: @YES,
+			NSSQLitePragmasOption: @{@"synchronous": @"OFF"}
+	};
 }
 
 - (NSURL *)applicationDocumentsDirectory {
