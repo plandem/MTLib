@@ -3,7 +3,9 @@
 // Copyright (c) 2015 Melatonin LLC. All rights reserved.
 //
 
-#import <Realm/Realm.h>
+#import <libextobjc/extobjc.h>
+#import "MTRealmDataObject.h"
+#import "MTRealmDataSort.h"
 #import "MTRealmDataProvider.h"
 
 @interface MTRealmDataProvider ()
@@ -24,10 +26,11 @@
 		self.realmPath = [NSString stringWithFormat:@"%@.realm", [[[RLMRealm defaultRealmPath] stringByDeletingLastPathComponent] stringByAppendingPathComponent:self.realmName]];
 		self.realm = [RLMRealm realmWithPath:self.realmPath readOnly:NO error:nil];
 
-		__weak typeof(self) weakSelf = self;
-		self.notificationToken = [weakSelf.realm addNotificationBlock:^(NSString *note, RLMRealm * realm) {
-			if([weakSelf refreshBlock]) {
-				[weakSelf refreshBlock](weakSelf);
+		@weakify(self);
+		self.notificationToken = [self.realm addNotificationBlock:^(NSString *note, RLMRealm * realm) {
+			@strongify(self);
+			if([self refreshBlock]) {
+				[self refreshBlock](self);
 			}
 		}];
 	}
@@ -47,10 +50,10 @@
 
 -(id<MTDataObject>)modelAtIndexPath:(NSIndexPath *)indexPath {
 	RLMResults *models = (RLMResults *)self.models;
-	return ((models && (indexPath.row < [models count] )) ? models[(NSUInteger)indexPath.row] : nil);
+	return ((models && (indexPath.row < [models count])) ? models[(NSUInteger)indexPath.row] : nil);
 }
 
--(id<NSFastEnumeration>)prepareModels {
+-(id<MTDataProviderCollection>)prepareModels {
 	MTDataQuery *query = self.query;
 
 	RLMResults *result = ((query.predicate)
@@ -64,7 +67,7 @@
 		result = [result sortedResultsUsingDescriptors:sorters];
 	}
 
-	return result;
+	return (id<MTDataProviderCollection>)result;
 }
 
 -(void)moveFromIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {

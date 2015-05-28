@@ -3,6 +3,7 @@
 // Copyright (c) 2015 Melatonin LLC. All rights reserved.
 //
 
+#import <libextobjc/extobjc.h>
 #import "MTDataQuery.h"
 
 @interface MTDataQuery()
@@ -100,128 +101,143 @@
 }
 
 -(MTDataQuery *(^)(id first, ...))condition {
-	__weak typeof(self) weakSelf = self;
+	@weakify(self);
 	return ^MTDataQuery *(id first, ...) {
+		@strongify(self);
 		va_list args;
 		va_start(args, first);
-		weakSelf.predicate = [weakSelf processCondition:first arguments:args not:NO];
+		self.predicate = [self processCondition:first arguments:args not:NO];
 		va_end(args);
-		return weakSelf;
+		return self;
 	};
 }
 
 -(MTDataQuery *(^)(id first, ...))notCondition {
-	__weak typeof(self) weakSelf = self;
+	@weakify(self);
 	return ^MTDataQuery *(id first, ...) {
+		@strongify(self);
 		va_list args;
 		va_start(args, first);
-		weakSelf.predicate = [weakSelf processCondition:first arguments:args not:YES];
+		self.predicate = [self processCondition:first arguments:args not:YES];
 		va_end(args);
-		return weakSelf;
+		return self;
 	};
 }
 
 -(MTDataQuery *(^)(NSString *attribute, id from, id to))between {
-	__weak typeof(self) weakSelf = self;
+	@weakify(self);
 	return ^MTDataQuery *(NSString *attribute, id from, id to) {
-		weakSelf.predicate = [weakSelf processBetween:attribute from:from to:to not:NO];
-		return weakSelf;
+		@strongify(self);
+		self.predicate = [self processBetween:attribute from:from to:to not:NO];
+		return self;
 	};
 }
 
 -(MTDataQuery *(^)(NSString *attribute, id from, id to))notBetween {
-	__weak typeof(self) weakSelf = self;
+	@weakify(self);
 	return ^MTDataQuery *(NSString *attribute, id from, id to) {
-		weakSelf.predicate = [weakSelf processBetween:attribute from:from to:to not:YES];
-		return weakSelf;
+		@strongify(self);
+		self.predicate = [self processBetween:attribute from:from to:to not:YES];
+		return self;
 	};
 }
 
 -(MTDataQuery *(^)(NSString *attribute, NSArray *array))in {
-	__weak typeof(self) weakSelf = self;
+	@weakify(self);
 	return ^MTDataQuery *(NSString *attribute, NSArray *array) {
-		weakSelf.predicate = [weakSelf processIn:attribute array:array not:NO];
-		return weakSelf;
+		@strongify(self);
+		self.predicate = [self processIn:attribute array:array not:NO];
+		return self;
 	};
 }
 
 -(MTDataQuery *(^)(NSString *attribute, NSArray *array))notIn {
-	__weak typeof(self) weakSelf = self;
+	@weakify(self);
 	return ^MTDataQuery *(NSString *attribute, NSArray *array) {
-		weakSelf.predicate = [weakSelf processIn:attribute array:array not:YES];
-		return weakSelf;
+		@strongify(self);
+		self.predicate = [self processIn:attribute array:array not:YES];
+		return self;
 	};
 }
 
 -(MTDataQuery *(^)(NSString *attribute, NSString *string))beginsWith {
-	__weak typeof(self) weakSelf = self;
+	@weakify(self);;
 	return ^MTDataQuery *(NSString *attribute, NSString *string) {
-		weakSelf.predicate = [weakSelf processBeginsWith:attribute string:string not:NO];
-		return weakSelf;
+		@strongify(self);
+		self.predicate = [self processBeginsWith:attribute string:string not:NO];
+		return self;
 	};
 }
 
 -(MTDataQuery *(^)(NSString *attribute, NSString *string))notBeginsWith {
-	__weak typeof(self) weakSelf = self;
+	@weakify(self);;
 	return ^MTDataQuery *(NSString *attribute, NSString *string) {
-		weakSelf.predicate = [weakSelf processBeginsWith:attribute string:string not:YES];
-		return weakSelf;
+		@strongify(self);
+		self.predicate = [self processBeginsWith:attribute string:string not:YES];
+		return self;
 	};
 }
 
 -(MTDataQuery *(^)(NSString *attribute, NSString *string))endsWith {
-	__weak typeof(self) weakSelf = self;
+	@weakify(self);;
 	return ^MTDataQuery *(NSString *attribute, NSString *string) {
-		weakSelf.predicate = [weakSelf processEndsWith:attribute string:string not:NO];
-		return weakSelf;
+		@strongify(self);
+		self.predicate = [self processEndsWith:attribute string:string not:NO];
+		return self;
 	};
 }
 
 -(MTDataQuery *(^)(NSString *attribute, NSString *string))notEndsWith {
-	__weak typeof(self) weakSelf = self;
+	@weakify(self);;
 	return ^MTDataQuery *(NSString *attribute, NSString *string) {
-		weakSelf.predicate = [weakSelf processEndsWith:attribute string:string not:YES];
-		return weakSelf;
+		@strongify(self);
+		self.predicate = [self processEndsWith:attribute string:string not:YES];
+		return self;
 	};
 }
 
 -(MTDataQuery *(^)(NSString *attribute, NSString *string))contains {
-	__weak typeof(self) weakSelf = self;
+	@weakify(self);;
 	return ^MTDataQuery *(NSString *attribute, NSString *string) {
-		weakSelf.predicate = [weakSelf processContains:attribute string:string not:NO];
-		return weakSelf;
+		@strongify(self);
+		self.predicate = [self processContains:attribute string:string not:NO];
+		return self;
 	};
 }
 
 -(MTDataQuery *(^)(NSString *attribute, NSString *string))notContains {
-	__weak typeof(self) weakSelf = self;
+	@weakify(self);;
 	return ^MTDataQuery *(NSString *attribute, NSString *string) {
-		weakSelf.predicate = [weakSelf processContains:attribute string:string not:YES];
-		return weakSelf;
+		@strongify(self);
+		self.predicate = [self processContains:attribute string:string not:YES];
+		return self;
 	};
 }
 
 -(MTDataQuery *(^)(MTDataQueryBlock block))and {
-	__weak typeof(self) weakSelf = self;
+	@weakify(self);;
 	return ^MTDataQuery *(MTDataQueryBlock block) {
-		[weakSelf processSubQueryBlock:block operator:NSAndPredicateType];
-		return weakSelf;
+		@strongify(self);
+		[self processSubQueryBlock:block operator:NSAndPredicateType];
+		return self;
 	};
 }
 
 -(MTDataQuery *(^)(MTDataQueryBlock block))or {
-	__weak typeof(self) weakSelf = self;
+	@weakify(self);;
 	return ^MTDataQuery *(MTDataQueryBlock block) {
-		[weakSelf processSubQueryBlock:block operator:NSOrPredicateType];
-		return weakSelf;
+		@strongify(self);
+		[self processSubQueryBlock:block operator:NSOrPredicateType];
+		return self;
 	};
 }
 
 -(MTDataQuery *(^)(MTDataQueryBlock block))not {
-	__weak typeof(self) weakSelf = self;
+	@weakify(self);;
 	return ^MTDataQuery *(MTDataQueryBlock block) {
-		[weakSelf processSubQueryBlock:block operator:NSNotPredicateType];
-		return weakSelf;
+		@strongify(self);
+		[self processSubQueryBlock:block operator:NSNotPredicateType];
+		return self;
 	};
 }
 @end

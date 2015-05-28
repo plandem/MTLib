@@ -12,6 +12,7 @@ Pod::Spec.new do |s|
   #s.source   = { :git => 'https://github.com/AFNetworking/AFNetworking.git', :tag => "2.1.0", :submodules => true }
 
   s.subspec 'MTCore' do |ss|
+    ss.dependency 'libextobjc'
     ss.source_files = 'MTCore/**/*.{h,m}'
   end
 
@@ -57,16 +58,10 @@ Pod::Spec.new do |s|
     ss.source_files = 'MTData+Realm/**/*.{h,m}'
   end
 
-  s.subspec 'MTCoreData' do |ss|
-    ss.framework = 'CoreData'
-    ss.dependency 'MTLib/MTLogger'
-    ss.source_files = 'MTCoreData/**/*.{h,m}'
-  end
-
   s.subspec 'MTData+CoreData' do |ss|
-    ss.dependency 'MTLib/MTData'
-    ss.dependency 'MTLib/CoreData'
     ss.dependency 'MTLib/MTLogger'
+    ss.dependency 'MTLib/MTData'
+    ss.dependency 'NLCoreData'
     ss.source_files = 'MTData+CoreData/**/*.{h,m}'
   end
 end

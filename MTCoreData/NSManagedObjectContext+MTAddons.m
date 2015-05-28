@@ -14,23 +14,65 @@
 		[self performBlockAndWait:block];
 }
 
-- (BOOL)save:(NSError **)error withRoot:(BOOL)withRoot {
-	NSManagedObjectContext *context = self;
+- (BOOL)save {
+	if (![self hasChanges]) {
+		return YES;
+	}
 
-	__block NSError *err;
-	do {
-		[context performBlock:^{
-			if(!([context save:&err]))
-				DDLogError(@"*** Saving error %@", err.localizedDescription);
-		} async:NO];
+	__block NSError *error = nil;
+	__block BOOL result;
 
-		//move to parent context
-		context = context.parentContext;
-	} while(withRoot && context && err == nil);
+	[self performBlockAndWait:^{
+		if (!(result = [self save:&error])) {
+			DDLogDebug(@"Saving error: %@", [error userInfo]);
 
-	if(error)
-		*error = [err copy];
+			for (NSError *err in [error userInfo][@"NSDetailedErrors"]) {
+				DDLogDebug(@"Error %i: %@", [err code], [err userInfo]);
+			}
+		}
+	}];
 
-	return (err == nil);
+	return result;
+}
+
+- (BOOL)saveNested {
+	if ([self save]) {
+		NSManagedObjectContext *context = [self parentContext];
+
+		if (!context) {
+			return YES;
+		}
+
+		__block BOOL save = NO;
+
+		[context performBlockAndWait:^{
+			save = [context saveNested];
+		}];
+
+		return save;
+	}
+
+	return NO;
+}
+
+- (void)saveNestedAsynchronous {
+	[self saveNestedAsynchronousWithCallback:nil];
+}
+
+- (void)saveNestedAsynchronousWithCallback:(MTCoreDataSaveCompleteBlock)block {
+	if ([self save]) {
+
+		NSManagedObjectContext* context = [self parentContext];
+
+		if (context) {
+			[context performBlock:^{
+				[context saveNestedAsynchronousWithCallback:block];
+			}];
+		} else if (block) {
+			block(YES);
+		}
+	} else if (block) {
+		block(NO);
+	}
 }
 @end

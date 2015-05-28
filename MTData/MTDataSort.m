@@ -3,6 +3,7 @@
 // Copyright (c) 2015 Melatonin LLC. All rights reserved.
 //
 
+#import <libextobjc/extobjc.h>
 #import "MTDataSort.h"
 @interface MTDataSort()
 @property (nonatomic, strong) NSArray *sort;
@@ -18,18 +19,20 @@
 }
 
 -(MTDataSort *(^)(NSString *attribute))asc {
-	__weak typeof(self) weakSelf = self;
+	@weakify(self);
 	return ^MTDataSort *(NSString *attribute) {
-		[(NSMutableArray *)weakSelf.sorters addObject: [NSSortDescriptor sortDescriptorWithKey:attribute ascending:YES]];
-		return weakSelf;
+		@strongify(self);
+		[(NSMutableArray *)self.sorters addObject: [NSSortDescriptor sortDescriptorWithKey:attribute ascending:YES]];
+		return self;
 	};
 }
 
 -(MTDataSort *(^)(NSString *attribute))desc {
-	__weak typeof(self) weakSelf = self;
+	@weakify(self);
 	return ^MTDataSort *(NSString *attribute) {
-		[(NSMutableArray *)weakSelf.sorters addObject: [NSSortDescriptor sortDescriptorWithKey:attribute ascending:NO]];
-		return weakSelf;
+		@strongify(self);
+		[(NSMutableArray *)self.sorters addObject: [NSSortDescriptor sortDescriptorWithKey:attribute ascending:NO]];
+		return self;
 	};
 }
 

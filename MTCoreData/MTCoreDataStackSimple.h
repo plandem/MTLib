@@ -15,6 +15,6 @@
 
 @interface MTCoreDataStackSimple : MTCoreDataStack
 + (NSManagedObjectContext *)mainQueueContext;
-+ (NSManagedObjectContext *)newMainQueueContext;
+//+ (NSManagedObjectContext *)newMainQueueContext;
 + (NSManagedObjectContext *)privateQueueContext;
 @end

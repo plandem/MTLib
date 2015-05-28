@@ -3,6 +3,7 @@
 // Copyright (c) 2015 Melatonin LLC. All rights reserved.
 //
 
+#import <libextobjc/extobjc.h>
 #import "MTFormNumberInputCell.h"
 
 @interface MTFormNumberInputCell()
@@ -18,14 +19,15 @@
 	self.keyboardType = UIKeyboardTypeNumberPad;
 	self.returnKeyType = UIReturnKeyDone;
 
-	__weak MTFormNumberInputCell *weakSelf = self;
+	@weakify(self);
 	self.numberInput.valueChangedBlock = ^{
-		weakSelf.field.value = weakSelf.numberInput.value;
-		weakSelf.detailTextLabel.text = [weakSelf.field fieldDescription];
-		[weakSelf setNeedsLayout];
+		@strongify(self);
+		self.field.value = self.numberInput.value;
+		self.detailTextLabel.text = [self.field fieldDescription];
+		[self setNeedsLayout];
 
-		if(weakSelf.field.action) {
-			weakSelf.field.action(weakSelf);
+		if(self.field.action) {
+			self.field.action(self);
 		}
 	};
 }

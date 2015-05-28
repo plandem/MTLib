@@ -3,7 +3,7 @@
 // Copyright (c) 2015 Melatonin LLC. All rights reserved.
 //
 
-#import <objc/runtime.h>
+#import <libextobjc/extobjc.h>
 #import "MTForm.h"
 #import "NSObject+MTSwizzle.h"
 
@@ -21,11 +21,12 @@ NSString *const MTFormFieldToolbarButton = @"toolbar.button";
 	MTFormToolbar *_toolbar = objc_getAssociatedObject(self, @selector(toolbar));
 
 	if (_toolbar == nil) {
-		__weak FXFormBaseCell *weakSelf = self;
-
 		_toolbar = [[MTFormToolbar alloc] initWithFrame:CGRectZero];
+
+		@weakify(self);
 		_toolbar.action = ^{
-			[weakSelf resignFirstResponder];
+			@strongify(self);
+			[self resignFirstResponder];
 		};
 
 		objc_setAssociatedObject(self, @selector(toolbar), _toolbar, OBJC_ASSOCIATION_RETAIN_NONATOMIC);

@@ -13,12 +13,19 @@
 typedef void (^MTDataProviderRefreshBlock)(MTDataProvider *dataProvider);
 typedef void (^MTDataProviderSaveBlock)(MTDataProvider *dataProvider);
 
+@protocol MTDataProviderCollection <NSFastEnumeration>
+@required
+@property (readonly) NSUInteger count;
+- (id)objectAtIndex:(NSUInteger)index;
+- (id)objectAtIndexedSubscript:(NSUInteger)index;
+@end
+
 @protocol MTDataProviderProtocol <NSObject>
 //NB: fetching can be implemented at background thread, so we can use this only after data fetched.
 @required
 -(void)deleteAtIndexPath:(NSIndexPath *)indexPath;
 -(id<MTDataObject>)modelAtIndexPath:(NSIndexPath *)indexPath;
--(id<NSFastEnumeration>)prepareModels;
+-(id<MTDataProviderCollection>)prepareModels;
 
 @optional
 -(void)moveFromIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath;
@@ -31,9 +38,10 @@ typedef void (^MTDataProviderSaveBlock)(MTDataProvider *dataProvider);
 @property (nonatomic, readonly) Class modelClass;
 @property (nonatomic, readonly) Class queryClass;
 @property (nonatomic, readonly) Class sortClass;
-@property (nonatomic, readonly) id<NSFastEnumeration> models;
+@property (nonatomic, readonly) id<MTDataProviderCollection> models;
 @property (nonatomic, copy) MTDataQuery *query;
 @property (nonatomic, copy) MTDataSort *sort;
+@property (nonatomic, assign) NSUInteger batchSize;
 @property (nonatomic, copy) MTDataProviderRefreshBlock refreshBlock;
 -(instancetype)initWithModelClass:(Class)modelClass;
 -(instancetype)createViewModel:(Class)className forIndexPath:(NSIndexPath *)indexPath;

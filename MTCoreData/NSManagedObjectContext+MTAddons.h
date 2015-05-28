@@ -5,14 +5,27 @@
 
 #import <CoreData/CoreData.h>
 
+typedef void(^MTCoreDataSaveCompleteBlock)(BOOL success);
+
 @interface NSManagedObjectContext (MTAddons)
 /**
-* Shorter more unified version of performBlock. if 'async' is NO, then performBlockAndWait is using.
+* Saves the context.
 */
-- (void)performBlock:(void (^)())block async:(BOOL)async;
+- (BOOL)save;
 
 /**
-* Save all changes at context of entity with respecting parentContext
+* Saves the context and all parent contexts asynchronously.
 */
-- (BOOL)save:(NSError **)error withRoot:(BOOL)withRoot;
+- (void)saveNestedAsynchronous;
+
+/**
+* Saves the context and all parent contexts asynchronously.
+* @param block callback for when save is complete
+*/
+- (void)saveNestedAsynchronousWithCallback:(MTCoreDataSaveCompleteBlock)block;
+
+/**
+* Saves the context and all parent contexts synchronously.
+*/
+- (BOOL)saveNested;
 @end

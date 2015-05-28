@@ -6,9 +6,4 @@
 #import "MTCoreDataObject.h"
 
 @implementation MTCoreDataObject
-+ (instancetype)createInContext:(NSManagedObjectContext *)context {
-	NSEntityDescription *entity = [NSEntityDescription entityForName:NSStringFromClass([self class]) inManagedObjectContext:context];
-
-	return (MTCoreDataObject *)[[NSManagedObject alloc] initWithEntity:entity insertIntoManagedObjectContext:context];
-}
 @end

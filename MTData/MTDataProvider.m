@@ -6,7 +6,7 @@
 #import "MTDataProvider.h"
 
 @interface MTDataProvider ()
-@property (nonatomic, strong) id<NSFastEnumeration> models;
+@property (nonatomic, strong) id<MTDataProviderCollection> models;
 @property (nonatomic, strong) Class modelClass;
 @end
 
@@ -14,7 +14,8 @@
 
 -(instancetype)initWithModelClass:(Class)modelClass {
 	if ((self = [super init])) {
-		self.modelClass = modelClass;
+		_modelClass = modelClass;
+		_batchSize = 0;
 		NSAssert([modelClass conformsToProtocol:@protocol(MTDataObject)], @"Class must conforms to protocol %@", NSStringFromProtocol(@protocol(MTDataObject)));
 	}
 
@@ -26,12 +27,12 @@
 	id viewModel = [className alloc];
 	NSAssert([viewModel respondsToSelector:@selector(initWithModel:)], @"You must implement the 'initWithModel:' selector for '%@'", NSStringFromClass(className));
 
-	id<MTDataObject> model;
+	id<MTDataObject>model;
 
 	if(indexPath) {
 		model = [self modelAtIndexPath:indexPath];
 	} else {
-		model = [[self.modelClass alloc] init];
+		model = (id<MTDataObject>)[[self.modelClass alloc] init];
 	}
 
 	viewModel = [viewModel performSelector:@selector(initWithModel:) withObject:model];
@@ -44,7 +45,7 @@
 	}
 }
 
--(id<NSFastEnumeration>)models {
+-(id<MTDataProviderCollection>)models {
 	[self prepare:NO];
 	return _models;
 }
