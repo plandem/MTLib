@@ -39,6 +39,11 @@
 	return viewModel;
 }
 
+-(id<MTDataObject>)modelAtIndexPath:(NSIndexPath *)indexPath {
+	id<MTDataProviderCollection>models = [self models];
+	return ((models && (indexPath.row < [models count])) ? models[(NSUInteger)indexPath.row] : nil);
+}
+
 -(void)prepare:(BOOL)forceUpdate {
 	if(forceUpdate || _models == nil) {
 		_models = [self prepareModels];
@@ -58,6 +63,7 @@
 	_query = (MTDataQuery *)[[[self queryClass] alloc] init];
 	_sort = (MTDataSort *)[[[self sortClass] alloc] init];
 	block(_query, _sort);
+	[self refresh];
 	return self;
 }
 
@@ -73,6 +79,7 @@
 	NSAssert([query isKindOfClass:self.queryClass], @"Query[%@] must be kind of [%@] class.", query.class, self.queryClass);
 	if(_query != query) {
 		_query = query;
+		[self refresh];
 	}
 }
 
@@ -80,6 +87,7 @@
 	NSAssert([sort isKindOfClass:self.sortClass], @"Sort[%@] must be kind of [%@] class.", sort.class, self.sortClass);
 	if(_sort != sort) {
 		_sort = sort;
+		[self refresh];
 	}
 }
 @end

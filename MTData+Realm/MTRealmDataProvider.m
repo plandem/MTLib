@@ -48,11 +48,6 @@
 	[_realm commitWriteTransaction];
 }
 
--(id<MTDataObject>)modelAtIndexPath:(NSIndexPath *)indexPath {
-	RLMResults *models = (RLMResults *)self.models;
-	return ((models && (indexPath.row < [models count])) ? models[(NSUInteger)indexPath.row] : nil);
-}
-
 -(id<MTDataProviderCollection>)prepareModels {
 	MTDataQuery *query = self.query;
 

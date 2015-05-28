@@ -13,7 +13,6 @@
 @interface MTCoreDataProvider () <NSFetchedResultsControllerDelegate>
 @property (nonatomic, strong) NSManagedObjectContext *context;
 @property (nonatomic, strong) MTCoreDataContextWatcher *watcher;
-@property (nonatomic, strong) NSFetchedResultsController *fetchController;
 @property (nonatomic, strong) NSFetchRequest *fetchRequest;
 @end
 
@@ -47,19 +46,6 @@
 	}];
 }
 
--(id<MTDataObject>)modelAtIndexPath:(NSIndexPath *)indexPath {
-	NSArray *models = (NSArray *)self.models;
-	return ((models && (indexPath.row < [models count])) ? models[(NSUInteger)indexPath.row] : nil);
-}
-
--(NSFetchedResultsController *)fetchController {
-	if(_fetchController == nil) {
-		_fetchController = [[NSFetchedResultsController alloc] initWithFetchRequest:[self fetchRequest] managedObjectContext:_context sectionNameKeyPath:nil cacheName:nil];
-	}
-
-	return _fetchController;
-}
-
 -(id<MTDataProviderCollection>)prepareModels {
 	[_watcher addEntityToWatch:self.modelClass withPredicate: self.query.predicate];
 	return [[MTCoreDataFetchResult alloc] initWithFetchRequest:[self fetchRequest] inContext:_context];
@@ -86,16 +72,6 @@
 		_fetchRequest = [NSFetchRequest fetchRequestWithEntity:self.modelClass context:_context];
 		MTCoreDataQuery *query = (MTCoreDataQuery *)self.query;
 
-//		[_fetchRequest setFetchLimit:_limit];
-//		[_fetchRequest setFetchOffset:_offset];
-//		[_fetchRequest setFetchBatchSize:_batchSize];
-//		[_fetchRequest setResultType: _resultType];
-//
-//		[_fetchRequest setIncludesPendingChanges:_includesPendingChanges];
-//		[_fetchRequest setIncludesPropertyValues:_includesPropertyValues];
-//		[_fetchRequest setShouldRefreshRefetchedObjects:_shouldRefreshRefetchedObjects];
-//		[_fetchRequest setReturnsObjectsAsFaults:_returnsObjectsAsFaults];
-
 		if(query.predicate) {
 			[_fetchRequest setPredicate:query.predicate];
 		}
@@ -105,12 +81,6 @@
 		}
 
 		[_fetchRequest setFetchLimit:self.batchSize];
-//		[_fetchRequest setReturnsObjectsAsFaults:YES];
-//		[_fetchRequest setShouldRefreshRefetchedObjects:YES];
-//		[_fetchRequest setIncludesPendingChanges:NO];
-//		[_fetchRequest setIncludesPropertyValues:NO];
-//		[_fetchRequest setReturnsDistinctResults:NO];
-//		[_fetchRequest setResultType:NSManagedObjectResultType];
 	}
 
 	return _fetchRequest;
@@ -133,12 +103,5 @@
 
 -(Class)queryClass {
 	return [MTCoreDataQuery class];
-}
-
-#pragma mark - NSFetchedResultsControllerDelegate
-- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
-	if([self refreshBlock]) {
-		[self refreshBlock](self);
-	}
 }
 @end
