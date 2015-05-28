@@ -5,5 +5,5 @@
 
 #import <Foundation/Foundation.h>
 
-@interface MTTransformerObject : NSValueTransformer
+@interface MTDataTransformer : NSValueTransformer
 @end

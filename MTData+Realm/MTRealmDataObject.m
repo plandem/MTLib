@@ -3,8 +3,8 @@
 // Copyright (c) 2015 Melatonin LLC. All rights reserved.
 //
 
-#import "MTRealmDataObject.h"
 #import <objc/runtime.h>
+#import "MTRealmDataObject.h"
 
 @implementation MTRealmDataObject
 

@@ -3,7 +3,6 @@
 // Copyright (c) 2015 Melatonin LLC. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
 #import "MTDataSort.h"
 
 @interface MTRealmDataSort : MTDataSort

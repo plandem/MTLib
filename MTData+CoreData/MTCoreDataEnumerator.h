@@ -3,7 +3,6 @@
 // Copyright (c) 2015 Melatonin LLC. All rights reserved.
 //
 
-#import <CoreData/CoreData.h>
 #import "MTCoreDataProvider.h"
 
 @interface MTCoreDataFetchResult : NSObject <MTDataProviderCollection>

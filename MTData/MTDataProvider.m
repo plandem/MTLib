@@ -22,7 +22,7 @@
 	return self;
 }
 
-// creates and return ViewModel for model
+// creates and return ViewModel for model at thread. if no thread is provided
 -(instancetype)createViewModel:(Class)className forIndexPath:(NSIndexPath *)indexPath {
 	id viewModel = [className alloc];
 	NSAssert([viewModel respondsToSelector:@selector(initWithModel:)], @"You must implement the 'initWithModel:' selector for '%@'", NSStringFromClass(className));
@@ -35,8 +35,7 @@
 		model = (id<MTDataObject>)[[self.modelClass alloc] init];
 	}
 
-	viewModel = [viewModel performSelector:@selector(initWithModel:) withObject:model];
-	return viewModel;
+	return [viewModel performSelector:@selector(initWithModel:) withObject:model];
 }
 
 -(id<MTDataObject>)modelAtIndexPath:(NSIndexPath *)indexPath {

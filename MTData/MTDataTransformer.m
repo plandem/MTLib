@@ -3,9 +3,9 @@
 // Copyright (c) 2015 Melatonin LLC. All rights reserved.
 //
 
-#import "MTTransformerObject.h"
+#import "MTDataTransformer.h"
 
-@implementation MTTransformerObject
+@implementation MTDataTransformer
 
 + (Class)transformedValueClass {
 	return [NSData class];

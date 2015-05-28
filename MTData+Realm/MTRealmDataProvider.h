@@ -3,7 +3,6 @@
 // Copyright (c) 2015 Melatonin LLC. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
 #import "MTDataProvider.h"
 
 @interface MTRealmDataProvider: MTDataProvider
