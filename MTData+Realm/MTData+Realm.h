@@ -1,4 +1,6 @@
 #import "MTData.h"
 #import "MTRealmDataObject.h"
 #import "MTRealmDataSort.h"
+#import "MTRealmDataQuery.h"
+#import "MTRealmDataRepository.h"
 #import "MTRealmDataProvider.h"

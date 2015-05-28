@@ -5,27 +5,32 @@
 
 #import <Foundation/Foundation.h>
 @class MTDataQuery;
+@class MTDataSort;
 
 typedef void (^MTDataQueryBlock)(MTDataQuery *subQuery);
 
 @interface MTDataQuery: NSObject
-//result info
 @property (nonatomic, readonly) NSPredicate *predicate;
+@property (nonatomic, readonly) MTDataSort *sort;
+@property (nonatomic, readonly) NSUInteger batchSize;
 
 //chaining methods
-@property (readonly) MTDataQuery *(^condition)(id condition, ...);
-@property (readonly) MTDataQuery *(^notCondition)(id condition, ...);
-@property (readonly) MTDataQuery *(^between)(NSString *attribute, id from, id to);
-@property (readonly) MTDataQuery *(^notBetween)(NSString *attribute, id from, id to);
-@property (readonly) MTDataQuery *(^in)(NSString *attribute, NSArray *array);
-@property (readonly) MTDataQuery *(^notIn)(NSString *attribute, NSArray *array);
-@property (readonly) MTDataQuery *(^beginsWith)(NSString *attribute, NSString *string);
-@property (readonly) MTDataQuery *(^notBeginsWith)(NSString *attribute, NSString *string);
-@property (readonly) MTDataQuery *(^endsWith)(NSString *attribute, NSString *string);
-@property (readonly) MTDataQuery *(^notEndsWith)(NSString *attribute, NSString *string);
-@property (readonly) MTDataQuery *(^contains)(NSString *attribute, NSString *string);
-@property (readonly) MTDataQuery *(^notContains)(NSString *attribute, NSString *string);
-@property (readonly) MTDataQuery *(^not)(MTDataQueryBlock block);
-@property (readonly) MTDataQuery *(^and)(MTDataQueryBlock block);
-@property (readonly) MTDataQuery *(^or)(MTDataQueryBlock block);
+@property (nonatomic, readonly) MTDataQuery *(^condition)(id condition, ...);
+@property (nonatomic, readonly) MTDataQuery *(^notCondition)(id condition, ...);
+@property (nonatomic, readonly) MTDataQuery *(^between)(NSString *attribute, id from, id to);
+@property (nonatomic, readonly) MTDataQuery *(^notBetween)(NSString *attribute, id from, id to);
+@property (nonatomic, readonly) MTDataQuery *(^in)(NSString *attribute, NSArray *array);
+@property (nonatomic, readonly) MTDataQuery *(^notIn)(NSString *attribute, NSArray *array);
+@property (nonatomic, readonly) MTDataQuery *(^beginsWith)(NSString *attribute, NSString *string);
+@property (nonatomic, readonly) MTDataQuery *(^notBeginsWith)(NSString *attribute, NSString *string);
+@property (nonatomic, readonly) MTDataQuery *(^endsWith)(NSString *attribute, NSString *string);
+@property (nonatomic, readonly) MTDataQuery *(^notEndsWith)(NSString *attribute, NSString *string);
+@property (nonatomic, readonly) MTDataQuery *(^contains)(NSString *attribute, NSString *string);
+@property (nonatomic, readonly) MTDataQuery *(^notContains)(NSString *attribute, NSString *string);
+@property (nonatomic, readonly) MTDataQuery *(^not)(MTDataQueryBlock block);
+@property (nonatomic, readonly) MTDataQuery *(^and)(MTDataQueryBlock block);
+@property (nonatomic, readonly) MTDataQuery *(^or)(MTDataQueryBlock block);
+@property (nonatomic, readonly) MTDataQuery *(^limit)(NSUInteger limit);
+
++(Class)sortClass;
 @end

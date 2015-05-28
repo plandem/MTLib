@@ -7,7 +7,7 @@
 
 typedef void (^MTCoreDataContextWatcherChangesCallback)(NSDictionary *changes, NSManagedObjectContext *context);
 
-@interface MTCoreDataContextWatcher : NSObject
+@interface MTCoreDataWatcher : NSObject
 @property (nonatomic, readonly) NSPredicate *predicateToWatch;
 @property (nonatomic, copy) MTCoreDataContextWatcherChangesCallback changesCallback;
 

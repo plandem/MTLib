@@ -4,16 +4,16 @@
 //
 
 #import <objc/runtime.h>
-#import "MTCoreDataContextWatcher.h"
+#import "MTCoreDataWatcher.h"
 #import "MTLogger.h"
 
-@interface MTCoreDataContextWatcher ()
+@interface MTCoreDataWatcher ()
 @property(nonatomic, strong) NSPredicate *predicateToWatch;
 @property(nonatomic, strong) NSManagedObjectContext *contextToWatch;
 @property(nonatomic, strong) NSPersistentStoreCoordinator *persistentStoreCoordinatorToWatch;
 @end
 
-@implementation MTCoreDataContextWatcher
+@implementation MTCoreDataWatcher
 
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)contextToWatch {
 	if ((self = [super init])) {

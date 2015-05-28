@@ -6,7 +6,5 @@
 #import "MTDataProvider.h"
 
 @interface MTRealmDataProvider: MTDataProvider
-@property (nonatomic, readonly) NSString *realmPath;
-@property (nonatomic, readonly) NSString *realmName;
 -(instancetype)initWithModelClass:(Class)modelClass withRealm:(NSString *)realmName;
 @end

@@ -3,9 +3,10 @@
 // Copyright (c) 2015 Melatonin LLC. All rights reserved.
 //
 
-#import "MTCoreDataProvider.h"
+#import <CoreData/CoreData.h>
+#import "MTDataObjectCollection.h"
 
-@interface MTCoreDataFetchResult : NSObject <MTDataProviderCollection>
+@interface MTCoreDataFetchResult : NSObject <MTDataObjectCollection>
 @property (readonly) NSUInteger count;
 
 - (instancetype)initWithFetchRequest:(NSFetchRequest *)fetchRequest inContext:(NSManagedObjectContext *)context;

@@ -3,7 +3,7 @@
 // Copyright (c) 2015 Melatonin LLC. All rights reserved.
 //
 
-#import "MTCoreDataEnumerator.h"
+#import "MTCoreDataFetchResult.h"
 #import "MTLogger.h"
 
 @interface MTCoreDataFetchResultEnumerator : NSEnumerator {

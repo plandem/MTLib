@@ -4,19 +4,17 @@
 //
 
 #import "MTDataProvider.h"
+#import "MTDataRepository.h"
 
 @interface MTDataProvider ()
-@property (nonatomic, strong) id<MTDataProviderCollection> models;
-@property (nonatomic, strong) Class modelClass;
+@property (nonatomic, strong) id<MTDataObjectCollection> models;
 @end
 
 @implementation MTDataProvider
 
 -(instancetype)initWithModelClass:(Class)modelClass {
-	if ((self = [super init])) {
-		_modelClass = modelClass;
-		_batchSize = 0;
-		NSAssert([modelClass conformsToProtocol:@protocol(MTDataObject)], @"Class must conforms to protocol %@", NSStringFromProtocol(@protocol(MTDataObject)));
+	if ((self = [self init])) {
+		_repository = [(MTDataRepository *)[[[self class] repositoryClass] alloc] initWithModelClass:modelClass];
 	}
 
 	return self;
@@ -32,24 +30,37 @@
 	if(indexPath) {
 		model = [self modelAtIndexPath:indexPath];
 	} else {
-		model = (id<MTDataObject>)[[self.modelClass alloc] init];
+		model = [_repository createModel];
 	}
 
 	return [viewModel performSelector:@selector(initWithModel:) withObject:model];
 }
 
 -(id<MTDataObject>)modelAtIndexPath:(NSIndexPath *)indexPath {
-	id<MTDataProviderCollection>models = [self models];
+	id<MTDataObjectCollection>models = [self models];
 	return ((models && (indexPath.row < [models count])) ? models[(NSUInteger)indexPath.row] : nil);
+}
+
+-(void)deleteAtIndexPath:(NSIndexPath *)indexPath {
+	id<MTDataObject>model = [self modelAtIndexPath:indexPath];
+	[_repository deleteModel:model];
+}
+
+-(void)moveFromIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
+	if(_moveBlock) {
+		id<MTDataObject>fromModel = [self modelAtIndexPath:fromIndexPath];
+		id<MTDataObject>toModel = [self modelAtIndexPath:toIndexPath];
+		_moveBlock(self, fromModel, toModel);
+	}
 }
 
 -(void)prepare:(BOOL)forceUpdate {
 	if(forceUpdate || _models == nil) {
-		_models = [self prepareModels];
+		_models = [_repository fetchAllWithQuery:_query];
 	}
 }
 
--(id<MTDataProviderCollection>)models {
+-(id<MTDataObjectCollection>)models {
 	[self prepare:NO];
 	return _models;
 }
@@ -59,34 +70,33 @@
 }
 
 -(MTDataProvider *)makeQuery:(void(^)(MTDataQuery *query, MTDataSort *sort))block {
-	_query = (MTDataQuery *)[[[self queryClass] alloc] init];
-	_sort = (MTDataSort *)[[[self sortClass] alloc] init];
-	block(_query, _sort);
+	_query = (MTDataQuery *)[[[[[self repository] class] queryClass] alloc] init];
+	block(_query, _query.sort);
 	[self refresh];
 	return self;
 }
 
--(Class)sortClass {
-	return [MTDataSort class];
-}
-
--(Class)queryClass {
-	return [MTDataQuery class];
-}
-
 -(void)setQuery:(MTDataQuery *)query {
-	NSAssert([query isKindOfClass:self.queryClass], @"Query[%@] must be kind of [%@] class.", query.class, self.queryClass);
+	Class queryClass = [[[self class] repositoryClass] queryClass];
+
+	NSAssert([query isKindOfClass:queryClass], @"Query[%@] must be kind of [%@] class.", query.class, queryClass);
 	if(_query != query) {
 		_query = query;
 		[self refresh];
 	}
 }
 
--(void)setSort:(MTDataSort *)sort {
-	NSAssert([sort isKindOfClass:self.sortClass], @"Sort[%@] must be kind of [%@] class.", sort.class, self.sortClass);
-	if(_sort != sort) {
-		_sort = sort;
+-(void)setRepository:(MTDataRepository *)repository {
+	Class repositoryClass = [[self class] repositoryClass];
+
+	NSAssert([repository isKindOfClass:repositoryClass], @"Repository[%@] must be kind of [%@] class.", repository.class, repositoryClass);
+	if(_repository != repository) {
+		_repository = repository;
 		[self refresh];
 	}
+}
+
++(Class)repositoryClass {
+	return [MTDataRepository class];
 }
 @end

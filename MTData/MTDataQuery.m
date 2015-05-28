@@ -5,9 +5,12 @@
 
 #import <libextobjc/extobjc.h>
 #import "MTDataQuery.h"
+#import "MTDataSort.h"
 
 @interface MTDataQuery()
 @property(nonatomic, strong) NSPredicate *predicate;
+@property(nonatomic, strong) MTDataSort *sort;
+@property(nonatomic, assign) NSUInteger batchSize;
 @property(nonatomic, assign) NSCompoundPredicateType operator;
 @end
 
@@ -16,6 +19,7 @@
 -(instancetype)init {
 	if((self = [super init])) {
 		_operator = NSAndPredicateType;
+		_batchSize = 0;
 	}
 
 	return self;
@@ -239,5 +243,26 @@
 		[self processSubQueryBlock:block operator:NSNotPredicateType];
 		return self;
 	};
+}
+
+-(MTDataQuery *(^)(NSUInteger limit))limit {
+	@weakify(self);;
+	return ^MTDataQuery *(NSUInteger limit) {
+		@strongify(self);
+		self.batchSize = limit;
+		return self;
+	};
+}
+
++(Class)sortClass {
+	return [MTDataSort class];
+}
+
+-(MTDataSort *)sort {
+	if(_sort == nil) {
+		_sort = (MTDataSort *)[[[[self class] sortClass] alloc] init];
+	}
+
+	return _sort;
 }
 @end

@@ -3,51 +3,33 @@
 // Copyright (c) 2015 Melatonin LLC. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
 #import "MTDataQuery.h"
-#import "MTDataSort.h"
 #import "MTDataObject.h"
+#import "MTDataObjectCollection.h"
 
 @class MTDataProvider;
+@class MTDataRepository;
 
 typedef void (^MTDataProviderRefreshBlock)(MTDataProvider *dataProvider);
-typedef void (^MTDataProviderSaveBlock)(MTDataProvider *dataProvider);
+typedef void (^MTDataProviderMoveBlock)(MTDataProvider *dataProvider, id<MTDataObject>fromModel, id<MTDataObject>toModel);
 
-@protocol MTDataProviderCollection <NSFastEnumeration>
-@required
-@property (readonly) NSUInteger count;
-- (id)objectAtIndex:(NSUInteger)index;
-- (id)objectAtIndexedSubscript:(NSUInteger)index;
-@end
-
-@protocol MTDataProviderProtocol <NSObject>
-//NB: fetching can be implemented at background thread, so we can use this only after data fetched.
-@required
--(void)deleteAtIndexPath:(NSIndexPath *)indexPath;
--(id<MTDataObject>)modelAtIndexPath:(NSIndexPath *)indexPath;
--(id<MTDataProviderCollection>)prepareModels;
-
-@optional
--(void)moveFromIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath;
--(id<MTDataObject>)createModel;
--(void)saveModel:(id<MTDataObject>)model;
--(void)withTransaction:(MTDataProviderSaveBlock)saveBlock;
-@end
-
-@interface MTDataProvider : NSObject <MTDataProviderProtocol>
-@property (nonatomic, readonly) Class modelClass;
-@property (nonatomic, readonly) Class queryClass;
-@property (nonatomic, readonly) Class sortClass;
-@property (nonatomic, readonly) id<MTDataProviderCollection> models;
+@interface MTDataProvider : NSObject
+@property (nonatomic, strong) MTDataRepository *repository;
+@property (nonatomic, readonly) id<MTDataObjectCollection> models;
 @property (nonatomic, copy) MTDataQuery *query;
-@property (nonatomic, copy) MTDataSort *sort;
-@property (nonatomic, assign) NSUInteger batchSize;
 @property (nonatomic, copy) MTDataProviderRefreshBlock refreshBlock;
+@property (nonatomic, copy) MTDataProviderMoveBlock moveBlock;
+
++(Class)repositoryClass;
+
 -(instancetype)initWithModelClass:(Class)modelClass;
 -(instancetype)createViewModel:(Class)className forIndexPath:(NSIndexPath *)indexPath;
 -(void)refresh;
 -(void)prepare:(BOOL)forceUpdate;
 
-//wrapper for chaining
+-(void)deleteAtIndexPath:(NSIndexPath *)indexPath;
+-(id<MTDataObject>)modelAtIndexPath:(NSIndexPath *)indexPath;
+-(void)moveFromIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath;
+
 -(MTDataProvider *)makeQuery:(void(^)(MTDataQuery *query, MTDataSort *sort))block;
 @end

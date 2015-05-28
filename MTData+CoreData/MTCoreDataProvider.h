@@ -7,7 +7,5 @@
 #import "MTDataProvider.h"
 
 @interface MTCoreDataProvider : MTDataProvider
-@property(nonatomic, readonly) NSManagedObjectContext *context;
-
 - (instancetype)initWithModelClass:(Class)modelClass withContext:(NSManagedObjectContext *)context;
 @end
