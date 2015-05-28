@@ -4,7 +4,6 @@
 //
 
 #import "MTDataObject.h"
-#import "MTDataObjectCollection.h"
 #import "MTDataQuery.h"
 
 @class MTDataRepository;

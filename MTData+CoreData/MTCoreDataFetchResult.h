@@ -4,7 +4,7 @@
 //
 
 #import <CoreData/CoreData.h>
-#import "MTDataObjectCollection.h"
+#import "MTDataObject.h"
 
 @interface MTCoreDataFetchResult : NSObject <MTDataObjectCollection>
 @property (readonly) NSUInteger count;

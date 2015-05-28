@@ -7,3 +7,10 @@
 
 @protocol MTDataObject <NSObject>
 @end
+
+@protocol MTDataObjectCollection <NSFastEnumeration>
+@required
+@property (readonly) NSUInteger count;
+- (id)objectAtIndex:(NSUInteger)index;
+- (id)objectAtIndexedSubscript:(NSUInteger)index;
+@end
