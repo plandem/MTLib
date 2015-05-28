@@ -37,8 +37,8 @@
 }
 
 -(void)prepare:(BOOL)forceUpdate {
-	//TODO: test for spam of 'addEntityToWatch' at watcher
-	[_watcher addEntityToWatch:self.repository.modelClass withPredicate: self.query.predicate];
+	[_watcher reset];
+	[_watcher addEntityToWatch:self.repository.modelClass withPredicate:self.query.predicate];
 	[super prepare:forceUpdate];
 }
 

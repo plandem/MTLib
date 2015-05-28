@@ -178,4 +178,8 @@
 	return YES;
 }
 
+-(NSString *)description {
+	return [NSString stringWithFormat:@"%@ (Total = %d)", [super description], [self count]];
+}
+
 @end
