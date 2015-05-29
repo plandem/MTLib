@@ -10,7 +10,7 @@
 @class MTDataRepository;
 
 typedef void (^MTDataProviderRefreshBlock)(MTDataProvider *dataProvider);
-typedef void (^MTDataProviderMoveBlock)(MTDataProvider *dataProvider, id<MTDataObject>fromModel, id<MTDataObject>toModel);
+typedef void (^MTDataProviderMoveBlock)(MTDataProvider *dataProvider, NSIndexPath *fromIndexPath, id<MTDataObject>fromModel, NSIndexPath *toIndexPath, id<MTDataObject>toModel);
 
 @interface MTDataProvider : NSObject
 @property (nonatomic, strong) MTDataRepository *repository;

@@ -131,15 +131,32 @@
     // Refresh stackBuf with objects
     if (countOfItemsAlreadyEnumerated < [self count]) {
 		if([self fetchChunkForIndex:countOfItemsAlreadyEnumerated]) {
-			//TODO: replace malloc with using stackBuf array and internal pointer inside of current chunk
-			state->itemsPtr = (__typeof__(state->itemsPtr))malloc(sizeof(id *) * [_currentChunk count]);
-			[_currentChunk getObjects:state->itemsPtr];
-			count = [_currentChunk count];
-			countOfItemsAlreadyEnumerated = _fetchRequest.fetchLimit * _fetchRequest.fetchOffset + [_currentChunk count];
+			// release memory from previous iteration
+			if(state->itemsPtr) {
+				free(state->itemsPtr);
+				state->itemsPtr = nil;
+			}
+
+			if((count = [_currentChunk count])) {
+				//alloc memory with same size as chunk
+				state->itemsPtr = (__typeof__(state->itemsPtr)) malloc(sizeof(id*) * count);
+
+				//copy objects into the C-array
+				[_currentChunk getObjects:state->itemsPtr];
+			}
+
+			countOfItemsAlreadyEnumerated = _fetchRequest.fetchLimit * _fetchRequest.fetchOffset + count;
 		}
     }
 
 	state->state = countOfItemsAlreadyEnumerated;
+
+	// if there is no more items to iterate, then we must release memory from previous iteration.
+	if(count == 0 && state->itemsPtr) {
+		free(state->itemsPtr);
+		state->itemsPtr = nil;
+	}
+
 	return count;
 }
 
@@ -150,6 +167,10 @@
 
 	// no limit for fetching?
 	if(!limit) {
+		if(_currentChunk) {
+			return YES;
+		}
+
 		_currentChunk = [_context executeFetchRequest:_fetchRequest error:&error];
 	} else {
 		NSUInteger minIndex = _fetchRequest.fetchOffset;

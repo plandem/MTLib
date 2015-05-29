@@ -50,7 +50,7 @@
 	if(_moveBlock) {
 		id<MTDataObject>fromModel = [self modelAtIndexPath:fromIndexPath];
 		id<MTDataObject>toModel = [self modelAtIndexPath:toIndexPath];
-		_moveBlock(self, fromModel, toModel);
+		_moveBlock(self, fromIndexPath, fromModel, toIndexPath, toModel);
 	}
 }
 
