@@ -4,7 +4,7 @@
 //
 
 #import "MTForm.h"
-#import "NSObject+MTSwizzle.h"
+#import "NSObject+Swizzle.h"
 
 @implementation FXFormDefaultCell (MTForm)
 + (void)load {

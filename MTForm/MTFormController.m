@@ -4,7 +4,7 @@
 //
 
 #import "MTForm.h"
-#import "UILabel+MTAddons.h"
+#import "UILabel+EdgeInsets.h"
 
 @implementation MTFormController
 

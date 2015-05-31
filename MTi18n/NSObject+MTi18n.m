@@ -5,7 +5,7 @@
 
 #import <objc/runtime.h>
 #import "NSObject+MTi18n.h"
-#import "NSObject+MTSwizzle.h"
+#import "NSObject+Swizzle.h"
 
 @implementation NSObject (MTi18n)
 @dynamic i18nAuto;

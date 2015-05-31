@@ -7,7 +7,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSObject (MTSwizzle)
+@interface NSObject (Swizzle)
 +(void)swizzleInstanceSelector:(SEL)originalSelector withNewSelector:(SEL)newSelector;
 +(void)swizzleClassSelector:(SEL)originalSelector withNewSelector:(SEL)newSelector;
 @end

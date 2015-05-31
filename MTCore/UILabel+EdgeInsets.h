@@ -5,9 +5,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UILabel (MTAddons)
+@interface UILabel (EdgeInsets)
 @property (nonatomic, assign) IBInspectable UIEdgeInsets edgeInsets;
 - (void)swizzle_drawTextInRect:(CGRect)rect;
 - (CGRect)swizzle_textRectForBounds:(CGRect)bounds limitedToNumberOfLines:(NSInteger)numberOfLines;
-
 @end

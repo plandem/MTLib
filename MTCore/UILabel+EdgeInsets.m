@@ -4,9 +4,9 @@
 //
 
 #import <objc/runtime.h>
-#import "UILabel+MTAddons.h"
+#import "UILabel+EdgeInsets.h"
 
-@implementation UILabel (MTAddons)
+@implementation UILabel (EdgeInsets)
 
 -(UIEdgeInsets)edgeInsets {
 	NSValue *edgeValue = (NSValue *)objc_getAssociatedObject(self, @selector(edgeInsets));

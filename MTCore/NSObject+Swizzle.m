@@ -4,9 +4,9 @@
 //
 
 #import <objc/runtime.h>
-#import "NSObject+MTSwizzle.h"
+#import "NSObject+Swizzle.h"
 
-@implementation NSObject (MTSwizzle)
+@implementation NSObject (Swizzle)
 
 +(void) swizzleInstanceSelector:(SEL)originalSelector withNewSelector:(SEL)newSelector {
 /*	Class cls = self;

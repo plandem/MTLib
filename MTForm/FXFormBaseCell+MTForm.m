@@ -5,7 +5,7 @@
 
 #import <libextobjc/extobjc.h>
 #import "MTForm.h"
-#import "NSObject+MTSwizzle.h"
+#import "NSObject+Swizzle.h"
 
 NSString *const MTFormFieldToolbarTitle = @"toolbar.title";
 NSString *const MTFormFieldToolbarButton = @"toolbar.button";
