@@ -13,6 +13,10 @@ typedef NS_OPTIONS(NSUInteger, MTCoreDataProviderOptions) {
 };
 
 @interface MTCoreDataProvider : MTDataProvider
+@property(nonatomic, assign) MTCoreDataProviderOptions options;
+
 - (instancetype)initWithModelClass:(Class)modelClass withContext:(NSManagedObjectContext *)context;
 - (instancetype)initWithModelClass:(Class)modelClass withContext:(NSManagedObjectContext *)context options:(MTCoreDataProviderOptions)options;
+
+- (void)setOptions:(MTCoreDataProviderOptions)options withWatchObject:(id)object;
 @end

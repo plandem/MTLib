@@ -40,28 +40,29 @@
 	NSFetchRequest *_fetchRequest;
 	NSManagedObjectContext *_context;
 	NSArray *_currentChunk;
+	NSUInteger _totalRows;
 }
 
 - (instancetype)initWithFetchRequest:(NSFetchRequest *)fetchRequest inContext:(NSManagedObjectContext *)context {
 	if ((self = [super init])) {
 		_fetchRequest = fetchRequest;
 		_context = context;
+		_totalRows = NSUIntegerMax;
 	}
 
 	return self;
 }
 
 - (NSUInteger)count {
-	static NSUInteger total = 0;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		NSError *error = nil;
+	if(_totalRows == NSUIntegerMax) {
+		__block NSError *error = nil;
 
-		NSUInteger limit = [_fetchRequest fetchLimit];
-
-		[_fetchRequest setFetchLimit:0];
-		total = [_context countForFetchRequest:_fetchRequest error:&error];
-		[_fetchRequest setFetchLimit:limit];
+		[_context performBlockAndWait:^{
+			NSUInteger limit = [_fetchRequest fetchLimit];
+			[_fetchRequest setFetchLimit:0];
+			_totalRows = [_context countForFetchRequest:_fetchRequest error:&error];
+			[_fetchRequest setFetchLimit:limit];
+		}];
 
 		if(error) {
 			DDLogDebug(@"NSManagedObjectContext Error: %@", [error userInfo]);
@@ -71,9 +72,9 @@
 				DDLogDebug(@"Error %i: %@", [err code], [err userInfo]);
 			}
 		}
-	});
+	}
 
-	return total;
+	return _totalRows;
 }
 
 - (id)objectAtIndex:(NSUInteger)index {
@@ -145,7 +146,7 @@
 				[_currentChunk getObjects:state->itemsPtr];
 			}
 
-			countOfItemsAlreadyEnumerated = _fetchRequest.fetchLimit * _fetchRequest.fetchOffset + count;
+			countOfItemsAlreadyEnumerated += count;
 		}
     }
 
@@ -161,8 +162,7 @@
 }
 
 -(BOOL)fetchChunkForIndex:(NSUInteger)index {
-	NSError *error = nil;
-
+	__block NSError *error = nil;
 	NSUInteger limit = [_fetchRequest fetchLimit];
 
 	// no limit for fetching?
@@ -171,7 +171,9 @@
 			return YES;
 		}
 
-		_currentChunk = [_context executeFetchRequest:_fetchRequest error:&error];
+		[_context performBlockAndWait:^{
+			_currentChunk = [_context executeFetchRequest:_fetchRequest error:&error];
+		}];
 	} else {
 		NSUInteger minIndex = _fetchRequest.fetchOffset;
 
@@ -180,9 +182,11 @@
 			return YES;
 		}
 
-		// looks like index outside of current chunk, let's fetch new chunk
+		// looks like index outside of current chunk, let's fetch a new chunk
 		[_fetchRequest setFetchOffset:index];
-		_currentChunk = [_context executeFetchRequest:_fetchRequest error:&error];
+		[_context performBlockAndWait:^{
+			_currentChunk = [_context executeFetchRequest:_fetchRequest error:&error];
+		}];
 	}
 
 	if(error) {

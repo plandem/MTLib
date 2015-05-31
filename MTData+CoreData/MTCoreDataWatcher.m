@@ -85,20 +85,17 @@
 	NSManagedObjectContext *incomingContext = [notification object];
 	NSPersistentStoreCoordinator *incomingCoordinator = [incomingContext persistentStoreCoordinator];
 
-	DDLogDebug(@"i/w context = %@/%@", incomingContext, _contextToWatch);
-	// differ context or differ store?
+	// differ context / differ store?
 	if ((_contextToWatch && incomingContext != _contextToWatch) || (_persistentStoreCoordinatorToWatch && incomingCoordinator != _persistentStoreCoordinatorToWatch)) {
 		return;
 	}
 
 	// no any predicate to filter updated objects?
 	if (_predicateToWatch == nil) {
-		DDLogDebug(@"watcher - without condition");
 		_changesCallback([notification userInfo], incomingContext);
 		return;
 	}
 
-	DDLogDebug(@"watcher - use condition");
 	NSMutableSet *inserted = [[notification userInfo][NSInsertedObjectsKey] mutableCopy];
 	NSMutableSet *deleted = [[notification userInfo][NSDeletedObjectsKey] mutableCopy];
 	NSMutableSet *updated = [[notification userInfo][NSUpdatedObjectsKey] mutableCopy];

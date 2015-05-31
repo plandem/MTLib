@@ -11,7 +11,7 @@
 
 @implementation MTCoreDataProvider {
 	MTCoreDataWatcher *_watcher;
-	MTCoreDataProviderOptions _options;
+	NSPredicate *_previousPredicate;
 }
 
 -(instancetype)initWithModelClass:(Class)modelClass {
@@ -19,50 +19,65 @@
 }
 
 -(instancetype)initWithModelClass:(Class)modelClass withContext:(NSManagedObjectContext *)context {
-	return [self initWithModelClass:modelClass withContext:context options:MTCoreDataProviderOptionWatchStore];
+	return [self initWithModelClass:modelClass withContext:context options:MTCoreDataProviderOptionWatchContext];
 }
 
 - (instancetype)initWithModelClass:(Class)modelClass withContext:(NSManagedObjectContext *)context options:(MTCoreDataProviderOptions)options {
-	if((self = [super initWithModelClass:modelClass])) {
-		_options = options;
-
+	if((self = [self init])) {
 		self.repository = [(MTCoreDataRepository *)[[[self class] repositoryClass] alloc] initWithModelClass:modelClass withContext:context];
+		self.options = options;
 	}
 
 	return self;
 }
 
--(void)setRepository:(MTDataRepository *)repository {
-	[super setRepository:repository];
-
-	if(self.repository) {
-		if (_options & MTCoreDataProviderOptionWatchStore) {
-			_watcher = [[MTCoreDataWatcher alloc] initWithPersistentStoreCoordinator:((MTCoreDataRepository *)self.repository).context.persistentStoreCoordinator];
-		} else if (_options & MTCoreDataProviderOptionWatchContext) {
-			_watcher = [[MTCoreDataWatcher alloc] initWithManagedObjectContext:((MTCoreDataRepository *)self.repository).context];
-		} else {
-			_watcher = nil;
-		}
-
-		if (_watcher) {
-			@weakify(self);
-			_watcher.changesCallback = ^(NSDictionary *changes, NSManagedObjectContext *ctx) {
-				@strongify(self);
-				if ([self refreshBlock]) {
-					[self refreshBlock](self);
-				}
-			};
-		}
-	}
-}
-
 -(void)prepare:(BOOL)forceUpdate {
-	if(_watcher) {
+	if(_watcher && (_watcher.predicateToWatch == nil || _previousPredicate != self.query.predicate)) {
+		_previousPredicate = ((self.query) ? self.query.predicate : nil);
 		[_watcher reset];
-		[_watcher addEntityToWatch:self.repository.modelClass withPredicate:self.query.predicate];
+		[_watcher addEntityToWatch:self.repository.modelClass withPredicate:_previousPredicate];
 	}
 
 	[super prepare:forceUpdate];
+}
+
+- (void)setOptions:(MTCoreDataProviderOptions)options {
+	id watchObject = nil;
+
+	if(self.repository) {
+		if (options & MTCoreDataProviderOptionWatchStore) {
+			watchObject = ((MTCoreDataRepository *) self.repository).context.persistentStoreCoordinator;
+		} else if (options & MTCoreDataProviderOptionWatchContext) {
+			watchObject = ((MTCoreDataRepository *) self.repository).context;
+		}
+	}
+
+	[self setOptions:options withWatchObject:watchObject];
+}
+
+- (void)setOptions:(MTCoreDataProviderOptions)options withWatchObject:(id)object {
+	_options = options;
+	_watcher = nil;
+
+	if (_options & MTCoreDataProviderOptionWatchStore) {
+		NSAssert(object && [object isKindOfClass:[NSPersistentStoreCoordinator class]], @"%@ is not %@ class.", NSStringFromClass([object class]), NSStringFromClass([NSPersistentStoreCoordinator class]));
+		_watcher = [[MTCoreDataWatcher alloc] initWithPersistentStoreCoordinator:object];
+	} else if (_options & MTCoreDataProviderOptionWatchContext) {
+		NSAssert(object && [object isKindOfClass:[NSManagedObjectContext class]], @"%@ is not %@ class.", NSStringFromClass([object class]), NSStringFromClass([NSManagedObjectContext class]));
+		_watcher = [[MTCoreDataWatcher alloc] initWithManagedObjectContext:object];
+	}
+
+	if (_watcher) {
+		_previousPredicate = nil;
+
+		@weakify(self);
+		_watcher.changesCallback = ^(NSDictionary *changes, NSManagedObjectContext *ctx) {
+			@strongify(self);
+				if ([self refreshBlock]) {
+					[self refreshBlock](self);
+			}
+		};
+	}
 }
 
 +(Class)repositoryClass {

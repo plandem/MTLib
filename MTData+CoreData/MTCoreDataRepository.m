@@ -57,14 +57,20 @@
 -(void)withTransaction:(MTDataRepositoryTransactionBlock)transaction {
 	_context.undoEnabled = YES;
 	NSAssert(_context.isUndoEnabled, @"Transaction is not supported.");
+
 	@try {
 		[_context.undoManager beginUndoGrouping];
-		transaction(self);
+		[_context performBlockAndWait:^{
+			transaction(self);
+		}];
 		[_context.undoManager endUndoGrouping];
+		[_context saveNested];
 	} @catch(NSException *e) {
 		[_context.undoManager endUndoGrouping];
 		[_context.undoManager undo];
 	}
+
+	_context.undoEnabled = NO;
 }
 
 -(void)deleteAllWithQuery:(MTDataQuery *)query {

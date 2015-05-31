@@ -19,7 +19,7 @@
 }
 
 -(instancetype)initWithModelClass:(Class)modelClass withRealm:(NSString *)realmName {
-	if((self = [super initWithModelClass:modelClass])) {
+	if((self = [self init])) {
 		self.repository = [(MTRealmDataRepository *)[[[self class] repositoryClass] alloc] initWithModelClass:modelClass withRealm:realmName];
 	}
 
