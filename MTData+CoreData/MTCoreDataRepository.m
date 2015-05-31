@@ -1,11 +1,13 @@
 //
 // Created by Andrey on 28/05/15.
+// Copyright (c) 2015 Andrey Gayvoronsky. All rights reserved.
 //
 
 #import <libextobjc/extobjc.h>
 #import <NLCoreData/NLCoreData.h>
 #import "MTCoreDataRepository.h"
 #import "MTCoreDataFetchResult.h"
+#import "MTCoreDataObject.h"
 #import "MTDataSort.h"
 
 @interface MTCoreDataRepository()
@@ -26,6 +28,8 @@
 }
 
 -(void)deleteModel:(id<MTDataObject>)model {
+	[self ensureModelType:model];
+
 	@weakify(self);
 	[_context performBlock:^{
 		@strongify(self);
@@ -50,20 +54,30 @@
 	return [[MTCoreDataFetchResult alloc] initWithFetchRequest:fetchRequest inContext:_context];
 }
 
-//-(void)withTransaction:(MTDataRepositoryTransactionBlock)transaction {
-//	[self notImplemented:_cmd];
-//}
+-(void)withTransaction:(MTDataRepositoryTransactionBlock)transaction {
+	_context.undoEnabled = YES;
+	NSAssert(_context.isUndoEnabled, @"Transaction is not supported.");
+	@try {
+		[_context.undoManager beginUndoGrouping];
+		transaction(self);
+		[_context.undoManager endUndoGrouping];
+	} @catch(NSException *e) {
+		[_context.undoManager endUndoGrouping];
+		[_context.undoManager undo];
+	}
+}
 
-//-(void)saveModel:(id<MTDataObject>)model {
-//	[self notImplemented:_cmd];
-//}
+-(void)deleteAllWithQuery:(MTDataQuery *)query {
+	id<MTDataObjectCollection> models = [self fetchAllWithQuery:query];
 
-//-(void)deleteAll {
-//	[self notImplemented:_cmd];
-//}
+	@weakify(self);
+	[_context performBlock:^{
+		@strongify(self);
+		for(MTCoreDataObject *model in models) {
+			[self.context deleteObject:model];
+		}
 
-//-(void)deleteAllWithQuery:(MTDataQuery *)query {
-//	[self notImplemented:_cmd];
-//}
-
+		[self.context saveNested];
+	}];
+}
 @end

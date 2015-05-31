@@ -21,11 +21,15 @@
 	return (id <MTDataObject>)[[[self modelClass] alloc] init];
 }
 
+-(void)ensureModelType:(id<MTDataObject>)model {
+	NSAssert([model isMemberOfClass:self.modelClass], @"Model[%@] must be same class[%@] as model that was used to create DataRepository/DataProvider.", model.class, self.modelClass);
+}
+
 -(void)notImplemented:(SEL)method {
 	NSAssert(false, @"There is no default implementation for %@", NSStringFromSelector(method));
 }
 
--(void)withTransaction:(MTDataRepositoryTransactionBlock)transaction {
+-(void)withTransaction:(MTDataRepositoryTransactionBlock)transactionBlock {
 	[self notImplemented:_cmd];
 }
 
@@ -37,12 +41,13 @@
 	[self notImplemented:_cmd];
 }
 
--(void)deleteAll {
+-(void)deleteAllWithQuery:(MTDataQuery *)query {
 	[self notImplemented:_cmd];
 }
 
--(void)deleteAllWithQuery:(MTDataQuery *)query {
-	[self notImplemented:_cmd];
+-(void)deleteAll {
+	MTDataQuery *query = (MTDataQuery *)[[[[self class] queryClass] alloc] init];
+	[self deleteAllWithQuery:query];
 }
 
 -(NSUInteger)countAll {
@@ -55,13 +60,11 @@
 }
 
 -(id<MTDataObject>)fetchWithQuery:(MTDataQuery *)query {
-	id<MTDataObjectCollection> all = [self fetchAllWithQuery:query];
-	return all[0];
+	return [self fetchAllWithQuery:query][0];
 }
 
 -(id<MTDataObjectCollection>)fetchAllWithQuery:(MTDataQuery *)query {
 	[self notImplemented:_cmd];
-//	return nil;
 }
 
 +(Class)queryClass {

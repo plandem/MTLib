@@ -14,7 +14,15 @@
 
 -(instancetype)initWithModelClass:(Class)modelClass {
 	if ((self = [self init])) {
-		_repository = [(MTDataRepository *)[[[self class] repositoryClass] alloc] initWithModelClass:modelClass];
+		self.repository = [(MTDataRepository *)[[[self class] repositoryClass] alloc] initWithModelClass:modelClass];
+	}
+
+	return self;
+}
+
+-(instancetype)initWithRepository:(MTDataRepository *)repository {
+	if ((self = [self init])) {
+		self.repository = repository;
 	}
 
 	return self;

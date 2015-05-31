@@ -11,6 +11,7 @@
 
 @implementation MTCoreDataProvider {
 	MTCoreDataWatcher *_watcher;
+	MTCoreDataProviderOptions _options;
 }
 
 -(instancetype)initWithModelClass:(Class)modelClass {
@@ -23,15 +24,27 @@
 
 - (instancetype)initWithModelClass:(Class)modelClass withContext:(NSManagedObjectContext *)context options:(MTCoreDataProviderOptions)options {
 	if((self = [super initWithModelClass:modelClass])) {
-		self.repository = [(MTCoreDataRepository *)[[[self class] repositoryClass] alloc] initWithModelClass:modelClass withContext:context];
+		_options = options;
 
-		if (options & MTCoreDataProviderOptionWatchStore) {
-			_watcher = [[MTCoreDataWatcher alloc] initWithPersistentStoreCoordinator:context.persistentStoreCoordinator];
-		} else if (options & MTCoreDataProviderOptionWatchContext) {
-			_watcher = [[MTCoreDataWatcher alloc] initWithManagedObjectContext:context];
+		self.repository = [(MTCoreDataRepository *)[[[self class] repositoryClass] alloc] initWithModelClass:modelClass withContext:context];
+	}
+
+	return self;
+}
+
+-(void)setRepository:(MTDataRepository *)repository {
+	[super setRepository:repository];
+
+	if(self.repository) {
+		if (_options & MTCoreDataProviderOptionWatchStore) {
+			_watcher = [[MTCoreDataWatcher alloc] initWithPersistentStoreCoordinator:((MTCoreDataRepository *)self.repository).context.persistentStoreCoordinator];
+		} else if (_options & MTCoreDataProviderOptionWatchContext) {
+			_watcher = [[MTCoreDataWatcher alloc] initWithManagedObjectContext:((MTCoreDataRepository *)self.repository).context];
+		} else {
+			_watcher = nil;
 		}
 
-		if(_watcher) {
+		if (_watcher) {
 			@weakify(self);
 			_watcher.changesCallback = ^(NSDictionary *changes, NSManagedObjectContext *ctx) {
 				@strongify(self);
@@ -41,8 +54,6 @@
 			};
 		}
 	}
-
-	return self;
 }
 
 -(void)prepare:(BOOL)forceUpdate {

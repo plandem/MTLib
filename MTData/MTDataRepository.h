@@ -14,7 +14,8 @@ typedef void (^MTDataRepositoryTransactionBlock)(MTDataRepository *dataRepositor
 @property (nonatomic, readonly) Class modelClass;
 
 -(instancetype)initWithModelClass:(Class)modelClass;
--(void)withTransaction:(MTDataRepositoryTransactionBlock)transaction;
+-(void)withTransaction:(MTDataRepositoryTransactionBlock)transactionBlock;
+-(void)ensureModelType:(id<MTDataObject>)model;
 
 -(id<MTDataObject>)createModel;
 -(void)saveModel:(id<MTDataObject>)model;

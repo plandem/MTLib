@@ -69,7 +69,7 @@
 		return;
 	}
 
-	MTDataQuery *subQuery = [[MTDataQuery alloc] init];
+	MTDataQuery *subQuery = (MTDataQuery *)[[self.class alloc] init];
 	block(subQuery);
 
 	self.predicate = ((operator != NSNotPredicateType)

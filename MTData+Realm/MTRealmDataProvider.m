@@ -21,21 +21,33 @@
 -(instancetype)initWithModelClass:(Class)modelClass withRealm:(NSString *)realmName {
 	if((self = [super initWithModelClass:modelClass])) {
 		self.repository = [(MTRealmDataRepository *)[[[self class] repositoryClass] alloc] initWithModelClass:modelClass withRealm:realmName];
-
-		@weakify(self);
-		self.notificationToken = [((MTRealmDataRepository *)self.repository).realm addNotificationBlock:^(NSString *note, RLMRealm * realm) {
-			@strongify(self);
-			if([self refreshBlock]) {
-				[self refreshBlock](self);
-			}
-		}];
 	}
 
 	return self;
 }
 
+-(void)setRepository:(MTDataRepository *)repository {
+	if(_notificationToken) {
+		[((MTRealmDataRepository *)self.repository).realm removeNotification:_notificationToken];
+	}
+
+	[super setRepository:repository];
+
+	if(self.repository) {
+		@weakify(self);
+		_notificationToken = [((MTRealmDataRepository *) self.repository).realm addNotificationBlock:^(NSString *note, RLMRealm *realm) {
+			@strongify(self);
+			if ([self refreshBlock]) {
+				[self refreshBlock](self);
+			}
+		}];
+	}
+}
+
 -(void)dealloc {
-	[((MTRealmDataRepository *)self.repository).realm removeNotification:_notificationToken];
+	if(_notificationToken) {
+		[((MTRealmDataRepository *) self.repository).realm removeNotification:_notificationToken];
+	}
 }
 
 +(Class)repositoryClass {

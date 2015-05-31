@@ -1,5 +1,6 @@
 //
 // Created by Andrey on 28/05/15.
+// Copyright (c) 2015 Andrey Gayvoronsky. All rights reserved.
 //
 
 #import "MTRealmDataRepository.h"
@@ -28,14 +29,18 @@
 	return self;
 }
 
--(void)withTransaction:(MTDataRepositoryTransactionBlock)saveBlock {
-	[_realm beginWriteTransaction];
-	saveBlock(self);
-	[_realm commitWriteTransaction];
+-(void)withTransaction:(MTDataRepositoryTransactionBlock)transactionBlock {
+	@try {
+		[_realm beginWriteTransaction];
+		transactionBlock(self);
+		[_realm commitWriteTransaction];
+	} @catch(NSException *e) {
+		[_realm cancelWriteTransaction];
+	}
 }
 
 -(void)saveModel:(id<MTDataObject>)model {
-	NSAssert([model isKindOfClass:self.modelClass], @"Model[%@] must be same class[%@] as model that was used to create DataProvider.", model.class, self.modelClass);
+	[self ensureModelType:model];
 
 	RLMObjectSchema *schema = ((MTRealmDataObject *)model).objectSchema;
 	BOOL inWriteTransaction = _realm.inWriteTransaction;
@@ -56,9 +61,31 @@
 }
 
 -(void)deleteModel:(id <MTDataObject>)model {
-	[_realm beginWriteTransaction];
+	[self ensureModelType:model];
+
+	BOOL inWriteTransaction = _realm.inWriteTransaction;
+	if(!(inWriteTransaction)) {
+		[_realm beginWriteTransaction];
+	}
+
 	[_realm deleteObject:(MTRealmDataObject *)model];
-	[_realm commitWriteTransaction];
+
+	if(!(inWriteTransaction)) {
+		[_realm commitWriteTransaction];
+	}
+}
+
+-(void)deleteAllWithQuery:(MTDataQuery *)query {
+	BOOL inWriteTransaction = _realm.inWriteTransaction;
+	if(!(inWriteTransaction)) {
+		[_realm beginWriteTransaction];
+	}
+
+	[_realm deleteObjects:[self fetchAllWithQuery:query]];
+
+	if(!(inWriteTransaction)) {
+		[_realm commitWriteTransaction];
+	}
 }
 
 -(id<MTDataObjectCollection>)fetchAllWithQuery:(MTDataQuery *)query {
