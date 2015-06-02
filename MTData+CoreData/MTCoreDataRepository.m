@@ -8,6 +8,7 @@
 #import "MTCoreDataRepository.h"
 #import "MTCoreDataFetchResult.h"
 #import "MTCoreDataObject.h"
+#import "MTCoreDataProvider.h"
 #import "MTDataSort.h"
 
 @interface MTCoreDataRepository()
@@ -85,5 +86,9 @@
 
 		[self.context saveNested];
 	}];
+}
+
++(Class)dataProviderClass {
+	return [MTCoreDataProvider class];
 }
 @end

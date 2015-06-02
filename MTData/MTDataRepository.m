@@ -4,6 +4,7 @@
 //
 
 #import "MTDataRepository.h"
+#import "MTDataProvider.h"
 
 @implementation MTDataRepository
 
@@ -69,5 +70,9 @@
 
 +(Class)queryClass {
 	return [MTDataQuery class];
+}
+
++(Class)dataProviderClass {
+	return [MTDataProvider class];
 }
 @end

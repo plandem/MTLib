@@ -3,6 +3,7 @@
 // Copyright (c) 2015 Andrey Gayvoronsky. All rights reserved.
 //
 
+#import "MTRealmDataProvider.h"
 #import "MTRealmDataRepository.h"
 #import "MTRealmDataObject.h"
 #import "MTRealmDataQuery.h"
@@ -105,5 +106,9 @@
 
 +(Class)queryClass {
 	return [MTRealmDataQuery class];
+}
+
++(Class)dataProviderClass {
+	return [MTRealmDataProvider class];
 }
 @end

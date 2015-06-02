@@ -31,4 +31,5 @@ typedef void (^MTDataRepositoryTransactionBlock)(MTDataRepository *dataRepositor
 -(id<MTDataObjectCollection>)fetchAllWithQuery:(MTDataQuery *)query;
 
 +(Class)queryClass;
++(Class)dataProviderClass;
 @end
