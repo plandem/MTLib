@@ -14,7 +14,7 @@
 
 -(instancetype)initWithModelClass:(Class)modelClass {
 	if ((self = [self init])) {
-		self.repository = [(MTDataRepository *)[[[self class] repositoryClass] alloc] initWithModelClass:modelClass];
+		_repository = [(MTDataRepository *)[[(id<MTDataObject>)modelClass repositoryClass] alloc] initWithModelClass:modelClass];
 	}
 
 	return self;
@@ -29,9 +29,9 @@
 }
 
 // creates and return ViewModel for model at thread. if no thread is provided
--(instancetype)createViewModel:(Class)className forIndexPath:(NSIndexPath *)indexPath {
-	id viewModel = [className alloc];
-	NSAssert([viewModel respondsToSelector:@selector(initWithModel:)], @"You must implement the 'initWithModel:' selector for '%@'", NSStringFromClass(className));
+-(id)createViewModel:(Class)viewModelClass forIndexPath:(NSIndexPath *)indexPath {
+	id viewModel = [viewModelClass alloc];
+	NSAssert([viewModel respondsToSelector:@selector(initWithModel:)], @"You must implement the 'initWithModel:' selector for '%@'", NSStringFromClass(viewModelClass));
 
 	id<MTDataObject>model;
 
@@ -78,14 +78,16 @@
 }
 
 -(MTDataProvider *)makeQuery:(void(^)(MTDataQuery *query, MTDataSort *sort))block {
-	_query = (MTDataQuery *)[[[[[self repository] class] queryClass] alloc] init];
+	Class queryClass = [(id<MTDataObject>)[_repository modelClass] queryClass];
+
+	_query = (MTDataQuery *)[[queryClass alloc] init];
 	block(_query, _query.sort);
 	[self refresh];
 	return self;
 }
 
 -(void)setQuery:(MTDataQuery *)query {
-	Class queryClass = [[[self class] repositoryClass] queryClass];
+	Class queryClass = [(id<MTDataObject>)[_repository modelClass] queryClass];
 
 	NSAssert([query isKindOfClass:queryClass], @"Query[%@] must be kind of [%@] class.", query.class, queryClass);
 	if(_query != query) {
@@ -95,16 +97,12 @@
 }
 
 -(void)setRepository:(MTDataRepository *)repository {
-	Class repositoryClass = [[self class] repositoryClass];
+	Class repositoryClass = [(id<MTDataObject>)[repository modelClass] repositoryClass];
 
 	NSAssert([repository isKindOfClass:repositoryClass], @"Repository[%@] must be kind of [%@] class.", repository.class, repositoryClass);
 	if(_repository != repository) {
 		_repository = repository;
 		[self refresh];
 	}
-}
-
-+(Class)repositoryClass {
-	return [MTDataRepository class];
 }
 @end

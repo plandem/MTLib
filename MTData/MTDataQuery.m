@@ -80,7 +80,7 @@
 }
 
 -(NSPredicate *)processBetween:(NSString *)attribute from:(id)from to:(id)to not:(BOOL)not {
-	NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K >= %@ AND %K <= %@", attribute, from, attribute, to];
+	NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K BETWEEN %@", attribute, @[from, to]];
 	return ((not) ? [NSCompoundPredicate notPredicateWithSubpredicate:predicate] : predicate);
 }
 
@@ -101,6 +101,16 @@
 
 -(NSPredicate *)processContains:(NSString *)attribute string:(NSString *)string not:(BOOL)not {
 	NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K CONTAINS %@", attribute, string];
+	return ((not) ? [NSCompoundPredicate notPredicateWithSubpredicate:predicate] : predicate);
+}
+
+-(NSPredicate *)processLike:(NSString *)attribute string:(NSString *)string not:(BOOL)not {
+	NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K LIKE %@", attribute, string];
+	return ((not) ? [NSCompoundPredicate notPredicateWithSubpredicate:predicate] : predicate);
+}
+
+-(NSPredicate *)processMatch:(NSString *)attribute string:(NSString *)string not:(BOOL)not {
+	NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES %@", attribute, string];
 	return ((not) ? [NSCompoundPredicate notPredicateWithSubpredicate:predicate] : predicate);
 }
 
@@ -214,6 +224,42 @@
 	return ^MTDataQuery *(NSString *attribute, NSString *string) {
 		@strongify(self);
 		self.predicate = [self processContains:attribute string:string not:YES];
+		return self;
+	};
+}
+
+-(MTDataQuery *(^)(NSString *attribute, NSString *string))like {
+	@weakify(self);;
+	return ^MTDataQuery *(NSString *attribute, NSString *string) {
+		@strongify(self);
+		self.predicate = [self processLike:attribute string:string not:NO];
+		return self;
+	};
+}
+
+-(MTDataQuery *(^)(NSString *attribute, NSString *string))notLike {
+	@weakify(self);;
+	return ^MTDataQuery *(NSString *attribute, NSString *string) {
+		@strongify(self);
+		self.predicate = [self processLike:attribute string:string not:YES];
+		return self;
+	};
+}
+
+-(MTDataQuery *(^)(NSString *attribute, NSString *string))match {
+	@weakify(self);;
+	return ^MTDataQuery *(NSString *attribute, NSString *string) {
+		@strongify(self);
+		self.predicate = [self processMatch:attribute string:string not:NO];
+		return self;
+	};
+}
+
+-(MTDataQuery *(^)(NSString *attribute, NSString *string))notMatch {
+	@weakify(self);;
+	return ^MTDataQuery *(NSString *attribute, NSString *string) {
+		@strongify(self);
+		self.predicate = [self processMatch:attribute string:string not:YES];
 		return self;
 	};
 }

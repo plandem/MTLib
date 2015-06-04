@@ -4,7 +4,6 @@
 //
 
 #import "MTDataRepository.h"
-#import "MTDataProvider.h"
 
 @implementation MTDataRepository
 
@@ -42,18 +41,22 @@
 	[self notImplemented:_cmd];
 }
 
+-(void)undoModel:(id<MTDataObject>)model {
+	[self notImplemented:_cmd];
+}
+
 -(void)deleteAllWithQuery:(MTDataQuery *)query {
 	[self notImplemented:_cmd];
 }
 
 -(void)deleteAll {
-	MTDataQuery *query = (MTDataQuery *)[[[[self class] queryClass] alloc] init];
+	MTDataQuery *query = (MTDataQuery *)[[[(id<MTDataObject>)_modelClass queryClass] alloc] init];
 	[self deleteAllWithQuery:query];
 }
 
 -(NSUInteger)countAll {
-	MTDataQuery *query = (MTDataQuery *)[[[[self class] queryClass] alloc] init];
-	return [[self fetchAllWithQuery:query] count];
+	MTDataQuery *query = (MTDataQuery *)[[[(id<MTDataObject>)_modelClass queryClass] alloc] init];
+	return [self countWithQuery:query];
 }
 
 -(NSUInteger)countWithQuery:(MTDataQuery *)query {
@@ -66,13 +69,6 @@
 
 -(id<MTDataObjectCollection>)fetchAllWithQuery:(MTDataQuery *)query {
 	[self notImplemented:_cmd];
-}
-
-+(Class)queryClass {
-	return [MTDataQuery class];
-}
-
-+(Class)dataProviderClass {
-	return [MTDataProvider class];
+	return nil;
 }
 @end

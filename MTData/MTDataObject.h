@@ -6,6 +6,10 @@
 #import <Foundation/Foundation.h>
 
 @protocol MTDataObject <NSObject>
+@required
++(Class)repositoryClass;
++(Class)dataProviderClass;
++(Class)queryClass;
 @end
 
 @protocol MTDataObjectCollection <NSFastEnumeration>

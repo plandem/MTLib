@@ -4,8 +4,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MTDataSort.h"
 @class MTDataQuery;
-@class MTDataSort;
 
 typedef void (^MTDataQueryBlock)(MTDataQuery *subQuery);
 
@@ -25,8 +25,12 @@ typedef void (^MTDataQueryBlock)(MTDataQuery *subQuery);
 @property (nonatomic, readonly) MTDataQuery *(^notBeginsWith)(NSString *attribute, NSString *string);
 @property (nonatomic, readonly) MTDataQuery *(^endsWith)(NSString *attribute, NSString *string);
 @property (nonatomic, readonly) MTDataQuery *(^notEndsWith)(NSString *attribute, NSString *string);
+@property (nonatomic, readonly) MTDataQuery *(^like)(NSString *attribute, NSString *string);
+@property (nonatomic, readonly) MTDataQuery *(^notLike)(NSString *attribute, NSString *string);
 @property (nonatomic, readonly) MTDataQuery *(^contains)(NSString *attribute, NSString *string);
 @property (nonatomic, readonly) MTDataQuery *(^notContains)(NSString *attribute, NSString *string);
+@property (nonatomic, readonly) MTDataQuery *(^match)(NSString *attribute, NSString *string);
+@property (nonatomic, readonly) MTDataQuery *(^notMatch)(NSString *attribute, NSString *string);
 @property (nonatomic, readonly) MTDataQuery *(^not)(MTDataQueryBlock block);
 @property (nonatomic, readonly) MTDataQuery *(^and)(MTDataQueryBlock block);
 @property (nonatomic, readonly) MTDataQuery *(^or)(MTDataQueryBlock block);

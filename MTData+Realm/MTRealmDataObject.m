@@ -5,8 +5,22 @@
 
 #import <objc/runtime.h>
 #import "MTRealmDataObject.h"
+#import "MTRealmDataRepository.h"
+#import "MTRealmDataProvider.h"
+#import "MTRealmDataQuery.h"
 
 @implementation MTRealmDataObject
++(Class)repositoryClass {
+	return [MTRealmDataRepository class];
+}
+
++(Class)dataProviderClass {
+	return [MTRealmDataProvider class];
+}
+
++(Class)queryClass {
+	return [MTRealmDataQuery class];
+}
 
 //ignore any property that starts with '$'
 +(NSArray *)ignoredProperties {

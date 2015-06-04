@@ -19,14 +19,12 @@ typedef void (^MTDataProviderMoveBlock)(MTDataProvider *dataProvider, NSIndexPat
 @property (nonatomic, copy) MTDataProviderRefreshBlock refreshBlock;
 @property (nonatomic, copy) MTDataProviderMoveBlock moveBlock;
 
-+(Class)repositoryClass;
-
 -(instancetype)initWithModelClass:(Class)modelClass;
 -(instancetype)initWithRepository:(MTDataRepository *)repository;
--(instancetype)createViewModel:(Class)className forIndexPath:(NSIndexPath *)indexPath;
 -(void)refresh;
 -(void)prepare:(BOOL)forceUpdate;
 
+-(id)createViewModel:(Class)viewModelClass forIndexPath:(NSIndexPath *)indexPath;
 -(void)deleteAtIndexPath:(NSIndexPath *)indexPath;
 -(id<MTDataObject>)modelAtIndexPath:(NSIndexPath *)indexPath;
 -(void)moveFromIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath;

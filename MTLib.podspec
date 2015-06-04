@@ -64,4 +64,11 @@ Pod::Spec.new do |s|
     ss.dependency 'NLCoreData'
     ss.source_files = 'MTData+CoreData/**/*.{h,m}'
   end
+
+  s.subspec 'MTData+SQLite' do |ss|
+    ss.dependency 'MTLib/MTLogger'
+    ss.dependency 'MTLib/MTData'
+    ss.dependency 'FMDB'
+    ss.source_files = 'MTData+SQLite/**/*.{h,m}'
+  end
 end

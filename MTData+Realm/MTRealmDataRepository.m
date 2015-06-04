@@ -6,7 +6,6 @@
 #import "MTRealmDataProvider.h"
 #import "MTRealmDataRepository.h"
 #import "MTRealmDataObject.h"
-#import "MTRealmDataQuery.h"
 #import "MTRealmDataSort.h"
 
 @interface MTRealmDataRepository()
@@ -22,9 +21,9 @@
 
 -(instancetype)initWithModelClass:(Class)modelClass withRealm:(NSString *)realmName {
 	if((self = [super initWithModelClass:modelClass])) {
-		self.realmName = realmName;
-		self.realmPath = [NSString stringWithFormat:@"%@.realm", [[[RLMRealm defaultRealmPath] stringByDeletingLastPathComponent] stringByAppendingPathComponent:self.realmName]];
-		self.realm = [RLMRealm realmWithPath:self.realmPath readOnly:NO error:nil];
+		_realmName = realmName;
+		_realmPath = [NSString stringWithFormat:@"%@.realm", [[[RLMRealm defaultRealmPath] stringByDeletingLastPathComponent] stringByAppendingPathComponent:_realmName]];
+		_realm = [RLMRealm realmWithPath:_realmPath readOnly:NO error:nil];
 	}
 
 	return self;
@@ -89,6 +88,10 @@
 	}
 }
 
+-(void)undoModel:(id<MTDataObject>)model {
+	//do nothing. In Realm we can ignore any changes - just don't save it.
+}
+
 -(id<MTDataObjectCollection>)fetchAllWithQuery:(MTDataQuery *)query {
 	RLMResults *result = ((query.predicate)
 			? [self.modelClass objectsInRealm:_realm withPredicate:query.predicate]
@@ -102,13 +105,5 @@
 	}
 
 	return (id<MTDataObjectCollection>)result;
-}
-
-+(Class)queryClass {
-	return [MTRealmDataQuery class];
-}
-
-+(Class)dataProviderClass {
-	return [MTRealmDataProvider class];
 }
 @end

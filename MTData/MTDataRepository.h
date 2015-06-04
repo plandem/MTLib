@@ -19,6 +19,7 @@ typedef void (^MTDataRepositoryTransactionBlock)(MTDataRepository *dataRepositor
 
 -(id<MTDataObject>)createModel;
 -(void)saveModel:(id<MTDataObject>)model;
+-(void)undoModel:(id<MTDataObject>)model;
 -(void)deleteModel:(id<MTDataObject>)model;
 
 -(void)deleteAll;
@@ -29,7 +30,4 @@ typedef void (^MTDataRepositoryTransactionBlock)(MTDataRepository *dataRepositor
 
 -(id<MTDataObject>)fetchWithQuery:(MTDataQuery *)query;
 -(id<MTDataObjectCollection>)fetchAllWithQuery:(MTDataQuery *)query;
-
-+(Class)queryClass;
-+(Class)dataProviderClass;
 @end

@@ -5,7 +5,6 @@
 
 #import <libextobjc/extobjc.h>
 #import "MTRealmDataObject.h"
-#import "MTRealmDataSort.h"
 #import "MTRealmDataRepository.h"
 #import "MTRealmDataProvider.h"
 
@@ -20,7 +19,7 @@
 
 -(instancetype)initWithModelClass:(Class)modelClass withRealm:(NSString *)realmName {
 	if((self = [self init])) {
-		self.repository = [(MTRealmDataRepository *)[[[self class] repositoryClass] alloc] initWithModelClass:modelClass withRealm:realmName];
+		self.repository = [(MTRealmDataRepository *)[[(id<MTDataObject>)modelClass repositoryClass] alloc] initWithModelClass:modelClass withRealm:realmName];
 	}
 
 	return self;
@@ -48,9 +47,5 @@
 	if(_notificationToken) {
 		[((MTRealmDataRepository *) self.repository).realm removeNotification:_notificationToken];
 	}
-}
-
-+(Class)repositoryClass {
-	return [MTRealmDataRepository class];
 }
 @end

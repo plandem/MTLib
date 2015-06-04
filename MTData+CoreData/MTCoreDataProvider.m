@@ -24,7 +24,7 @@
 
 - (instancetype)initWithModelClass:(Class)modelClass withContext:(NSManagedObjectContext *)context options:(MTCoreDataProviderOptions)options {
 	if((self = [self init])) {
-		self.repository = [(MTCoreDataRepository *)[[[self class] repositoryClass] alloc] initWithModelClass:modelClass withContext:context];
+		self.repository = [(MTCoreDataRepository *)[[(id<MTDataObject>)modelClass repositoryClass] alloc] initWithModelClass:modelClass withContext:context];
 		self.options = options;
 	}
 
@@ -78,9 +78,5 @@
 			}
 		};
 	}
-}
-
-+(Class)repositoryClass {
-	return [MTCoreDataRepository class];
 }
 @end

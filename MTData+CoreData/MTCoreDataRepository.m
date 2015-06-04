@@ -8,7 +8,6 @@
 #import "MTCoreDataRepository.h"
 #import "MTCoreDataFetchResult.h"
 #import "MTCoreDataObject.h"
-#import "MTCoreDataProvider.h"
 #import "MTDataSort.h"
 
 @interface MTCoreDataRepository()
@@ -88,7 +87,17 @@
 	}];
 }
 
-+(Class)dataProviderClass {
-	return [MTCoreDataProvider class];
+-(void)undoModel:(id<MTDataObject>)model {
+	[self ensureModelType:model];
+
+	@weakify(self);
+	[_context performBlock:^{
+		@strongify(self);
+		[_context refreshObject:(id)model mergeChanges:NO];
+	}];
+}
+
+-(void)saveModel:(id<MTDataObject>)model {
+	//do nothing. in CoreData we can't save specific model - only context. For better code re-use, wrap required savings into the transaction!
 }
 @end
