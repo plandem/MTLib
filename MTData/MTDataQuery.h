@@ -7,7 +7,7 @@
 #import "MTDataSort.h"
 @class MTDataQuery;
 
-typedef void (^MTDataQueryBlock)(MTDataQuery *subQuery);
+typedef void (^MTDataSubQueryBlock)(MTDataQuery *subQuery);
 
 @interface MTDataQuery: NSObject
 @property (nonatomic, readonly) NSPredicate *predicate;
@@ -31,9 +31,9 @@ typedef void (^MTDataQueryBlock)(MTDataQuery *subQuery);
 @property (nonatomic, readonly) MTDataQuery *(^notContains)(NSString *attribute, NSString *string);
 @property (nonatomic, readonly) MTDataQuery *(^match)(NSString *attribute, NSString *string);
 @property (nonatomic, readonly) MTDataQuery *(^notMatch)(NSString *attribute, NSString *string);
-@property (nonatomic, readonly) MTDataQuery *(^not)(MTDataQueryBlock block);
-@property (nonatomic, readonly) MTDataQuery *(^and)(MTDataQueryBlock block);
-@property (nonatomic, readonly) MTDataQuery *(^or)(MTDataQueryBlock block);
+@property (nonatomic, readonly) MTDataQuery *(^not)(MTDataSubQueryBlock block);
+@property (nonatomic, readonly) MTDataQuery *(^and)(MTDataSubQueryBlock block);
+@property (nonatomic, readonly) MTDataQuery *(^or)(MTDataSubQueryBlock block);
 @property (nonatomic, readonly) MTDataQuery *(^limit)(NSUInteger limit);
 
 +(Class)sortClass;

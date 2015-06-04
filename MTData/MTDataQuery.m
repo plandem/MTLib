@@ -58,7 +58,7 @@
 	return ((not) ? [NSCompoundPredicate notPredicateWithSubpredicate:predicate] : predicate);
 }
 
--(void)processSubQueryBlock:(MTDataQueryBlock) block operator:(NSCompoundPredicateType)operator {
+-(void)processSubQueryBlock:(MTDataSubQueryBlock) block operator:(NSCompoundPredicateType)operator {
 	NSCompoundPredicateType currentOperator = _operator;
 
 	if(_operator != NSNotPredicateType) {
@@ -264,27 +264,27 @@
 	};
 }
 
--(MTDataQuery *(^)(MTDataQueryBlock block))and {
+-(MTDataQuery *(^)(MTDataSubQueryBlock block))and {
 	@weakify(self);;
-	return ^MTDataQuery *(MTDataQueryBlock block) {
+	return ^MTDataQuery *(MTDataSubQueryBlock block) {
 		@strongify(self);
 		[self processSubQueryBlock:block operator:NSAndPredicateType];
 		return self;
 	};
 }
 
--(MTDataQuery *(^)(MTDataQueryBlock block))or {
+-(MTDataQuery *(^)(MTDataSubQueryBlock block))or {
 	@weakify(self);;
-	return ^MTDataQuery *(MTDataQueryBlock block) {
+	return ^MTDataQuery *(MTDataSubQueryBlock block) {
 		@strongify(self);
 		[self processSubQueryBlock:block operator:NSOrPredicateType];
 		return self;
 	};
 }
 
--(MTDataQuery *(^)(MTDataQueryBlock block))not {
+-(MTDataQuery *(^)(MTDataSubQueryBlock block))not {
 	@weakify(self);;
-	return ^MTDataQuery *(MTDataQueryBlock block) {
+	return ^MTDataQuery *(MTDataSubQueryBlock block) {
 		@strongify(self);
 		[self processSubQueryBlock:block operator:NSNotPredicateType];
 		return self;
