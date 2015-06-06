@@ -16,7 +16,7 @@
 -(void)swizzle_setUp {
 	[self swizzle_setUp];
 
-	self.textField.font = MTFormDetailFont;
+	self.textField.font = MT_FORM_FONT_DETAIL;
 }
 #pragma clang diagnostic pop
 @end

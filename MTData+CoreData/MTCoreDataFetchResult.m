@@ -6,6 +6,9 @@
 #import "MTCoreDataFetchResult.h"
 #import "MTLogger.h"
 
+#define INDEX2PAGE(_index) (_totalPages > 0 ? (NSUInteger)ceil((_index) / [_fetchRequest fetchLimit]) : 0)
+#define PAGE2INDEX(_page) ((_page) * [_fetchRequest fetchLimit])
+
 @interface MTCoreDataFetchResultEnumerator : NSEnumerator {
 	MTCoreDataFetchResult *_result;
 	NSUInteger _currentIndex;
@@ -37,10 +40,13 @@
 @end
 
 @implementation MTCoreDataFetchResult {
-	NSFetchRequest *_fetchRequest;
 	NSManagedObjectContext *_context;
-	NSArray *_currentChunk;
+	NSFetchRequest *_fetchRequest;
+	NSEnumerator *_currentPageData;
+	NSUInteger _currentPageNumber;
+	NSArray *_retainedModel;
 	NSUInteger _totalRows;
+	NSUInteger _totalPages;
 }
 
 - (instancetype)initWithFetchRequest:(NSFetchRequest *)fetchRequest inContext:(NSManagedObjectContext *)context {
@@ -48,6 +54,8 @@
 		_fetchRequest = fetchRequest;
 		_context = context;
 		_totalRows = NSUIntegerMax;
+		_totalPages = NSUIntegerMax;
+		_currentPageNumber = 0;
 	}
 
 	return self;
@@ -61,6 +69,7 @@
 			NSUInteger limit = [_fetchRequest fetchLimit];
 			[_fetchRequest setFetchLimit:0];
 			_totalRows = [_context countForFetchRequest:_fetchRequest error:&error];
+			_totalPages = (limit ? (NSUInteger)ceil(_totalRows / limit) : 0);
 			[_fetchRequest setFetchLimit:limit];
 		}];
 
@@ -86,10 +95,13 @@
 		[NSException raise:NSRangeException format:@"Index %d is beyond bounds [0, %d].", index, [self count]];
 	}
 
-	NSUInteger minIndex = _fetchRequest.fetchOffset * _fetchRequest.fetchLimit;
-	NSUInteger relativeIndex = index - minIndex;
+	NSUInteger page = INDEX2PAGE(index);
+	if([self fetchPage:page]) {
+		index -= PAGE2INDEX(page);
+		return _retainedModel[index];
+	}
 
-	return ([self fetchChunkForIndex:index]) ? _currentChunk[relativeIndex] : nil;
+	return nil;
 }
 
 - (void)enumerateObjectsUsingBlock:(void (^)(id object, NSUInteger index, BOOL *stop))block {
@@ -131,63 +143,48 @@
 
     // Refresh stackBuf with objects
     if (countOfItemsAlreadyEnumerated < [self count]) {
-		if([self fetchChunkForIndex:countOfItemsAlreadyEnumerated]) {
-			// release memory from previous iteration
-			if(state->itemsPtr) {
-				free(state->itemsPtr);
-				state->itemsPtr = nil;
+		NSUInteger page = INDEX2PAGE(countOfItemsAlreadyEnumerated);
+		if([self fetchPage:page]) {
+			if(_currentPageData == nil) {
+				_currentPageData = [_retainedModel objectEnumerator];
 			}
 
-			if((count = [_currentChunk count])) {
-				//alloc memory with same size as chunk
-				state->itemsPtr = (__typeof__(state->itemsPtr)) malloc(sizeof(id*) * count);
-
-				//copy objects into the C-array
-				[_currentChunk getObjects:state->itemsPtr];
+			id model;
+			while(count < stackBufLength && (model = [_currentPageData nextObject])) {
+				stackBuf[count++] = model;
 			}
 
 			countOfItemsAlreadyEnumerated += count;
 		}
     }
 
-	state->state = countOfItemsAlreadyEnumerated;
-
-	// if there is no more items to iterate, then we must release memory from previous iteration.
-	if(count == 0 && state->itemsPtr) {
-		free(state->itemsPtr);
-		state->itemsPtr = nil;
+	//if all data retrieved, then rewind to begin
+	if (countOfItemsAlreadyEnumerated >= [self count]) {
+		_currentPageData = nil;
 	}
+
+	state->state = countOfItemsAlreadyEnumerated;
+	state->itemsPtr = stackBuf;
 
 	return count;
 }
 
--(BOOL)fetchChunkForIndex:(NSUInteger)index {
-	__block NSError *error = nil;
-	NSUInteger limit = [_fetchRequest fetchLimit];
-
-	// no limit for fetching?
-	if(!limit) {
-		if(_currentChunk) {
-			return YES;
-		}
-
-		[_context performBlockAndWait:^{
-			_currentChunk = [_context executeFetchRequest:_fetchRequest error:&error];
-		}];
-	} else {
-		NSUInteger minIndex = _fetchRequest.fetchOffset;
-
-		// if index from same chunk, then no need to fetch
-		if(index > minIndex && index < minIndex + limit) {
-			return YES;
-		}
-
-		// looks like index outside of current chunk, let's fetch a new chunk
-		[_fetchRequest setFetchOffset:index];
-		[_context performBlockAndWait:^{
-			_currentChunk = [_context executeFetchRequest:_fetchRequest error:&error];
-		}];
+-(BOOL)fetchPage:(NSUInteger)page {
+	if(page == _currentPageNumber && _currentPageData) {
+		return YES;
 	}
+
+	if(_totalPages > 0) {
+		NSUInteger offset = PAGE2INDEX(page);
+		[_fetchRequest setFetchOffset:offset];
+	}
+
+	__block NSError *error = nil;
+	[_context performBlockAndWait:^{
+		_retainedModel = [_context executeFetchRequest:_fetchRequest error:&error];
+		_currentPageData = _retainedModel.objectEnumerator;
+		_currentPageNumber = page;
+	}];
 
 	if(error) {
 		DDLogDebug(@"NSManagedObjectContext Error: %@", [error userInfo]);

@@ -45,8 +45,8 @@ NSString *const MTFormFieldToolbarButton = @"toolbar.button";
 	id result;
 
 	if((result = [self swizzle_initWithStyle:style reuseIdentifier:reuseIdentifier])) {
-		((FXFormBaseCell *)result).textLabel.font = MTFormTextFont;
-		((FXFormBaseCell *)result).detailTextLabel.font = MTFormDetailFont;
+		((FXFormBaseCell *)result).textLabel.font = MT_FORM_FONT_TEXT;
+		((FXFormBaseCell *)result).detailTextLabel.font = MT_FORM_FONT_DETAIL;
 	}
 
 	return result;

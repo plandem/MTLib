@@ -7,8 +7,8 @@
 #import "MTLogger.h"
 #import "MTSQLiteDataRepository.h"
 #import "MTSQLitePredicateTransformer.h"
-#import "NSObject+MTSQLiteDataObject.h"
 #import "MTSQLiteDataFetchResult.h"
+#import "NSObject+MTSQLiteDataObject.h"
 
 @interface MTSQLiteDataRepository()
 @property (nonatomic, strong) NSString *dbPath;
@@ -127,6 +127,9 @@
 	}
 
 	[sql appendString:[query.sort description]];
+	#if MT_SQLITE_LOG_QUERY
+	DDLogDebug(@"%@", sql);
+	#endif
 	if(![db executeUpdate:sql]) {
 		DDLogError(@"Error: %@", [db lastErrorMessage]);
 	}
@@ -160,7 +163,11 @@
 		[db beginTransaction];
 	}
 
-	if(![db executeUpdate:[NSString stringWithFormat:@"DELETE FROM %@ WHERE %@ = ?", [self.modelClass tableName], primaryKeyName], primaryKeyValue]) {
+	NSString *sql = [NSString stringWithFormat:@"DELETE FROM %@ WHERE %@ = ?", [self.modelClass tableName], primaryKeyName];
+	#if MT_SQLITE_LOG_QUERY
+	DDLogDebug(@"%@", sql);
+	#endif
+	if(![db executeUpdate:sql, primaryKeyValue]) {
 		DDLogError(@"Error: %@", [db lastErrorMessage]);
 	}
 
@@ -218,15 +225,24 @@
 	BOOL success;
 	NSMutableString *sql = [NSMutableString stringWithFormat:@"INSERT OR IGNORE INTO %@ (%@) VALUES(%@);", [model.class tableName], [_modelProperties componentsJoinedByString:@","], sqlValuesInsert];
 	if(primaryKeyName == nil) {
-		//model has no primaryKey, so just INSERT it
+		#if MT_SQLITE_LOG_QUERY
+		DDLogDebug(@"%@", sql);
+		#endif
+		//model has no primaryKey, so INSERT it
 		success = [db executeUpdate:sql];
 	} else {
 		//model has primaryKey, so UPSERT it
 		id primaryKeyValue = [(NSObject *)model valueForKey:primaryKeyName];
-		[sql appendFormat:@"UPDATE %@ SET %@ WHERE changes() == 0 AND %@ = %@;", [model.class tableName], sqlValuesUpdate, primaryKeyName, primaryKeyValue];
-		[sql appendFormat:@"SELECT CASE changes() WHEN 0 THEN last_insert_rowid() ELSE %@ END AS pk;", primaryKeyValue];
+		[sql appendFormat:@"\nUPDATE %@ SET %@ WHERE changes() == 0 AND %@ = %@;", [model.class tableName], sqlValuesUpdate, primaryKeyName, primaryKeyValue];
+		[sql appendFormat:@"\nSELECT CASE changes() WHEN 0 THEN last_insert_rowid() ELSE %@ END AS pk;", primaryKeyValue];
+		#if MT_SQLITE_LOG_QUERY
+		DDLogDebug(@"%@", sql);
+		#endif
 		success = [db executeStatements:sql withResultBlock:^int(NSDictionary *dictionary) {
-			[(NSObject *) model setValue:dictionary[@"pk"] forKey:primaryKeyName];
+			if(primaryKeyValue == nil) {
+				[(NSObject *) model setValue:dictionary[@"pk"] forKey:primaryKeyName];
+			}
+
 			return 0;
 		}];
 	}

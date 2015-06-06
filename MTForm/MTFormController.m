@@ -30,7 +30,7 @@
 	if ([title length]) {
 		UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
 		label.text = title;
-		label.font = MTFormSectionFont;
+		label.font = MT_FORM_FONT_SECTION;
 		label.edgeInsets = UIEdgeInsetsMake(10, 10, 0, 0);
 		[label sizeToFit];
 

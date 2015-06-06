@@ -2,12 +2,12 @@
 // Created by Andrey on 03/06/15.
 // Copyright (c) 2015 Melatonin LLC. All rights reserved.
 //
-// TODO: add expressions for functions and keyPath
-//
-// some hints:
+// TODO: add expressions for functions and keyPath. Some hints and ideas:
 // http://realm.io/news/nspredicate-cheatsheet/
 // http://nshipster.com/nsexpression/
 // http://gist.githubusercontent.com/iluvcapra/5118789/raw/c92f0a6c12545791ead0a4fcc0b0094571a37c2d/NSPredicate2SQL.mm
+// http://github.com/GusevAndrey/NSIncrementalStoreInUse/blob/master/NSIncrementalStoreInUse/Utilities/FMDB/FMDatabase%2BNSPredicate.m
+// http://cocotron.googlecode.com/svn/branches/iTextView/Foundation/NSPredicate/
 
 #import "MTSQLitePredicateTransformer.h"
 

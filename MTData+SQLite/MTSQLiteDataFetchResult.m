@@ -10,6 +10,9 @@
 #import "MTSQLitePredicateTransformer.h"
 #import "NSObject+MTSQLiteDataObject.h"
 
+#define INDEX2PAGE(_index) (_totalPages > 0 ? (NSUInteger)ceil((_index) / [_query batchSize]) : 0)
+#define PAGE2INDEX(_page) ((_page) * [_query batchSize])
+
 @interface MTSQLiteDataFetchResultEnumerator : NSEnumerator {
 	MTSQLiteDataFetchResult *_result;
 	NSUInteger _currentIndex;
@@ -40,12 +43,15 @@
 @end
 
 @implementation MTSQLiteDataFetchResult {
+	Class _modelClass;
 	MTDataQuery *_query;
 	FMDatabase *_db;
-	FMResultSet *_currentChunk;
+	FMResultSet *_currentPageData;
+	NSUInteger _currentPageNumber;
+	NSMutableArray *_retainedModel;
+
 	NSUInteger _totalRows;
-	Class _modelClass;
-	NSUInteger _offset;
+	NSUInteger _totalPages;
 	MTSQLitePredicateTransformer *_predicateTransformer;
 	NSString *_properties;
 }
@@ -55,10 +61,12 @@
 		_query = query;
 		_properties = (properties && [properties count] ? [properties componentsJoinedByString:@","] : @"*");
 		_db = db;
-		_totalRows = NSUIntegerMax;
 		_modelClass = modelClass;
 		_predicateTransformer = [[MTSQLitePredicateTransformer alloc] init];
-		_offset = 0;
+		_retainedModel = [NSMutableArray array];
+		_totalRows = NSUIntegerMax;
+		_totalPages = NSUIntegerMax;
+		_currentPageNumber = 0;
 	}
 
 	return self;
@@ -72,10 +80,14 @@
 			[sql appendFormat:@" WHERE %@", condition];
 		}
 
+		#if MT_SQLITE_LOG_QUERY
 		DDLogDebug(@"%@", sql);
+		#endif
+
 		FMResultSet *resultSet = [_db executeQuery:sql];
 		if (resultSet && [resultSet next]) {
 			_totalRows =  (NSUInteger)[resultSet intForColumnIndex:0];
+			_totalPages = ([_query batchSize] ? (NSUInteger)ceil(_totalRows / [_query batchSize]) : 0);
 		} else {
 			DDLogError(@"Error: %@", [_db lastErrorMessage]);
 		}
@@ -93,10 +105,23 @@
 		[NSException raise:NSRangeException format:@"Index %d is beyond bounds [0, %d].", index, [self count]];
 	}
 
-	NSUInteger minIndex = _offset * _query.batchSize;
-	NSUInteger relativeIndex = index - minIndex;
+	NSUInteger page = INDEX2PAGE(index);
+	if([self fetchPage:page]) {
+		index -= PAGE2INDEX(page);
 
-	return ([self fetchChunkForIndex:index]) ? _currentChunk[relativeIndex] : nil;
+		NSUInteger totalRetained = [_retainedModel count];
+		if(index >= totalRetained) {
+			for(NSUInteger i = totalRetained; i <= index; i++) {
+				if([_currentPageData next]) {
+					[self populateAndRetain];
+				}
+			}
+		}
+
+		return _retainedModel[index];
+	}
+
+	return nil;
 }
 
 - (void)enumerateObjectsUsingBlock:(void (^)(id object, NSUInteger index, BOOL *stop))block {
@@ -113,6 +138,13 @@
 
 - (NSEnumerator *)objectEnumerator {
 	return [[MTSQLiteDataFetchResultEnumerator alloc] initWithEnumerable:self];
+}
+
+-(id) populateAndRetain {
+	id model = [[_modelClass alloc] init];
+	[model setValuesForKeysWithDictionary:[_currentPageData resultDictionary]];
+	[_retainedModel addObject:model];
+	return model;
 }
 
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state  objects:(id __unsafe_unretained [])stackBuf count:(NSUInteger)stackBufLength {
@@ -136,50 +168,34 @@
 		state->mutationsPtr = &state->extra[0];
 	}
 
-	//TODO: optimize for using stackBuf
 	// Refresh stackBuf with objects
 	if (countOfItemsAlreadyEnumerated < [self count]) {
-		if([self fetchChunkForIndex:countOfItemsAlreadyEnumerated]) {
-			// release memory from previous iteration
-			if(state->itemsPtr) {
-				free(state->itemsPtr);
-				state->itemsPtr = nil;
-			}
-
-			count = 0;
-			NSMutableArray *rows = [NSMutableArray array];
-			while([_currentChunk next]) {
-				id model = [[_modelClass alloc] init];
-				[model setValuesForKeysWithDictionary:[_currentChunk resultDictionary]];
-				[rows addObject:model];
-				count++;
-			}
-
-			if(count) {
-				//alloc memory with same size as chunk
-				state->itemsPtr = (__typeof__(state->itemsPtr)) malloc(sizeof(id*) * count);
-
-				//copy objects into the C-array
-				[rows getObjects:state->itemsPtr];
+		NSUInteger page = INDEX2PAGE(countOfItemsAlreadyEnumerated);
+		if([self fetchPage:page]) {
+			while(count < stackBufLength && [_currentPageData next]) {
+				stackBuf[count++] = [self populateAndRetain];
 			}
 
 			countOfItemsAlreadyEnumerated += count;
 		}
 	}
 
-	state->state = countOfItemsAlreadyEnumerated;
-
-	// if there is no more items to iterate, then we must release memory from previous iteration.
-	if(count == 0 && state->itemsPtr) {
-		free(state->itemsPtr);
-		state->itemsPtr = nil;
+	//if all data retrieved, then rewind to begin
+	if (countOfItemsAlreadyEnumerated >= [self count]) {
+		_currentPageData = nil;
 	}
+
+	state->state = countOfItemsAlreadyEnumerated;
+	state->itemsPtr = stackBuf;
 
 	return count;
 }
 
--(BOOL)fetchChunkForIndex:(NSUInteger)index {
-	NSUInteger limit = [_query batchSize];
+-(BOOL)fetchPage:(NSUInteger)page {
+	if(page == _currentPageNumber && _currentPageData) {
+		return YES;
+	}
+
 	NSMutableString *sql = [NSMutableString stringWithFormat:@"SELECT %@ FROM %@", _properties, [_modelClass tableName]];
 	NSString *condition = [_predicateTransformer transformedValue:_query.predicate];
 	if(condition) {
@@ -188,30 +204,23 @@
 
 	[sql appendString:[_query.sort description]];
 
-	// no limit for fetching?
-	if(!limit) {
-		if(_currentChunk) {
-			return YES;
+	if(_totalPages > 0) {
+		NSUInteger offset = PAGE2INDEX(page);
+		[sql appendFormat:@" LIMIT %d", [_query batchSize]];
+
+		if(offset) {
+			[sql appendFormat:@" OFFSET %d", offset];
 		}
-
-		DDLogDebug(@"%@", sql);
-		_currentChunk = [_db executeQuery:sql];
-	} else {
-		NSUInteger minIndex = _offset;
-
-		// if index from same chunk, then no need to fetch
-		if(index > minIndex && index < minIndex + limit) {
-			return YES;
-		}
-
-		// looks like index outside of current chunk, let's fetch a new chunk
-		_offset =  index;
-		[sql appendFormat:@" LIMIT %d OFFSET %d", limit, _offset];
-		DDLogDebug(@"%@", sql);
-		_currentChunk = [_db executeQuery:sql];
 	}
 
-	if(_currentChunk == nil) {
+	#if MT_SQLITE_LOG_QUERY
+	DDLogDebug(@"%@", sql);
+	#endif
+
+	[_retainedModel removeAllObjects];
+	_currentPageData = [_db executeQuery:sql];
+	_currentPageNumber = page;
+	if(_currentPageData == nil) {
 		DDLogError(@"Error: %@", [_db lastErrorMessage]);
 		return NO;
 	}

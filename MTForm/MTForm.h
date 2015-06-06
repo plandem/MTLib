@@ -3,18 +3,18 @@
 // Copyright (c) 2015 Melatonin LLC. All rights reserved.
 //
 
-#ifndef MTFormTextFont
-	#define MTFormTextFont \
+#ifndef MT_FORM_FONT_TEXT
+	#define MT_FORM_FONT_TEXT \
  		[UIFont systemFontOfSize:18.0f]
 #endif
 
-#ifndef MTFormDetailFont
-	#define MTFormDetailFont \
+#ifndef MT_FORM_FONT_DETAIL
+	#define MT_FORM_FONT_DETAIL \
  		[UIFont systemFontOfSize:14.0f]
 #endif
 
-#ifndef MTFormSectionFont
-	#define MTFormSectionFont \
+#ifndef MT_FORM_FONT_SECTION
+	#define MT_FORM_FONT_SECTION \
  		[UIFont systemFontOfSize:14.0f]
 #endif
 
