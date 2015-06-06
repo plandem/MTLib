@@ -6,6 +6,8 @@
 #import <FMDB/FMDB.h>
 #import "MTDataRepository.h"
 
+extern const NSString *MTSQLiteDataRepositoryUpdateNotification;
+
 @interface MTSQLiteDataRepository : MTDataRepository
 @property (nonatomic, readonly) NSString *dbPath;
 @property (nonatomic, readonly) NSString *dbName;

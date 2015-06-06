@@ -10,6 +10,8 @@
 #import "MTSQLiteDataFetchResult.h"
 #import "NSObject+MTSQLiteDataObject.h"
 
+const NSString *MTSQLiteDataRepositoryUpdateNotification = @"MTSQLiteDataRepositoryUpdateNotification";
+
 @interface MTSQLiteDataRepository()
 @property (nonatomic, strong) NSString *dbPath;
 @property (nonatomic, strong) NSString *dbName;
@@ -106,6 +108,7 @@
 		[db beginTransaction];
 		transactionBlock(self);
 		[db commit];
+		[self notifyForChanges];
 	} @catch(NSException *e) {
 		[db rollback];
 	}
@@ -135,6 +138,7 @@
 	}
 
 	[db commit];
+	[self notifyForChanges];
 }
 
 -(void)undoModel:(id<MTDataObject>)model {
@@ -173,6 +177,7 @@
 
 	if(!(inTransaction)) {
 		[db commit];
+		[self notifyForChanges];
 	}
 }
 
@@ -253,6 +258,11 @@
 
 	if(!(inTransaction)) {
 		[db commit];
+		[self notifyForChanges];
 	}
+}
+
+-(void)notifyForChanges {
+	[[NSNotificationCenter defaultCenter] postNotificationName:(NSString *) MTSQLiteDataRepositoryUpdateNotification object:self.modelClass];
 }
 @end
