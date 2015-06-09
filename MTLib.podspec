@@ -30,6 +30,12 @@ Pod::Spec.new do |s|
     ss.source_files = 'MTLogger+Crashlytics/**/*.{h,m}'
   end
 
+  s.subspec 'MTUIKit' do |ss|
+    ss.framework = 'UIKit'
+    ss.dependency 'MTLib/MTCore'
+    ss.source_files = 'MTUIKit/**/*.{h,m}'
+  end
+
   s.subspec 'MTSlider' do |ss|
     ss.framework = 'UIKit'
     ss.source_files = 'MTSlider/**/*.{h,m}'
