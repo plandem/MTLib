@@ -5,5 +5,5 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol MTTheme <NSObject>
+@protocol MTStyleKit <NSObject>
 @end

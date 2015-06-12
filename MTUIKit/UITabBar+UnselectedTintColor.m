@@ -8,6 +8,8 @@
 #import "UITabBar+UnselectedTintColor.h"
 
 @implementation UITabBar (UnselectedTintColor)
+@dynamic unselectedTintColor;
+
 -(UIColor *)unselectedTintColor {
 	return objc_getAssociatedObject(self, @selector(unselectedTintColor));
 }

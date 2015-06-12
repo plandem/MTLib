@@ -4,9 +4,16 @@
 //
 
 #import <objc/runtime.h>
+#import "NSObject+Swizzle.h"
 #import "UILabel+EdgeInsets.h"
 
 @implementation UILabel (EdgeInsets)
+@dynamic edgeInsets;
+
++ (void)load {
+	[self swizzleInstanceSelector:@selector(drawTextInRect:) withNewSelector:@selector(swizzle_drawTextInRect:)];
+	[self swizzleInstanceSelector:@selector(textRectForBounds:limitedToNumberOfLines:) withNewSelector:@selector(swizzle_textRectForBounds:limitedToNumberOfLines:)];
+}
 
 -(UIEdgeInsets)edgeInsets {
 	NSValue *edgeValue = (NSValue *)objc_getAssociatedObject(self, @selector(edgeInsets));

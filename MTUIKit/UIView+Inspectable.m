@@ -6,6 +6,10 @@
 #import "UIView+Inspectable.h"
 
 @implementation UIView (Inspectable)
+@dynamic borderColor;
+@dynamic borderWidth;
+@dynamic cornerRadius;
+
 - (void) setBorderColor:(UIColor *)borderColor {
 	self.layer.borderColor = borderColor.CGColor;
 }
