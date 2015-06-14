@@ -9,4 +9,5 @@
 - (id)initWithCoder:(NSCoder *)decoder;
 - (id)initWithValues:(NSDictionary *)values;
 - (void)encodeWithCoder:(NSCoder *)encoder;
+- (void)removeObjectForKeyPath:(NSString *)keyPath;
 @end

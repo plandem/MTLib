@@ -48,7 +48,23 @@
 }
 
 -(void)setValue:(id)value forKeyPath:(NSString *)keyPath {
-	[_values setValue:value forKeyPath:keyPath];
+	if (value) {
+		[_values setValue:value forKeyPath:keyPath];
+	} else {
+		[self removeObjectForKeyPath:keyPath];
+	}
+}
+
+-(void)removeObjectForKeyPath:(NSString *)keyPath {
+	NSArray *keyPathElements = [keyPath componentsSeparatedByString:@"."];
+	NSUInteger numElements = [keyPathElements count];
+	if (numElements == 1) {
+		[_values removeObjectForKey:keyPath];
+	} else {
+		NSString *keyPathHead = [[keyPathElements subarrayWithRange:(NSRange){0, numElements - 1}] componentsJoinedByString:@"."];
+		NSMutableDictionary *tailContainer = [_values valueForKeyPath:keyPathHead];
+		[tailContainer removeObjectForKey:[keyPathElements lastObject]];
+	}
 }
 
 - (id)valueForUndefinedKey:(NSString *)key {
