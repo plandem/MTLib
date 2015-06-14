@@ -8,7 +8,7 @@
 #import "MTCoreDataRepository.h"
 #import "MTCoreDataFetchResult.h"
 #import "MTCoreDataObject.h"
-#import "MTDataSort.h"
+#import "MTLogger.h"
 
 @interface MTCoreDataRepository()
 @property (nonatomic, strong) NSManagedObjectContext *context;
@@ -64,8 +64,13 @@
 			transaction(self);
 		}];
 		[_context.undoManager endUndoGrouping];
-		[_context saveNested];
+
+		if(![_context saveNested]) {
+			[_context.undoManager undo];
+			DDLogError(@"Context was not saved due to errors.");
+		}
 	} @catch(NSException *e) {
+		DDLogError(@"%@", e.reason);
 		[_context.undoManager endUndoGrouping];
 		[_context.undoManager undo];
 	}

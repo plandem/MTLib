@@ -110,6 +110,7 @@ const NSString *MTSQLiteDataRepositoryUpdateNotification = @"MTSQLiteDataReposit
 		[db commit];
 		[self notifyForChanges];
 	} @catch(NSException *e) {
+		DDLogError(@"%@", e.reason);
 		[db rollback];
 	}
 }

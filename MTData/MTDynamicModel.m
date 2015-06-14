@@ -18,7 +18,7 @@
 }
 
 - (id)initWithValues:(NSDictionary *)values {
-	NSAssert([values isKindOfClass:[NSDictionary class]], @"Only NSDictionary is allowed as values to init model.");
+	NSAssert([values isKindOfClass:[NSDictionary class]], @"Only NSDictionary is allowed as values to init model. Type of values is %@", NSStringFromClass([values class]));
 
 	if((self = [super init])) {
 		_values = [values mutableCopy];

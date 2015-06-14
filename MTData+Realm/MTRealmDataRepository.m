@@ -7,6 +7,7 @@
 #import "MTRealmDataRepository.h"
 #import "MTRealmDataObject.h"
 #import "MTRealmDataSort.h"
+#import "MTLogger.h"
 
 @interface MTRealmDataRepository()
 @property (nonatomic, strong) NSString *realmName;
@@ -35,6 +36,7 @@
 		transactionBlock(self);
 		[_realm commitWriteTransaction];
 	} @catch(NSException *e) {
+		DDLogError(@"%@", e.reason);
 		[_realm cancelWriteTransaction];
 	}
 }
