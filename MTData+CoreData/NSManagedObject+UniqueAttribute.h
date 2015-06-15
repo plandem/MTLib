@@ -7,5 +7,5 @@
 
 @interface NSManagedObject (UniqueAttribute)
 // Will not work correctly if some models will be in process of creation at another context.
-+(BOOL)isUniqueAttribute:(NSString *)attribute value:(id *)value error:(NSError **)error context:(NSManagedObjectContext *)context;
+-(BOOL)isUniqueAttribute:(NSString *)attribute value:(id *)value error:(NSError **)error;
 @end
