@@ -15,5 +15,6 @@ typedef NS_OPTIONS(NSInteger, UIViewCustomBorderType) {
 };
 
 @interface UIView (CustomBorder)
-@property (nonatomic) UIViewCustomBorderType customBorderType;
+@property (nonatomic) UIViewCustomBorderType customBorderType UI_APPEARANCE_SELECTOR;
+@property (nonatomic) UIColor *customBorderColor UI_APPEARANCE_SELECTOR;
 @end
