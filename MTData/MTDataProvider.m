@@ -78,9 +78,7 @@
 }
 
 -(MTDataProvider *)makeQuery:(void(^)(MTDataQuery *query, MTDataSort *sort))block {
-	Class queryClass = [(id<MTDataObject>)[_repository modelClass] queryClass];
-
-	_query = (MTDataQuery *)[[queryClass alloc] init];
+	_query = [(id<MTDataObject>)[_repository modelClass] query];
 	block(_query, _query.sort);
 	[self refresh];
 	return self;

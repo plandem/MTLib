@@ -4,6 +4,7 @@
 //
 
 #import "NSObject+MTSQLiteDataObject.h"
+#import "NSObject+MTDataObjectQuery.h"
 #import "MTSQLiteDataRepository.h"
 #import "MTSQLiteDataProvider.h"
 #import "MTSQLiteDataQuery.h"

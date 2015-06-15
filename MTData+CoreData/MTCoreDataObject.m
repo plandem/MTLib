@@ -8,6 +8,7 @@
 #import "MTCoreDataObject.h"
 #import "MTCoreDataProvider.h"
 #import "MTCoreDataRepository.h"
+#import "NSObject+MTDataObjectQuery.h"
 
 @implementation MTCoreDataObject
 +(Class)repositoryClass {

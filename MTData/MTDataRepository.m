@@ -50,13 +50,11 @@
 }
 
 -(void)deleteAll {
-	MTDataQuery *query = (MTDataQuery *)[[[(id<MTDataObject>)_modelClass queryClass] alloc] init];
-	[self deleteAllWithQuery:query];
+	[self deleteAllWithQuery:[(id<MTDataObject>)_modelClass query]];
 }
 
 -(NSUInteger)countAll {
-	MTDataQuery *query = (MTDataQuery *)[[[(id<MTDataObject>)_modelClass queryClass] alloc] init];
-	return [self countWithQuery:query];
+	return [self countWithQuery:[(id<MTDataObject>)_modelClass query]];
 }
 
 -(NSUInteger)countWithQuery:(MTDataQuery *)query {

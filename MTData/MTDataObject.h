@@ -5,11 +5,14 @@
 
 #import <Foundation/Foundation.h>
 
+@class MTDataQuery;
+
 @protocol MTDataObject <NSObject>
 @required
 +(Class)repositoryClass;
 +(Class)dataProviderClass;
 +(Class)queryClass;
++(MTDataQuery *)query;
 @end
 
 @protocol MTDataObjectCollection <NSFastEnumeration>

@@ -8,6 +8,7 @@
 #import "MTRealmDataRepository.h"
 #import "MTRealmDataProvider.h"
 #import "MTRealmDataQuery.h"
+#import "NSObject+MTDataObjectQuery.h"
 
 @implementation MTRealmDataObject
 +(Class)repositoryClass {
