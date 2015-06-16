@@ -78,4 +78,8 @@
 -(NSString *)description {
 	return [NSString stringWithFormat:@"%@", _values];
 }
+
+-(NSArray *)allKeys {
+	return [_values allKeys];
+}
 @end

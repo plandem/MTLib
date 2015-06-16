@@ -6,6 +6,8 @@
 #import <Foundation/Foundation.h>
 
 @interface MTDynamicModel : NSObject
+@property (nonatomic, readonly, copy) NSArray *allKeys;
+
 - (id)initWithCoder:(NSCoder *)decoder;
 - (id)initWithValues:(NSDictionary *)values;
 - (void)encodeWithCoder:(NSCoder *)encoder;
