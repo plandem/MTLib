@@ -23,8 +23,15 @@
 }
 
 - (instancetype)initWithModelClass:(Class)modelClass withContext:(NSManagedObjectContext *)context options:(MTCoreDataProviderOptions)options {
-	if((self = [self init])) {
-		self.repository = [(MTCoreDataRepository *)[[(id<MTDataObject>)modelClass repositoryClass] alloc] initWithModelClass:modelClass withContext:context];
+	return [self initWithRepository:[(MTCoreDataRepository *)[[(id<MTDataObject>)modelClass repositoryClass] alloc] initWithModelClass:modelClass withContext:context] options:options];
+}
+
+-(instancetype)initWithRepository:(MTDataRepository *)repository {
+	return [self initWithRepository:repository options:MTCoreDataProviderOptionWatchContext];
+}
+
+-(instancetype)initWithRepository:(MTDataRepository *)repository options:(MTCoreDataProviderOptions)options {
+	if((self = [super initWithRepository:repository])) {
 		self.options = options;
 	}
 

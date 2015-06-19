@@ -17,6 +17,7 @@ typedef NS_OPTIONS(NSUInteger, MTCoreDataProviderOptions) {
 
 - (instancetype)initWithModelClass:(Class)modelClass withContext:(NSManagedObjectContext *)context;
 - (instancetype)initWithModelClass:(Class)modelClass withContext:(NSManagedObjectContext *)context options:(MTCoreDataProviderOptions)options;
+- (instancetype)initWithRepository:(MTDataRepository *)repository options:(MTCoreDataProviderOptions)options;
 
 - (void)setOptions:(MTCoreDataProviderOptions)options withWatchObject:(id)object;
 @end

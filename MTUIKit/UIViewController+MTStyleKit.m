@@ -11,7 +11,7 @@
 @dynamic styleKit;
 
 + (void)load {
-	[self swizzleInstanceSelector:@selector(viewWillAppear:) withNewSelector:@selector(swizzle_viewWillAppear:)];
+	[self swizzleInstanceSelector:@selector(viewWillAppear:) withNewSelector:@selector(swizzle_viewWillAppearStyleKit:)];
 }
 
 -(id<MTStyleKit>)styleKit {
@@ -38,8 +38,8 @@
 	}
 }
 
--(void)swizzle_viewWillAppear:(BOOL)animated {
-	[self swizzle_viewWillAppear:animated];
+-(void)swizzle_viewWillAppearStyleKit:(BOOL)animated {
+	[self swizzle_viewWillAppearStyleKit:animated];
 
 	if(!([objc_getAssociatedObject(self, @selector(applyStyles)) boolValue])) {
 		[self applyStyles];
