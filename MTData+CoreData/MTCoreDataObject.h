@@ -7,4 +7,5 @@
 #import "MTDataObject.h"
 
 @interface MTCoreDataObject : NSManagedObject <MTDataObject>
+- (void)transformableUpdate:(NSString *)key;
 @end
