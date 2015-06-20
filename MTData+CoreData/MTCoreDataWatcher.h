@@ -2,6 +2,8 @@
 // Created by Andrey on 26/05/15.
 // Copyright (c) 2015 Melatonin LLC. All rights reserved.
 //
+// Based on: https://github.com/mzarra/ZDS_Shared/blob/master/ZSContextWatcher.m
+//
 
 #import <CoreData/CoreData.h>
 

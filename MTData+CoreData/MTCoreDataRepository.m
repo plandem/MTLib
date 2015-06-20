@@ -31,7 +31,7 @@
 	[self ensureModelType:model];
 
 	@weakify(self);
-	[_context performBlock:^{
+	[_context performBlockAndWait:^{
 		@strongify(self);
 		[self.context deleteObject:(NSManagedObject *)model];
 		[self.context saveNested];
@@ -82,7 +82,7 @@
 	id<MTDataObjectCollection> models = [self fetchAllWithQuery:query];
 
 	@weakify(self);
-	[_context performBlock:^{
+	[_context performBlockAndWait:^{
 		@strongify(self);
 		for(MTCoreDataObject *model in models) {
 			[self.context deleteObject:model];
@@ -96,9 +96,9 @@
 	[self ensureModelType:model];
 
 	@weakify(self);
-	[_context performBlock:^{
+	[_context performBlockAndWait:^{
 		@strongify(self);
-		[_context refreshObject:(id)model mergeChanges:NO];
+		[self.context refreshObject:(id) model mergeChanges:NO];
 	}];
 }
 

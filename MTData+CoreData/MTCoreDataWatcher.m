@@ -5,7 +5,6 @@
 
 #import <objc/runtime.h>
 #import "MTCoreDataWatcher.h"
-#import "MTLogger.h"
 
 @interface MTCoreDataWatcher ()
 @property(nonatomic, strong) NSPredicate *predicateToWatch;

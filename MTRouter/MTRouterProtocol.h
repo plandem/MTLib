@@ -6,6 +6,10 @@
 #import <UIKit/UIKit.h>
 
 @protocol MTRouterProtocol <NSObject>
+@required
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender;
 - (void)dismissViewController:(UIViewController *)viewController animated:(BOOL)animated;
+
+@optional
+-(id)viewModelForViewController:(UIViewController *)viewController;
 @end
