@@ -1,15 +1,15 @@
 Pod::Spec.new do |s|
   s.name          = 'MTLib'
   s.version       = '1.0.0'
-  s.summary       = 'Some useful classes'
-  s.license       = 'MIT'
-  s.homepage      = 'http://bitbucket.org/plandem/mtlib'
+  s.summary       = 'Some useful mini helpers for iOS / OSX'
+  s.license       = { :type => 'MIT' }
+  s.homepage      = 'https://github.com/plandem/MTLib'
   s.author        = { 'Andrey Gayvoronsky' => 'plandem@gmail.com' }
   s.requires_arc  = true
   s.framework     = 'Foundation'
   s.ios.deployment_target = '8.0'
   s.default_subspec = 'MTCore', 'MTLogger', 'MTData'
-  #s.source   = { :git => 'https://github.com/AFNetworking/AFNetworking.git', :tag => "2.1.0", :submodules => true }
+  s.source   = { :git => 'https://github.com/plandem/MTLib.git', :tag => "#{s.version}", :submodules => true }
 
   s.subspec 'MTCore' do |ss|
     ss.dependency 'libextobjc'
