@@ -3,6 +3,7 @@
 // Copyright (c) 2015 Melatonin LLC. All rights reserved.
 //
 
+#import <ReactiveCocoa/ReactiveCocoa.h>
 #import <ReactiveViewModel/ReactiveViewModel.h>
 #import "MTDataRepository.h"
 #import "MTForm.h"

@@ -4,9 +4,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MTListViewModel.h"
+#import <ReactiveViewModel/ReactiveViewModel.h>
 
 @interface UIViewController (MTViewModel)
-@property (nonatomic, strong, readonly)  MTListViewModel *viewModel;
+@property (nonatomic, strong, readonly) RVMViewModel *viewModel;
 -(void)reload;
 @end

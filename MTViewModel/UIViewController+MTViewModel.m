@@ -7,6 +7,7 @@
 #import "MTLib/NSObject+Swizzle.h"
 #import "MTRouterProtocol.h"
 #import "UIViewController+MTViewModel.h"
+#import "MTListViewModel.h"
 
 @implementation UIViewController (MTViewModel)
 @dynamic viewModel;
@@ -52,16 +53,16 @@
 	// Nothing to do by default. Put any code that will refresh UIViewController when viewModel had been changed.
 }
 
--(MTListViewModel *)viewModel {
+-(RVMViewModel *)viewModel {
 	return objc_getAssociatedObject(self, @selector(viewModel));
 }
 
-- (void)setViewModel:(MTListViewModel *)viewModel {
+- (void)setViewModel:(RVMViewModel *)viewModel {
 	objc_setAssociatedObject(self, @selector(viewModel), viewModel, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 
-	if(viewModel) {
+	if(viewModel && [viewModel isKindOfClass:[MTListViewModel class]]) {
 		@weakify(self);
-		[[viewModel updatedContentSignal] subscribeNext:^(id x) {
+		[[(MTListViewModel *)viewModel updatedContentSignal] subscribeNext:^(id x) {
 			@strongify(self);
 			[self reload];
 		}];
