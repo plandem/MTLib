@@ -6,7 +6,7 @@
 #import <UIKit/UIKit.h>
 #import "MTListViewModel.h"
 
-@interface UIViewController (MTListViewModel)
+@interface UIViewController (MTViewModel)
 @property (nonatomic, strong, readonly)  MTListViewModel *viewModel;
 -(void)reload;
 @end

@@ -7,9 +7,6 @@
 #import <ReactiveViewModel/ReactiveViewModel.h>
 #import "MTDataProvider.h"
 
-@protocol MTListViewModelProtocol <NSObject>
-@end
-
 @interface MTListViewModel : RVMViewModel
 @property (nonatomic, readonly) RACSignal *updatedContentSignal;
 @property (nonatomic, readonly) MTDataProvider *dataProvider;
