@@ -22,14 +22,21 @@
 
 	return nil;
 }
-#pragma clang diagnostic pop
-
--(void)applyStyles {
-	//by default do nothing
-}
 
 - (void)swizzle_setField:(FXFormField *)field {
 	[self swizzle_setField:field];
-	[self applyStyles];
+
+	if([self respondsToSelector:@selector(applyStyles)]) {
+		//if subclass cell has own style - use it
+		[self performSelector:@selector(applyStyles)];
+	} else {
+		//use viewController has global styles for cell - use it
+		FXFormController *controller = [self.field performSelector:@selector(formController)];
+		if ([controller.delegate respondsToSelector:@selector(applyStylesForFieldCell:)]) {
+			[controller.delegate performSelector:@selector(applyStylesForFieldCell:) withObject:self];
+		}
+	}
 };
+
+#pragma clang diagnostic pop
 @end

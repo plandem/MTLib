@@ -8,5 +8,5 @@
 
 @interface FXFormBaseCell (MTStyleKit)
 -(id<MTStyleKit>)styleKit;
--(void)applyStyles;
+//-(void)applyStyles; //implement it, if needed
 @end
