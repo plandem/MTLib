@@ -84,4 +84,13 @@ Pod::Spec.new do |s|
     ss.dependency 'FMDB'
     ss.source_files = 'MTData+SQLite/**/*.{h,m}'
   end
+
+  s.subspec 'MTViewModel' do |ss|
+    ss.dependency 'ReactiveCocoa'
+    ss.dependency 'ReactiveViewModel'
+    ss.dependency 'MTLib/MTLogger'
+    ss.dependency 'MTLib/MTData'
+    ss.dependency 'MTLib/MTForm'
+    ss.source_files = 'MTViewModel/**/*.{h,m}'
+  end
 end
