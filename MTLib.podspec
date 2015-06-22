@@ -89,6 +89,7 @@ Pod::Spec.new do |s|
     ss.dependency 'ReactiveCocoa'
     ss.dependency 'ReactiveViewModel'
     ss.dependency 'MTLib/MTLogger'
+    ss.dependency 'MTLib/MTRouter'
     ss.dependency 'MTLib/MTData'
     ss.dependency 'MTLib/MTForm'
     ss.source_files = 'MTViewModel/**/*.{h,m}'
