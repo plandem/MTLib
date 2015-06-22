@@ -54,7 +54,7 @@
 - (void)setOptions:(MTCoreDataProviderOptions)options {
 	_options = options;
 	_watcher = nil;
-	[self setupRefresh];
+	[self setupWatcher];
 }
 
 -(MTCoreDataWatcher *)watcher {
@@ -71,7 +71,7 @@
 	return _watcher;
 }
 
--(void)setupRefresh {
+-(void)setupWatcher {
 	if([self refreshBlock]) {
 		@weakify(self);
 		self.watcher.changesCallback = ^(NSDictionary *changes, NSManagedObjectContext *ctx) {
@@ -87,6 +87,6 @@
 
 -(void)setRefreshBlock:(MTDataProviderRefreshBlock)refreshBlock {
 	[super setRefreshBlock:refreshBlock];
-	[self setupRefresh];
+	[self setupWatcher];
 }
 @end

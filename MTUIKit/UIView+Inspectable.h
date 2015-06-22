@@ -6,7 +6,7 @@
 #import <UIKit/UIKit.h>
 
 @interface UIView (Inspectable)
-@property (nonatomic, assign) IBInspectable CGFloat cornerRadius;
-@property (nonatomic, assign) IBInspectable CGFloat borderWidth;
-@property (nonatomic, strong) IBInspectable UIColor *borderColor;
+@property (nonatomic, assign) IBInspectable CGFloat cornerRadius UI_APPEARANCE_SELECTOR;
+@property (nonatomic, assign) IBInspectable CGFloat borderWidth UI_APPEARANCE_SELECTOR;
+@property (nonatomic, strong) IBInspectable UIColor *borderColor UI_APPEARANCE_SELECTOR;
 @end
