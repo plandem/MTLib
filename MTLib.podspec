@@ -18,8 +18,6 @@ Pod::Spec.new do |s|
 
   s.subspec 'MTLogger' do |ss|
     ss.dependency 'CocoaLumberjack'
-    ss.dependency 'CrashlyticsFramework'
-    ss.dependency 'CrashlyticsLumberjack'
     ss.source_files = 'MTLogger/**/*.{h,m}'
   end
 
