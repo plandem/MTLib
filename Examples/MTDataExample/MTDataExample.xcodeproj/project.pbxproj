@@ -11,17 +11,17 @@
 		55E2AD711B38F48A003AC16E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 55E2AD701B38F48A003AC16E /* AppDelegate.m */; };
 		55E2AD991B3918B0003AC16E /* MTDataExample.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 55E2AD971B3918B0003AC16E /* MTDataExample.xcdatamodeld */; };
 		6BD44603C88059B5C9F2BE98 /* libPods-MTDataExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 777E501CDB6D6A7AD4B0F380 /* libPods-MTDataExample.a */; };
-		ABC350E1CE00C92DCAE03544 /* SQLiteContact.m in Sources */ = {isa = PBXBuildFile; fileRef = ABC352DA2F05C2A88E85F6A9 /* SQLiteContact.m */; };
 		ABC3511A19C74068A98D4656 /* MainAssembly.m in Sources */ = {isa = PBXBuildFile; fileRef = ABC356092DFC913FA1A936BC /* MainAssembly.m */; };
 		ABC35144B0349A82FDBF5758 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ABC357882193615AB515D35F /* Main.storyboard */; };
-		ABC3525D857C4554DC866DED /* CoreContact.m in Sources */ = {isa = PBXBuildFile; fileRef = ABC3560BFD54DE5D1E500E3E /* CoreContact.m */; };
+		ABC35236513A917FC6DB4C70 /* SQLiteContact.m in Sources */ = {isa = PBXBuildFile; fileRef = ABC35962661435FAEA286342 /* SQLiteContact.m */; };
 		ABC352ED1B2A52CC90281777 /* MainRouter.m in Sources */ = {isa = PBXBuildFile; fileRef = ABC359652657B39FC5E4E6B1 /* MainRouter.m */; };
 		ABC35300BB9A6F83136E8740 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = ABC35F8AD7290D2AA551F46E /* LaunchScreen.xib */; };
+		ABC355B93CE0F95AE896A578 /* RealmContact.m in Sources */ = {isa = PBXBuildFile; fileRef = ABC357FC3B2983D19BD7F901 /* RealmContact.m */; };
 		ABC3583E14BEEACB5756D9F7 /* ContactEditViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = ABC35FB1AEAC5D77F1BA6739 /* ContactEditViewModel.m */; };
 		ABC3592C10274901344144B5 /* ContactEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABC356B4FD0634343321D686 /* ContactEditViewController.m */; };
-		ABC35A01C3F815D98F5106E5 /* RealmContact.m in Sources */ = {isa = PBXBuildFile; fileRef = ABC35A5A2FDB5E255102D15D /* RealmContact.m */; };
 		ABC35B2D057EEA382CCE69D9 /* ContactListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABC351E9B66D104FDCA0F2A5 /* ContactListViewController.m */; };
 		ABC35D74A335EF7FE7216995 /* ContactListViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = ABC3585784F6D4477D197EFB /* ContactListViewModel.m */; };
+		ABC35E73DE58B6131C9198CD /* CoreContact.m in Sources */ = {isa = PBXBuildFile; fileRef = ABC356854F9D7B92C840BF82 /* CoreContact.m */; };
 		ABC35EBCC75598A73CAE1E3B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ABC3515A86C86E724005489F /* Images.xcassets */; };
 /* End PBXBuildFile section */
 
@@ -35,25 +35,25 @@
 		777E501CDB6D6A7AD4B0F380 /* libPods-MTDataExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MTDataExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9F106F4C88D449F8C406D349 /* Pods-MTDataExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MTDataExample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MTDataExample/Pods-MTDataExample.debug.xcconfig"; sourceTree = "<group>"; };
 		ABC3506860E70B6B69BFB324 /* MainRouterProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainRouterProtocol.h; sourceTree = "<group>"; };
-		ABC350874260BD8249190E19 /* ContactProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContactProtocol.h; path = MTDataExample.xcdatamodel/ContactProtocol.h; sourceTree = "<group>"; };
+		ABC350ED2C661A084F17C2EF /* SQLiteContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQLiteContact.h; sourceTree = "<group>"; };
 		ABC3515A86C86E724005489F /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		ABC351E9B66D104FDCA0F2A5 /* ContactListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactListViewController.m; sourceTree = "<group>"; };
-		ABC352DA2F05C2A88E85F6A9 /* SQLiteContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SQLiteContact.m; path = MTDataExample.xcdatamodel/SQLiteContact.m; sourceTree = "<group>"; };
-		ABC355A2EE350EDC9F18D7C4 /* RealmContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RealmContact.h; path = MTDataExample.xcdatamodel/RealmContact.h; sourceTree = "<group>"; };
 		ABC356092DFC913FA1A936BC /* MainAssembly.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainAssembly.m; sourceTree = "<group>"; };
-		ABC3560BFD54DE5D1E500E3E /* CoreContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CoreContact.m; path = MTDataExample.xcdatamodel/CoreContact.m; sourceTree = "<group>"; };
+		ABC356854F9D7B92C840BF82 /* CoreContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreContact.m; sourceTree = "<group>"; };
 		ABC356B4FD0634343321D686 /* ContactEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactEditViewController.m; sourceTree = "<group>"; };
+		ABC357380090323DC907EBAE /* RealmContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RealmContact.h; sourceTree = "<group>"; };
+		ABC357FC3B2983D19BD7F901 /* RealmContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RealmContact.m; sourceTree = "<group>"; };
 		ABC3585784F6D4477D197EFB /* ContactListViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactListViewModel.m; sourceTree = "<group>"; };
+		ABC35962661435FAEA286342 /* SQLiteContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQLiteContact.m; sourceTree = "<group>"; };
 		ABC359652657B39FC5E4E6B1 /* MainRouter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainRouter.m; sourceTree = "<group>"; };
 		ABC359CA07BA8C69D4ED3C16 /* MainRouter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainRouter.h; sourceTree = "<group>"; };
-		ABC35A5A2FDB5E255102D15D /* RealmContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RealmContact.m; path = MTDataExample.xcdatamodel/RealmContact.m; sourceTree = "<group>"; };
-		ABC35B6BA31E265AB347BDC0 /* CoreContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CoreContact.h; path = MTDataExample.xcdatamodel/CoreContact.h; sourceTree = "<group>"; };
 		ABC35BFB0A378E159AB0A9D5 /* ContactEditViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactEditViewModel.h; sourceTree = "<group>"; };
 		ABC35C84AF7B0A78555537E7 /* ContactListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactListViewController.h; sourceTree = "<group>"; };
 		ABC35D1C97850ED7CF8278E8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		ABC35E90C7E9C5545B14BFA9 /* ContactEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactEditViewController.h; sourceTree = "<group>"; };
 		ABC35EE15671C6055F673272 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = MTDataExample/Base.lproj/Main.storyboard; sourceTree = SOURCE_ROOT; };
-		ABC35F155D0C4837DDEF60AC /* SQLiteContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SQLiteContact.h; path = MTDataExample.xcdatamodel/SQLiteContact.h; sourceTree = "<group>"; };
+		ABC35F023D7AFDDF2BE88ED6 /* ContactProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactProtocol.h; sourceTree = "<group>"; };
+		ABC35F486267E17E5EFFD10D /* CoreContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreContact.h; sourceTree = "<group>"; };
 		ABC35FA062617949B0842DAD /* MainAssembly.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainAssembly.h; sourceTree = "<group>"; };
 		ABC35FABA267B93E4EC39FF2 /* ContactListViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactListViewModel.h; sourceTree = "<group>"; };
 		ABC35FB1AEAC5D77F1BA6739 /* ContactEditViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactEditViewModel.m; sourceTree = "<group>"; };
@@ -186,13 +186,13 @@
 			isa = PBXGroup;
 			children = (
 				55E2AD971B3918B0003AC16E /* MTDataExample.xcdatamodeld */,
-				ABC3560BFD54DE5D1E500E3E /* CoreContact.m */,
-				ABC35B6BA31E265AB347BDC0 /* CoreContact.h */,
-				ABC35A5A2FDB5E255102D15D /* RealmContact.m */,
-				ABC355A2EE350EDC9F18D7C4 /* RealmContact.h */,
-				ABC352DA2F05C2A88E85F6A9 /* SQLiteContact.m */,
-				ABC35F155D0C4837DDEF60AC /* SQLiteContact.h */,
-				ABC350874260BD8249190E19 /* ContactProtocol.h */,
+				ABC357FC3B2983D19BD7F901 /* RealmContact.m */,
+				ABC35962661435FAEA286342 /* SQLiteContact.m */,
+				ABC35F486267E17E5EFFD10D /* CoreContact.h */,
+				ABC350ED2C661A084F17C2EF /* SQLiteContact.h */,
+				ABC356854F9D7B92C840BF82 /* CoreContact.m */,
+				ABC357380090323DC907EBAE /* RealmContact.h */,
+				ABC35F023D7AFDDF2BE88ED6 /* ContactProtocol.h */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -328,9 +328,9 @@
 				ABC352ED1B2A52CC90281777 /* MainRouter.m in Sources */,
 				ABC3592C10274901344144B5 /* ContactEditViewController.m in Sources */,
 				ABC3583E14BEEACB5756D9F7 /* ContactEditViewModel.m in Sources */,
-				ABC3525D857C4554DC866DED /* CoreContact.m in Sources */,
-				ABC35A01C3F815D98F5106E5 /* RealmContact.m in Sources */,
-				ABC350E1CE00C92DCAE03544 /* SQLiteContact.m in Sources */,
+				ABC355B93CE0F95AE896A578 /* RealmContact.m in Sources */,
+				ABC35236513A917FC6DB4C70 /* SQLiteContact.m in Sources */,
+				ABC35E73DE58B6131C9198CD /* CoreContact.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
