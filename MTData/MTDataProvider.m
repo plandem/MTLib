@@ -98,7 +98,7 @@
 -(void)setRepository:(MTDataRepository *)repository {
 	Class repositoryClass = [(id<MTDataObject>)[repository modelClass] repositoryClass];
 
-	NSAssert([repository isKindOfClass:repositoryClass], @"Repository[%@] must be kind of [%@] class.", repository.class, repositoryClass);
+	NSAssert([repository isKindOfClass:repositoryClass], @"Repository [%@] must be kind of [%@] class.", repository.class, repositoryClass);
 	if(_repository != repository) {
 		_repository = repository;
 		[self refresh];

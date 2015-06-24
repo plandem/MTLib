@@ -46,14 +46,39 @@
 
 //set default values for all 'object' types
 +(NSDictionary *)defaultPropertyValues {
-	NSMutableDictionary *defaultValues = [NSMutableDictionary dictionary];
+	NSMutableDictionary *defaultValues = objc_getAssociatedObject([self class], @selector(defaultPropertyValues));
+	if (defaultValues) {
+		return defaultValues;
+	}
+
+	static NSSet *NSObjectProperties;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		NSObjectProperties = [NSMutableSet set];
+		NSUInteger numberOfProperties;
+		objc_property_t *propertyList = class_copyPropertyList([NSObject class], &numberOfProperties);
+		for (NSUInteger prop_i = 0; prop_i < numberOfProperties; prop_i++) {
+			objc_property_t property = propertyList[prop_i];
+			NSString *name = [[NSString alloc] initWithUTF8String:property_getName(property)];
+			[(NSMutableSet *)NSObjectProperties addObject:name];
+		}
+
+		free(propertyList);
+		NSObjectProperties = [NSObjectProperties copy];
+	});
 
 	NSUInteger numberOfProperties = 0;
+	defaultValues = [NSMutableDictionary dictionary];
 	objc_property_t *propertyArray = class_copyPropertyList([self class], &numberOfProperties);
 
 	for (NSUInteger prop_i = 0; prop_i < numberOfProperties; prop_i++) {
 		objc_property_t property = propertyArray[prop_i];
 		NSString *name = [[NSString alloc] initWithUTF8String:property_getName(property)];
+
+		if([NSObjectProperties containsObject:name]) {
+			//ignore properties from NSObject
+			continue;
+		}
 
 		NSUInteger numOfAttributes;
 		objc_property_attribute_t *propertyAttributes = property_copyAttributeList(property, &numOfAttributes);
@@ -81,6 +106,8 @@
 	} //for(prop_i)
 
 	free(propertyArray);
+	objc_setAssociatedObject([self class], @selector(defaultPropertyValues), defaultValues, OBJC_ASSOCIATION_RETAIN);
+
 	return defaultValues;
 }
 
