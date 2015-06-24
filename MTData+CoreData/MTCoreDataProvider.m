@@ -42,10 +42,11 @@
 }
 
 -(void)prepare:(BOOL)forceUpdate {
-	if (_watcher && (_watcher.predicateToWatch == nil || _previousPredicate != self.query.predicate)) {
+	if (self.watcher.predicateToWatch == nil || _previousPredicate != self.query.predicate) {
+		//CoreData's implementation for updates is quite advanced, so we must refresh watching predicate if needed.
 		_previousPredicate = ((self.query) ? self.query.predicate : nil);
-		[_watcher reset];
-		[_watcher addEntityToWatch:self.repository.modelClass withPredicate:_previousPredicate];
+		[self.watcher reset];
+		[self.watcher addEntityToWatch:self.repository.modelClass withPredicate:_previousPredicate];
 	}
 
 	[super prepare:forceUpdate];
@@ -54,7 +55,7 @@
 - (void)setOptions:(MTCoreDataProviderOptions)options {
 	_options = options;
 	_watcher = nil;
-	[self setupWatcher];
+	[self refresh];
 }
 
 -(MTCoreDataWatcher *)watcher {
@@ -73,20 +74,17 @@
 
 -(void)setupWatcher {
 	if([self refreshBlock]) {
-		@weakify(self);
-		self.watcher.changesCallback = ^(NSDictionary *changes, NSManagedObjectContext *ctx) {
-			@strongify(self);
-			if ([self refreshBlock]) {
-				[self refreshBlock](self);
-			}
-		};
+		if(self.watcher.changesCallback == nil) {
+			@weakify(self);
+			self.watcher.changesCallback = ^(NSDictionary *changes, NSManagedObjectContext *ctx) {
+				@strongify(self);
+				if ([self refreshBlock]) {
+					[self refreshBlock](self);
+				}
+			};
+		}
 	} else {
 		self.watcher.changesCallback = nil;
 	}
-}
-
--(void)setRefreshBlock:(MTDataProviderRefreshBlock)refreshBlock {
-	[super setRefreshBlock:refreshBlock];
-	[self setupWatcher];
 }
 @end

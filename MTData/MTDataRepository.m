@@ -4,6 +4,7 @@
 //
 
 #import "MTDataRepository.h"
+#import "MTLogger.h"
 
 @implementation MTDataRepository
 
@@ -22,15 +23,39 @@
 }
 
 -(void)ensureModelType:(id<MTDataObject>)model {
-	NSAssert([model isMemberOfClass:self.modelClass], @"Model[%@] must be same class[%@] as model that was used to create DataRepository/DataProvider.", model.class, self.modelClass);
+	NSAssert([model isKindOfClass:self.modelClass], @"Model[%@] must be same class[%@] as model that was used to create DataRepository/DataProvider.", model.class, self.modelClass);
 }
 
 -(void)notImplemented:(SEL)method {
 	NSAssert(false, @"There is no default implementation for %@", NSStringFromSelector(method));
 }
 
--(void)withTransaction:(MTDataRepositoryTransactionBlock)transactionBlock {
+-(void)beginTransaction {
 	[self notImplemented:_cmd];
+}
+
+-(void)commitTransaction {
+	[self notImplemented:_cmd];
+}
+
+-(void)rollbackTransaction {
+	[self notImplemented:_cmd];
+}
+
+-(BOOL)inTransaction {
+	[self notImplemented:_cmd];
+	return NO;
+}
+
+-(void)withTransaction:(MTDataRepositoryTransactionBlock)transactionBlock {
+	@try {
+		[self beginTransaction];
+		transactionBlock(self);
+		[self commitTransaction];
+	} @catch(NSException *e) {
+		DDLogError(@"%@", e.reason);
+		[self rollbackTransaction];
+	}
 }
 
 -(void)saveModel:(id<MTDataObject>)model {

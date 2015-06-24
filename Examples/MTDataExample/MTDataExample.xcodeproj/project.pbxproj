@@ -1,0 +1,494 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		55E2AD6E1B38F48A003AC16E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 55E2AD6D1B38F48A003AC16E /* main.m */; };
+		55E2AD711B38F48A003AC16E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 55E2AD701B38F48A003AC16E /* AppDelegate.m */; };
+		55E2AD991B3918B0003AC16E /* MTDataExample.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 55E2AD971B3918B0003AC16E /* MTDataExample.xcdatamodeld */; };
+		6BD44603C88059B5C9F2BE98 /* libPods-MTDataExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 777E501CDB6D6A7AD4B0F380 /* libPods-MTDataExample.a */; };
+		ABC350E1CE00C92DCAE03544 /* SQLiteContact.m in Sources */ = {isa = PBXBuildFile; fileRef = ABC352DA2F05C2A88E85F6A9 /* SQLiteContact.m */; };
+		ABC3511A19C74068A98D4656 /* MainAssembly.m in Sources */ = {isa = PBXBuildFile; fileRef = ABC356092DFC913FA1A936BC /* MainAssembly.m */; };
+		ABC35144B0349A82FDBF5758 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ABC357882193615AB515D35F /* Main.storyboard */; };
+		ABC3525D857C4554DC866DED /* CoreContact.m in Sources */ = {isa = PBXBuildFile; fileRef = ABC3560BFD54DE5D1E500E3E /* CoreContact.m */; };
+		ABC352ED1B2A52CC90281777 /* MainRouter.m in Sources */ = {isa = PBXBuildFile; fileRef = ABC359652657B39FC5E4E6B1 /* MainRouter.m */; };
+		ABC35300BB9A6F83136E8740 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = ABC35F8AD7290D2AA551F46E /* LaunchScreen.xib */; };
+		ABC3583E14BEEACB5756D9F7 /* ContactEditViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = ABC35FB1AEAC5D77F1BA6739 /* ContactEditViewModel.m */; };
+		ABC3592C10274901344144B5 /* ContactEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABC356B4FD0634343321D686 /* ContactEditViewController.m */; };
+		ABC35A01C3F815D98F5106E5 /* RealmContact.m in Sources */ = {isa = PBXBuildFile; fileRef = ABC35A5A2FDB5E255102D15D /* RealmContact.m */; };
+		ABC35B2D057EEA382CCE69D9 /* ContactListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABC351E9B66D104FDCA0F2A5 /* ContactListViewController.m */; };
+		ABC35D74A335EF7FE7216995 /* ContactListViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = ABC3585784F6D4477D197EFB /* ContactListViewModel.m */; };
+		ABC35EBCC75598A73CAE1E3B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ABC3515A86C86E724005489F /* Images.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		55E2AD681B38F48A003AC16E /* MTDataExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MTDataExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		55E2AD6C1B38F48A003AC16E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		55E2AD6D1B38F48A003AC16E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		55E2AD6F1B38F48A003AC16E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		55E2AD701B38F48A003AC16E /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		55E2AD981B3918B0003AC16E /* MTDataExample.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MTDataExample.xcdatamodel; sourceTree = "<group>"; };
+		777E501CDB6D6A7AD4B0F380 /* libPods-MTDataExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MTDataExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9F106F4C88D449F8C406D349 /* Pods-MTDataExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MTDataExample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MTDataExample/Pods-MTDataExample.debug.xcconfig"; sourceTree = "<group>"; };
+		ABC3506860E70B6B69BFB324 /* MainRouterProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainRouterProtocol.h; sourceTree = "<group>"; };
+		ABC350874260BD8249190E19 /* ContactProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContactProtocol.h; path = MTDataExample.xcdatamodel/ContactProtocol.h; sourceTree = "<group>"; };
+		ABC3515A86C86E724005489F /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		ABC351E9B66D104FDCA0F2A5 /* ContactListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactListViewController.m; sourceTree = "<group>"; };
+		ABC352DA2F05C2A88E85F6A9 /* SQLiteContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SQLiteContact.m; path = MTDataExample.xcdatamodel/SQLiteContact.m; sourceTree = "<group>"; };
+		ABC355A2EE350EDC9F18D7C4 /* RealmContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RealmContact.h; path = MTDataExample.xcdatamodel/RealmContact.h; sourceTree = "<group>"; };
+		ABC356092DFC913FA1A936BC /* MainAssembly.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainAssembly.m; sourceTree = "<group>"; };
+		ABC3560BFD54DE5D1E500E3E /* CoreContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CoreContact.m; path = MTDataExample.xcdatamodel/CoreContact.m; sourceTree = "<group>"; };
+		ABC356B4FD0634343321D686 /* ContactEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactEditViewController.m; sourceTree = "<group>"; };
+		ABC3585784F6D4477D197EFB /* ContactListViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactListViewModel.m; sourceTree = "<group>"; };
+		ABC359652657B39FC5E4E6B1 /* MainRouter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainRouter.m; sourceTree = "<group>"; };
+		ABC359CA07BA8C69D4ED3C16 /* MainRouter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainRouter.h; sourceTree = "<group>"; };
+		ABC35A5A2FDB5E255102D15D /* RealmContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RealmContact.m; path = MTDataExample.xcdatamodel/RealmContact.m; sourceTree = "<group>"; };
+		ABC35B6BA31E265AB347BDC0 /* CoreContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CoreContact.h; path = MTDataExample.xcdatamodel/CoreContact.h; sourceTree = "<group>"; };
+		ABC35BFB0A378E159AB0A9D5 /* ContactEditViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactEditViewModel.h; sourceTree = "<group>"; };
+		ABC35C84AF7B0A78555537E7 /* ContactListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactListViewController.h; sourceTree = "<group>"; };
+		ABC35D1C97850ED7CF8278E8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		ABC35E90C7E9C5545B14BFA9 /* ContactEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactEditViewController.h; sourceTree = "<group>"; };
+		ABC35EE15671C6055F673272 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = MTDataExample/Base.lproj/Main.storyboard; sourceTree = SOURCE_ROOT; };
+		ABC35F155D0C4837DDEF60AC /* SQLiteContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SQLiteContact.h; path = MTDataExample.xcdatamodel/SQLiteContact.h; sourceTree = "<group>"; };
+		ABC35FA062617949B0842DAD /* MainAssembly.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainAssembly.h; sourceTree = "<group>"; };
+		ABC35FABA267B93E4EC39FF2 /* ContactListViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactListViewModel.h; sourceTree = "<group>"; };
+		ABC35FB1AEAC5D77F1BA6739 /* ContactEditViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactEditViewModel.m; sourceTree = "<group>"; };
+		BD650AB84FEC9694E86D7E91 /* Pods-MTDataExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MTDataExample.release.xcconfig"; path = "Pods/Target Support Files/Pods-MTDataExample/Pods-MTDataExample.release.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		55E2AD651B38F48A003AC16E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6BD44603C88059B5C9F2BE98 /* libPods-MTDataExample.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		55E2AD5F1B38F48A003AC16E = {
+			isa = PBXGroup;
+			children = (
+				55E2AD6A1B38F48A003AC16E /* MTDataExample */,
+				55E2AD691B38F48A003AC16E /* Products */,
+				BE3EE1EDCD1F976B90F8B9AB /* Pods */,
+				DFD7FC92DBE9F7B31F291D3D /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		55E2AD691B38F48A003AC16E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				55E2AD681B38F48A003AC16E /* MTDataExample.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		55E2AD6A1B38F48A003AC16E /* MTDataExample */ = {
+			isa = PBXGroup;
+			children = (
+				ABC35AA80E3261F51D81AD2B /* Assembly */,
+				ABC354C71E4356FE88B9D205 /* Controllers */,
+				ABC352221F7A9AC62BCE1737 /* Interface */,
+				ABC35F777B3B259D1CBAACD5 /* Models */,
+				ABC3569C28FB9FD1E054CB1F /* Resources */,
+				ABC35D6919580E3A716E51BC /* Router */,
+				55E2AD6B1B38F48A003AC16E /* Supporting Files */,
+				55E2AD6F1B38F48A003AC16E /* AppDelegate.h */,
+				55E2AD701B38F48A003AC16E /* AppDelegate.m */,
+				ABC35F8AD7290D2AA551F46E /* LaunchScreen.xib */,
+			);
+			path = MTDataExample;
+			sourceTree = "<group>";
+		};
+		55E2AD6B1B38F48A003AC16E /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				55E2AD6C1B38F48A003AC16E /* Info.plist */,
+				55E2AD6D1B38F48A003AC16E /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		ABC350B8F97321A7E95875E8 /* List */ = {
+			isa = PBXGroup;
+			children = (
+				ABC351E9B66D104FDCA0F2A5 /* ContactListViewController.m */,
+				ABC35C84AF7B0A78555537E7 /* ContactListViewController.h */,
+				ABC3585784F6D4477D197EFB /* ContactListViewModel.m */,
+				ABC35FABA267B93E4EC39FF2 /* ContactListViewModel.h */,
+			);
+			path = List;
+			sourceTree = "<group>";
+		};
+		ABC352221F7A9AC62BCE1737 /* Interface */ = {
+			isa = PBXGroup;
+			children = (
+				ABC357882193615AB515D35F /* Main.storyboard */,
+			);
+			path = Interface;
+			sourceTree = "<group>";
+		};
+		ABC354C71E4356FE88B9D205 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				ABC350B8F97321A7E95875E8 /* List */,
+				ABC356C4CD2BC6A2C7F58E41 /* Edit */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		ABC3569C28FB9FD1E054CB1F /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				ABC3515A86C86E724005489F /* Images.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		ABC356C4CD2BC6A2C7F58E41 /* Edit */ = {
+			isa = PBXGroup;
+			children = (
+				ABC356B4FD0634343321D686 /* ContactEditViewController.m */,
+				ABC35E90C7E9C5545B14BFA9 /* ContactEditViewController.h */,
+				ABC35FB1AEAC5D77F1BA6739 /* ContactEditViewModel.m */,
+				ABC35BFB0A378E159AB0A9D5 /* ContactEditViewModel.h */,
+			);
+			path = Edit;
+			sourceTree = "<group>";
+		};
+		ABC35AA80E3261F51D81AD2B /* Assembly */ = {
+			isa = PBXGroup;
+			children = (
+				ABC356092DFC913FA1A936BC /* MainAssembly.m */,
+				ABC35FA062617949B0842DAD /* MainAssembly.h */,
+			);
+			path = Assembly;
+			sourceTree = "<group>";
+		};
+		ABC35D6919580E3A716E51BC /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				ABC359652657B39FC5E4E6B1 /* MainRouter.m */,
+				ABC359CA07BA8C69D4ED3C16 /* MainRouter.h */,
+				ABC3506860E70B6B69BFB324 /* MainRouterProtocol.h */,
+			);
+			path = Router;
+			sourceTree = "<group>";
+		};
+		ABC35F777B3B259D1CBAACD5 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				55E2AD971B3918B0003AC16E /* MTDataExample.xcdatamodeld */,
+				ABC3560BFD54DE5D1E500E3E /* CoreContact.m */,
+				ABC35B6BA31E265AB347BDC0 /* CoreContact.h */,
+				ABC35A5A2FDB5E255102D15D /* RealmContact.m */,
+				ABC355A2EE350EDC9F18D7C4 /* RealmContact.h */,
+				ABC352DA2F05C2A88E85F6A9 /* SQLiteContact.m */,
+				ABC35F155D0C4837DDEF60AC /* SQLiteContact.h */,
+				ABC350874260BD8249190E19 /* ContactProtocol.h */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		BE3EE1EDCD1F976B90F8B9AB /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				9F106F4C88D449F8C406D349 /* Pods-MTDataExample.debug.xcconfig */,
+				BD650AB84FEC9694E86D7E91 /* Pods-MTDataExample.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		DFD7FC92DBE9F7B31F291D3D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				777E501CDB6D6A7AD4B0F380 /* libPods-MTDataExample.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		55E2AD671B38F48A003AC16E /* MTDataExample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 55E2AD8E1B38F48A003AC16E /* Build configuration list for PBXNativeTarget "MTDataExample" */;
+			buildPhases = (
+				02197F92DCE5F5C11006D6C2 /* Check Pods Manifest.lock */,
+				55E2AD641B38F48A003AC16E /* Sources */,
+				55E2AD651B38F48A003AC16E /* Frameworks */,
+				55E2AD661B38F48A003AC16E /* Resources */,
+				CF29365AEE571FF25C9AB5EA /* Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MTDataExample;
+			productName = MTDataExample;
+			productReference = 55E2AD681B38F48A003AC16E /* MTDataExample.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		55E2AD601B38F48A003AC16E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0620;
+				ORGANIZATIONNAME = Andrey;
+				TargetAttributes = {
+					55E2AD671B38F48A003AC16E = {
+						CreatedOnToolsVersion = 6.2;
+					};
+				};
+			};
+			buildConfigurationList = 55E2AD631B38F48A003AC16E /* Build configuration list for PBXProject "MTDataExample" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 55E2AD5F1B38F48A003AC16E;
+			productRefGroup = 55E2AD691B38F48A003AC16E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				55E2AD671B38F48A003AC16E /* MTDataExample */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		55E2AD661B38F48A003AC16E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ABC35144B0349A82FDBF5758 /* Main.storyboard in Resources */,
+				ABC35EBCC75598A73CAE1E3B /* Images.xcassets in Resources */,
+				ABC35300BB9A6F83136E8740 /* LaunchScreen.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		02197F92DCE5F5C11006D6C2 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		CF29365AEE571FF25C9AB5EA /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MTDataExample/Pods-MTDataExample-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		55E2AD641B38F48A003AC16E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				55E2AD711B38F48A003AC16E /* AppDelegate.m in Sources */,
+				55E2AD6E1B38F48A003AC16E /* main.m in Sources */,
+				ABC35B2D057EEA382CCE69D9 /* ContactListViewController.m in Sources */,
+				ABC3511A19C74068A98D4656 /* MainAssembly.m in Sources */,
+				ABC35D74A335EF7FE7216995 /* ContactListViewModel.m in Sources */,
+				55E2AD991B3918B0003AC16E /* MTDataExample.xcdatamodeld in Sources */,
+				ABC352ED1B2A52CC90281777 /* MainRouter.m in Sources */,
+				ABC3592C10274901344144B5 /* ContactEditViewController.m in Sources */,
+				ABC3583E14BEEACB5756D9F7 /* ContactEditViewModel.m in Sources */,
+				ABC3525D857C4554DC866DED /* CoreContact.m in Sources */,
+				ABC35A01C3F815D98F5106E5 /* RealmContact.m in Sources */,
+				ABC350E1CE00C92DCAE03544 /* SQLiteContact.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		ABC357882193615AB515D35F /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				ABC35EE15671C6055F673272 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		ABC35F8AD7290D2AA551F46E /* LaunchScreen.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				ABC35D1C97850ED7CF8278E8 /* Base */,
+			);
+			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		55E2AD8C1B38F48A003AC16E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		55E2AD8D1B38F48A003AC16E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		55E2AD8F1B38F48A003AC16E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9F106F4C88D449F8C406D349 /* Pods-MTDataExample.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = MTDataExample/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		55E2AD901B38F48A003AC16E /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = BD650AB84FEC9694E86D7E91 /* Pods-MTDataExample.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = MTDataExample/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		55E2AD631B38F48A003AC16E /* Build configuration list for PBXProject "MTDataExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				55E2AD8C1B38F48A003AC16E /* Debug */,
+				55E2AD8D1B38F48A003AC16E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		55E2AD8E1B38F48A003AC16E /* Build configuration list for PBXNativeTarget "MTDataExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				55E2AD8F1B38F48A003AC16E /* Debug */,
+				55E2AD901B38F48A003AC16E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		55E2AD971B3918B0003AC16E /* MTDataExample.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				55E2AD981B3918B0003AC16E /* MTDataExample.xcdatamodel */,
+			);
+			currentVersion = 55E2AD981B3918B0003AC16E /* MTDataExample.xcdatamodel */;
+			path = MTDataExample.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 55E2AD601B38F48A003AC16E /* Project object */;
+}

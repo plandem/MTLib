@@ -15,17 +15,27 @@
 @implementation MTEditViewModel
 -(id)initWithModel:(id<MTDataObject>)model fromRepository:(MTDataRepository *)repository {
 	if ((self = [super init])) {
-		NSAssert([[model class] isEqual:[repository modelClass]], @"Model %@ must be same type as repository's model type %@.", NSStringFromClass([model class]), NSStringFromClass([repository modelClass]));
+		NSAssert([model isKindOfClass:[repository modelClass]], @"Model %@ must be same type as repository's model type %@.", NSStringFromClass([model class]), NSStringFromClass([repository modelClass]));
 		_dataRepository = repository;
 		_model = model;
 //		_isValid = NO;
 		_isValid = YES;
 
+		//some types of repositories can require active transaction for any changes on object
+		[_dataRepository beginTransaction];
+
+		//bindings and other setup
 		[self setup];
 		[self setupValidator];
 	}
 
 	return self;
+}
+
+-(void)dealloc {
+	if([_dataRepository inTransaction]) {
+		DDLogError(@"Unpredictable behaviour, repository was in transaction, no any action to save or cancel model %@.", _model);
+	}
 }
 
 -(void)setup {
@@ -34,9 +44,8 @@
 
 -(void)save {
 	if(_isValid) {
-		[_dataRepository withTransaction:^(MTDataRepository *repository){
-			[_dataRepository saveModel:_model];
-		}];
+		[_dataRepository saveModel:_model];
+		[_dataRepository commitTransaction];
 	} else  {
 		DDLogError(@"Unpredictable behaviour, model %@ is not valid yet, but there is a request to save it.", _model);
 	}
@@ -44,6 +53,7 @@
 
 -(void)cancel {
 	[_dataRepository undoModel:_model];
+	[_dataRepository rollbackTransaction];
 }
 
 -(void)setupValidator {

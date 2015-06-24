@@ -12,17 +12,17 @@
 
 @implementation MTDataProvider
 
--(instancetype)initWithModelClass:(Class)modelClass {
+-(instancetype)initWithRepository:(MTDataRepository *)repository {
 	if ((self = [self init])) {
-		_repository = [(MTDataRepository *)[[(id<MTDataObject>)modelClass repositoryClass] alloc] initWithModelClass:modelClass];
+		self.repository = repository;
 	}
 
 	return self;
 }
 
--(instancetype)initWithRepository:(MTDataRepository *)repository {
+-(instancetype)initWithModelClass:(Class)modelClass {
 	if ((self = [self init])) {
-		self.repository = repository;
+		self.repository = [(MTDataRepository *)[[(id<MTDataObject>)modelClass repositoryClass] alloc] initWithModelClass:modelClass];
 	}
 
 	return self;
@@ -74,6 +74,7 @@
 }
 
 -(void)refresh {
+	[self setupWatcher];
 	_models = nil;
 }
 
@@ -102,5 +103,14 @@
 		_repository = repository;
 		[self refresh];
 	}
+}
+
+-(void)setRefreshBlock:(MTDataProviderRefreshBlock)refreshBlock {
+	_refreshBlock = [refreshBlock copy];
+	[self refresh];
+}
+
+-(void)setupWatcher {
+	//by default do nothing, specific to implementation. override to add specific behavior.
 }
 @end

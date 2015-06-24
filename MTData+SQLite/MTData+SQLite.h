@@ -1,5 +1,5 @@
 #ifndef MT_SQLITE_LOG_QUERY
-#define MT_SQLITE_LOG_QUERY 0
+#define MT_SQLITE_LOG_QUERY 1
 #endif
 
 #import "MTData.h"

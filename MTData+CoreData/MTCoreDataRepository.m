@@ -15,8 +15,12 @@
 @end
 
 @implementation MTCoreDataRepository
+-(instancetype)initWithModelClass:(Class)modelClass {
+	return [self initWithModelClass:modelClass withContext:[NSManagedObjectContext mainContext]];
+}
+
 - (instancetype)initWithModelClass:(Class)modelClass withContext:(NSManagedObjectContext *)context {
-	if((self = [self initWithModelClass:modelClass])) {
+	if((self = [super initWithModelClass:modelClass])) {
 		_context = context;
 	}
 
@@ -54,28 +58,46 @@
 	return [[MTCoreDataFetchResult alloc] initWithFetchRequest:fetchRequest inContext:_context];
 }
 
--(void)withTransaction:(MTDataRepositoryTransactionBlock)transaction {
-	_context.undoEnabled = YES;
-	NSAssert(_context.isUndoEnabled, @"Transaction is not supported.");
-
-	@try {
+-(void)beginTransaction {
+	if(![self inTransaction]) {
+		_context.undoEnabled = YES;
+		NSAssert(_context.isUndoEnabled, @"Transaction is not supported.");
 		[_context.undoManager beginUndoGrouping];
-		[_context performBlockAndWait:^{
-			transaction(self);
-		}];
-		[_context.undoManager endUndoGrouping];
+	}
+}
 
-		if(![_context saveNested]) {
-			[_context.undoManager undo];
-			DDLogError(@"Context was not saved due to errors.");
-		}
-	} @catch(NSException *e) {
-		DDLogError(@"%@", e.reason);
-		[_context.undoManager endUndoGrouping];
+-(void)commitTransaction {
+	[_context.undoManager endUndoGrouping];
+
+	if(![_context saveNested]) {
 		[_context.undoManager undo];
+		DDLogError(@"Context was not saved due to errors.");
 	}
 
 	_context.undoEnabled = NO;
+}
+
+-(void)rollbackTransaction {
+	[_context.undoManager endUndoGrouping];
+	[_context.undoManager undo];
+	_context.undoEnabled = NO;
+}
+
+-(BOOL)inTransaction {
+	return _context.isUndoEnabled;
+}
+
+-(void)withTransaction:(MTDataRepositoryTransactionBlock)transaction {
+	@try {
+		[self beginTransaction];
+		[_context performBlockAndWait:^{
+			transaction(self);
+		}];
+		[self commitTransaction];
+	} @catch(NSException *e) {
+		DDLogError(@"%@", e.reason);
+		[self rollbackTransaction];
+	}
 }
 
 -(void)deleteAllWithQuery:(MTDataQuery *)query {
@@ -90,6 +112,7 @@
 
 		[self.context saveNested];
 	}];
+
 }
 
 -(void)undoModel:(id<MTDataObject>)model {

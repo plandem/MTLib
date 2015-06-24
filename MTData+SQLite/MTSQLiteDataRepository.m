@@ -101,18 +101,23 @@ const NSString *MTSQLiteDataRepositoryUpdateNotification = @"MTSQLiteDataReposit
 	return _db;
 }
 
--(void)withTransaction:(MTDataRepositoryTransactionBlock)transactionBlock {
-	FMDatabase *db = self.db;
-
-	@try {
-		[db beginTransaction];
-		transactionBlock(self);
-		[db commit];
-		[self notifyForChanges];
-	} @catch(NSException *e) {
-		DDLogError(@"%@", e.reason);
-		[db rollback];
+-(void)beginTransaction {
+	if(![self inTransaction]) {
+		[self.db beginTransaction];
 	}
+}
+
+-(void)commitTransaction {
+	[self.db commit];
+	[self notifyForChanges];
+}
+
+-(void)rollbackTransaction {
+	[self.db rollback];
+}
+
+-(BOOL)inTransaction {
+	return self.db.inTransaction;
 }
 
 -(id<MTDataObjectCollection>)fetchAllWithQuery:(MTDataQuery *)query {
@@ -122,7 +127,7 @@ const NSString *MTSQLiteDataRepositoryUpdateNotification = @"MTSQLiteDataReposit
 -(void)deleteAllWithQuery:(MTDataQuery *)query {
 	FMDatabase *db = self.db;
 
-	[db beginTransaction];
+	[self beginTransaction];
 
 	NSMutableString *sql = [NSMutableString stringWithFormat:@"DELETE FROM %@", [self.modelClass tableName]];
 	NSString *condition = [_predicateTransformer transformedValue:query.predicate];
@@ -138,8 +143,7 @@ const NSString *MTSQLiteDataRepositoryUpdateNotification = @"MTSQLiteDataReposit
 		DDLogError(@"Error: %@", [db lastErrorMessage]);
 	}
 
-	[db commit];
-	[self notifyForChanges];
+	[self commitTransaction];
 }
 
 -(void)undoModel:(id<MTDataObject>)model {
@@ -162,10 +166,10 @@ const NSString *MTSQLiteDataRepositoryUpdateNotification = @"MTSQLiteDataReposit
 	}
 
 	FMDatabase *db = self.db;
-	BOOL inTransaction = db.inTransaction;
+	BOOL inTransaction = [self inTransaction];
 
 	if(!(inTransaction)) {
-		[db beginTransaction];
+		[self beginTransaction];
 	}
 
 	NSString *sql = [NSString stringWithFormat:@"DELETE FROM %@ WHERE %@ = ?", [self.modelClass tableName], primaryKeyName];
@@ -177,8 +181,7 @@ const NSString *MTSQLiteDataRepositoryUpdateNotification = @"MTSQLiteDataReposit
 	}
 
 	if(!(inTransaction)) {
-		[db commit];
-		[self notifyForChanges];
+		[self commitTransaction];
 	}
 }
 
@@ -188,10 +191,10 @@ const NSString *MTSQLiteDataRepositoryUpdateNotification = @"MTSQLiteDataReposit
 	NSString *primaryKeyName = [self.modelClass primaryKey];
 
 	FMDatabase *db = self.db;
-	BOOL inTransaction = db.inTransaction;
+	BOOL inTransaction = [self inTransaction];
 
 	if(!(inTransaction)) {
-		[db beginTransaction];
+		[self beginTransaction];
 	}
 
 	// prepare args
@@ -258,8 +261,7 @@ const NSString *MTSQLiteDataRepositoryUpdateNotification = @"MTSQLiteDataReposit
 	}
 
 	if(!(inTransaction)) {
-		[db commit];
-		[self notifyForChanges];
+		[self commitTransaction];
 	}
 }
 

@@ -15,6 +15,10 @@ typedef void (^MTDataRepositoryTransactionBlock)(MTDataRepository *dataRepositor
 
 -(instancetype)initWithModelClass:(Class)modelClass;
 -(void)withTransaction:(MTDataRepositoryTransactionBlock)transactionBlock;
+-(void)beginTransaction;
+-(void)commitTransaction;
+-(void)rollbackTransaction;
+-(BOOL)inTransaction;
 -(void)ensureModelType:(id<MTDataObject>)model;
 
 -(id<MTDataObject>)createModel;

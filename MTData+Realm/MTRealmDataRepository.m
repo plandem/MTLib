@@ -30,25 +30,32 @@
 	return self;
 }
 
--(void)withTransaction:(MTDataRepositoryTransactionBlock)transactionBlock {
-	@try {
+-(void)beginTransaction {
+	if(![self inTransaction]) {
 		[_realm beginWriteTransaction];
-		transactionBlock(self);
-		[_realm commitWriteTransaction];
-	} @catch(NSException *e) {
-		DDLogError(@"%@", e.reason);
-		[_realm cancelWriteTransaction];
 	}
+}
+
+-(void)commitTransaction {
+	[_realm commitWriteTransaction];
+}
+
+-(void)rollbackTransaction {
+	[_realm cancelWriteTransaction];
+}
+
+-(BOOL)inTransaction {
+	return _realm.inWriteTransaction;
 }
 
 -(void)saveModel:(id<MTDataObject>)model {
 	[self ensureModelType:model];
 
 	RLMObjectSchema *schema = ((MTRealmDataObject *)model).objectSchema;
-	BOOL inWriteTransaction = _realm.inWriteTransaction;
+	BOOL inTransaction = [self inTransaction];
 
-	if(!(inWriteTransaction)) {
-		[_realm beginWriteTransaction];
+	if(!(inTransaction)) {
+		[self beginTransaction];
 	}
 
 	if (schema.primaryKeyProperty) {
@@ -57,36 +64,36 @@
 		[_realm addObject:(id) model];
 	}
 
-	if(!(inWriteTransaction)) {
-		[_realm commitWriteTransaction];
+	if(!(inTransaction)) {
+		[self commitTransaction];
 	}
 }
 
 -(void)deleteModel:(id <MTDataObject>)model {
 	[self ensureModelType:model];
 
-	BOOL inWriteTransaction = _realm.inWriteTransaction;
-	if(!(inWriteTransaction)) {
-		[_realm beginWriteTransaction];
+	BOOL inTransaction = [self inTransaction];
+	if(!(inTransaction)) {
+		[self beginTransaction];
 	}
 
 	[_realm deleteObject:(MTRealmDataObject *)model];
 
-	if(!(inWriteTransaction)) {
-		[_realm commitWriteTransaction];
+	if(!(inTransaction)) {
+		[self commitTransaction];
 	}
 }
 
 -(void)deleteAllWithQuery:(MTDataQuery *)query {
-	BOOL inWriteTransaction = _realm.inWriteTransaction;
-	if(!(inWriteTransaction)) {
-		[_realm beginWriteTransaction];
+	BOOL inTransaction = [self inTransaction];
+	if(!(inTransaction)) {
+		[self beginTransaction];
 	}
 
 	[_realm deleteObjects:[self fetchAllWithQuery:query]];
 
-	if(!(inWriteTransaction)) {
-		[_realm commitWriteTransaction];
+	if(!(inTransaction)) {
+		[self commitTransaction];
 	}
 }
 

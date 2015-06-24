@@ -30,4 +30,5 @@ typedef void (^MTDataProviderMoveBlock)(MTDataProvider *dataProvider, NSIndexPat
 -(void)moveFromIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath;
 
 -(MTDataProvider *)makeQuery:(void(^)(MTDataQuery *query, MTDataSort *sort))block;
+//-(void)setupWatcher;
 @end

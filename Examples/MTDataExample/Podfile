@@ -1,0 +1,15 @@
+platform :ios, 8.0
+
+target :MTDataExample do
+	pod 'MTLib/MTLogger', :path => '../../../MTLib'
+	pod 'MTLib/MTForm', :path => '../../../MTLib'
+	pod 'MTLib/MTRouter', :path => '../../../MTLib'
+	pod 'MTLib/MTData+CoreData', :path => '../../../MTLib'
+	pod 'MTLib/MTData+Realm', :path => '../../../MTLib'
+	pod 'MTLib/MTData+SQLite', :path => '../../../MTLib'
+	pod 'MTLib/MTViewModel', :path => '../../../MTLib'
+
+	pod 'Typhoon'
+
+	inhibit_all_warnings!
+end
