@@ -5,7 +5,10 @@
 
 #import <MTLib/MTListViewModel.h>
 
-@interface ContactListViewModel : MTListViewModel
+@protocol ContactListViewModel
 -(NSString *)nameForIndexPath:(NSIndexPath *)indexPath;
 -(NSString *)emailForIndexPath:(NSIndexPath *)indexPath;
+@end
+
+@interface ContactListViewModel : MTListViewModel <ContactListViewModel>
 @end

@@ -3,9 +3,7 @@
 // Copyright (c) 2015 Andrey. All rights reserved.
 //
 
-#import <MTLib/MTListViewModel+Cache.h>
 #import "ContactListViewModel.h"
-#import "ContactProtocol.h"
 
 @implementation ContactListViewModel
 -(id)initWithRepository:(MTDataRepository *)repository {
@@ -19,13 +17,5 @@
 
 	return self;
 }
--(NSString *)nameForIndexPath:(NSIndexPath *)indexPath {
-	id<ContactProtocol> model = (id <ContactProtocol>)[self modelAtIndexPath:indexPath];
-	return model.name;
-}
 
--(NSString *)emailForIndexPath:(NSIndexPath *)indexPath {
-	id<ContactProtocol> model = (id <ContactProtocol>)[self modelAtIndexPath:indexPath];
-	return model.email;
-}
 @end

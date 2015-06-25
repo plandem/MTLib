@@ -3,8 +3,16 @@
 // Copyright (c) 2015 Melatonin LLC. All rights reserved.
 //
 
+#import <objc/runtime.h>
 #import "MTDataRepository.h"
 #import "MTListViewModel+Cache.h"
+
+id modelGetterForIndexPath(id self, SEL _cmd, id indexPath) {
+	NSString *method = NSStringFromSelector(_cmd);
+	NSString *key = [[method stringByReplacingOccurrencesOfString:@"ForIndexPath" withString:@""] stringByReplacingOccurrencesOfString:@":" withString:@""];
+	id model = [self modelAtIndexPath:indexPath];
+	return [model valueForKey:key];
+}
 
 @interface MTListViewModel()
 @property (nonatomic, strong) RACSignal *updatedContentSignal;
@@ -13,6 +21,17 @@
 @end
 
 @implementation MTListViewModel
++(BOOL)resolveInstanceMethod:(SEL)aSEL {
+	NSString *method = NSStringFromSelector(aSEL);
+
+	if([method hasSuffix:@"ForIndexPath:"]) {
+		class_addMethod([self class], aSEL, (IMP) modelGetterForIndexPath, "@:@");
+		return YES;
+	}
+
+	return [super resolveInstanceMethod:aSEL];
+}
+
 -(id)initWithRepository:(MTDataRepository *)repository {
 	if ((self = [super init])) {
 		_dataProvider = [(MTDataProvider *) [[(id<MTDataObject>)[repository modelClass] dataProviderClass] alloc] initWithRepository:repository];
