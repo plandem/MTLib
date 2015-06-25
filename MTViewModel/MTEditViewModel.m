@@ -75,4 +75,12 @@
 //		self.isValid = [isValid boolValue];
 //	}];
 }
+
+- (id)valueForUndefinedKey:(NSString *)key {
+	return [(id)self.model valueForKey:key];
+}
+
+- (void)setValue:(id)value forUndefinedKey:(NSString *)key {
+	return 	[(id)self.model setValue:value forKey:key];
+}
 @end
