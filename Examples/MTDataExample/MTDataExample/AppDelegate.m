@@ -7,19 +7,10 @@
 //
 
 #import "AppDelegate.h"
-#import <Realm/Realm.h>
-#import "RealmContact.h"
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-	MTRealmDataRepository *rep = [[MTRealmDataRepository alloc] initWithModelClass:[RealmContact class]];
-//	RealmContact *contact = (RealmContact *)[rep createModel];
-	RealmContact *contact = [[RealmContact alloc] init];
-	contact.name = @"name of contact";
-	NSLog(@"%@/%@", contact.id, [contact valueForKey:@"name"]);
-	NSLog(@"%@/%@", [RealmContact defaultPropertyValues], [RealmContact defaultPropertyValues]);
-
 	// Override point for customization after application launch.
 	[self.window makeKeyAndVisible];
     return YES;

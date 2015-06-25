@@ -30,7 +30,7 @@
 		//if subclass cell has own style - use it
 		[self performSelector:@selector(applyStyles)];
 	} else {
-		//use viewController has global styles for cell - use it
+		//if viewController has global styles for cell - use it
 		FXFormController *controller = [self.field performSelector:@selector(formController)];
 		if ([controller.delegate respondsToSelector:@selector(applyStylesForFieldCell:)]) {
 			[controller.delegate performSelector:@selector(applyStylesForFieldCell:) withObject:self];

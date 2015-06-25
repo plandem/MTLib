@@ -33,7 +33,7 @@
 }
 
 - (void)setup {
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextUpdated:) name:NSManagedObjectContextDidSaveNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextDidUpdate:) name:NSManagedObjectContextDidSaveNotification object:nil];
 }
 
 - (void)dealloc {
@@ -76,13 +76,18 @@
 	_predicateToWatch = (_predicateToWatch) ? [NSCompoundPredicate orPredicateWithSubpredicates:@[_predicateToWatch, newPredicate]] : newPredicate;
 }
 
-- (void)contextUpdated:(NSNotification *)notification {
+- (void)contextDidUpdate:(NSNotification *)notification {
 	if(_changesCallback == nil) {
 		return;
 	}
 
 	NSManagedObjectContext *incomingContext = [notification object];
 	NSPersistentStoreCoordinator *incomingCoordinator = [incomingContext persistentStoreCoordinator];
+
+	//skip any child context in case if we are watching for changes at store
+	if(_persistentStoreCoordinatorToWatch && incomingContext.parentContext) {
+		return;
+	}
 
 	// differ context / differ store?
 	if ((_contextToWatch && incomingContext != _contextToWatch) || (_persistentStoreCoordinatorToWatch && incomingCoordinator != _persistentStoreCoordinatorToWatch)) {
@@ -100,6 +105,11 @@
 	NSMutableSet *updated = [[notification userInfo][NSUpdatedObjectsKey] mutableCopy];
 
 	// filter updated objects with predicate
+	// TODO: in case if we watch for advanced predicate (Entity + some properties) we can 'miss' some hits for updated objects, because of changes for 'watching' property.
+	// E.g.: we watched for 'isActive = 1' and our model set isActive to 0, so this filter will fail. To handle this we must get set of updated properties at
+	// NSManagedObjectContextWillSaveNotification notification via [context updatedObjects] and later here we must add additionally check for that properties.
+	// N.B.: right now behaviour is almost same as at NSFetchedController and differ contexts - it has 'same' problems with objects outside context and faulted.
+
 	[inserted filterUsingPredicate:_predicateToWatch];
 	[deleted filterUsingPredicate:_predicateToWatch];
 	[updated filterUsingPredicate:_predicateToWatch];

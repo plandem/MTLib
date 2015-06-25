@@ -9,9 +9,4 @@
 @dynamic name;
 @dynamic email;
 @dynamic banned;
-
--(BOOL)validateValue:(id *)value forKey:(NSString *)key error:(NSError **)error {
-	NSLog(@"validateValue");
-	return [super validateValue:value forKey:key error:error];
-}
 @end

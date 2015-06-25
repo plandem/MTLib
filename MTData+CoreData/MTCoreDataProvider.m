@@ -13,7 +13,6 @@
 @end
 
 @implementation MTCoreDataProvider {
-	NSPredicate *_previousPredicate;
 	MTCoreDataProviderOptions _options;
 }
 
@@ -41,17 +40,6 @@
 	return self;
 }
 
--(void)prepare:(BOOL)forceUpdate {
-	if (self.watcher.predicateToWatch == nil || _previousPredicate != self.query.predicate) {
-		//CoreData's implementation for updates is quite advanced, so we must refresh watching predicate if needed.
-		_previousPredicate = ((self.query) ? self.query.predicate : nil);
-		[self.watcher reset];
-		[self.watcher addEntityToWatch:self.repository.modelClass withPredicate:_previousPredicate];
-	}
-
-	[super prepare:forceUpdate];
-}
-
 - (void)setOptions:(MTCoreDataProviderOptions)options {
 	_options = options;
 	_watcher = nil;
@@ -60,8 +48,6 @@
 
 -(MTCoreDataWatcher *)watcher {
 	if(_watcher == nil) {
-		_previousPredicate = nil;
-
 		if (_options & MTCoreDataProviderOptionWatchStore) {
 			_watcher = [[MTCoreDataWatcher alloc] initWithPersistentStoreCoordinator:((MTCoreDataRepository *) self.repository).context.persistentStoreCoordinator];
 		} else if (_options & MTCoreDataProviderOptionWatchContext) {
@@ -75,6 +61,10 @@
 -(void)setupWatcher {
 	if([self refreshBlock]) {
 		if(self.watcher.changesCallback == nil) {
+			// we will watch for just same entity, it's quite hard to watch for changes via advanced 'query' predicate due to limitation of watcher.
+			// N.B.: to decrease memory consume, set limit for query to limit fetching results.
+			[self.watcher addEntityToWatch:self.repository.modelClass];
+
 			@weakify(self);
 			self.watcher.changesCallback = ^(NSDictionary *changes, NSManagedObjectContext *ctx) {
 				@strongify(self);
