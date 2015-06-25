@@ -9,6 +9,7 @@
 @property (nonatomic, strong) MTDataRepository *dataRepository;
 @property (nonatomic, strong) id<MTDataObject> model;
 @property (nonatomic, assign) BOOL isValid;
+@property (nonatomic, assign) BOOL readOnly;
 //@property (nonatomic, strong) RACDisposable *validator;
 @end
 
@@ -44,6 +45,7 @@
 
 -(void)save {
 	if(_isValid) {
+		_readOnly = YES;
 		[_dataRepository saveModel:_model];
 		[_dataRepository commitTransaction];
 	} else  {
@@ -52,6 +54,7 @@
 }
 
 -(void)cancel {
+	_readOnly = YES;
 	[_dataRepository undoModel:_model];
 	[_dataRepository rollbackTransaction];
 }
