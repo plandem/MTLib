@@ -5,7 +5,7 @@
 
 #import <UIKit/UIKit.h>
 
-typedef NS_OPTIONS(NSInteger, MTFormNumberInputMode) {
+typedef NS_ENUM(NSInteger, MTFormNumberInputMode) {
 	MTFormNumberInputCellModeFloat,
 	MTFormNumberInputCellModeInteger,
 	MTFormNumberInputCellModeUnsigned,

@@ -9,21 +9,21 @@
 @property (nonatomic, strong) MTDataRepository *dataRepository;
 @property (nonatomic, strong) id<MTDataObject> model;
 @property (nonatomic, assign) BOOL isValid;
-@property (nonatomic, assign) BOOL readOnly;
 //@property (nonatomic, strong) RACDisposable *validator;
 @end
 
-@implementation MTEditViewModel
+@implementation MTEditViewModel {
+	NSMutableDictionary *_modelValues;
+}
+
 -(id)initWithModel:(id<MTDataObject>)model fromRepository:(MTDataRepository *)repository {
 	if ((self = [super init])) {
 		NSAssert([model isKindOfClass:[repository modelClass]], @"Model %@ must be same type as repository's model type %@.", NSStringFromClass([model class]), NSStringFromClass([repository modelClass]));
 		_dataRepository = repository;
 		_model = model;
+		_modelValues = [NSMutableDictionary dictionary];
 //		_isValid = NO;
 		_isValid = YES;
-
-		//some types of repositories can require active transaction for any changes on object
-		[_dataRepository beginTransaction];
 
 		//bindings and other setup
 		[self setup];
@@ -33,30 +33,39 @@
 	return self;
 }
 
--(void)dealloc {
-	if([_dataRepository inTransaction]) {
-		DDLogError(@"Unpredictable behaviour, repository was in transaction, no any action to save or cancel model %@.", _model);
-	}
-}
-
 -(void)setup {
 
 }
 
 -(void)save {
-	if(_isValid) {
-		_readOnly = YES;
-		[_dataRepository saveModel:_model];
-		[_dataRepository commitTransaction];
-	} else  {
+	//validate data
+	if(!_isValid) {
 		DDLogError(@"Unpredictable behaviour, model %@ is not valid yet, but there is a request to save it.", _model);
+		return;
 	}
+
+	//TODO: think about moving saving process out of 'withTransaction' and put it between 'beginTransaction/commitTransaction'.
+	@weakify(self);
+	[self.dataRepository withTransaction:^(MTDataRepository *repository) {
+		@strongify(self);
+
+		[_modelValues enumerateKeysAndObjectsUsingBlock:^(id key, id value, BOOL *stop) {
+			if ([value isEqual:[NSNull null]]) {
+				value = nil;
+			}
+
+			//we are using keyPath, because in some cases it can be required to set value to related object
+			[(id)self.model setValue:value forKeyPath:key];
+		}];
+
+		[repository saveModel:self.model];
+		[_modelValues removeAllObjects];
+	}];
 }
 
 -(void)cancel {
-	_readOnly = YES;
-	[_dataRepository undoModel:_model];
-	[_dataRepository rollbackTransaction];
+	//some repositories (E.g. CoreData) must revert created model or it will be saved in the future.
+	[self.dataRepository undoModel:self.model];
 }
 
 -(void)setupValidator {
@@ -76,11 +85,29 @@
 //	}];
 }
 
+#pragma mark model getter/setter for FXForms
+//we must override get/set for undefined to allow FXForms works transparently with properties of model.
 - (id)valueForUndefinedKey:(NSString *)key {
-	return [(id)self.model valueForKey:key];
+	id value = _modelValues[key];
+	if(value) {
+		//return already requested value
+		return value;
+	}
+
+	//we are using keyPath, because in some cases it can be required to get value from related object
+	value = [(id)self.model valueForKeyPath:key];
+	if(value) {
+		_modelValues[key] = value;
+	}
+
+	return value;
 }
 
 - (void)setValue:(id)value forUndefinedKey:(NSString *)key {
-	return 	[(id)self.model setValue:value forKey:key];
+	if(value == nil) {
+		value = [NSNull null];
+	}
+
+	_modelValues[key] = value;
 }
 @end

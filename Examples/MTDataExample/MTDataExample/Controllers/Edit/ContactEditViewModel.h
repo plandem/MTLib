@@ -4,9 +4,5 @@
 //
 
 #import <MTLib/MTEditViewModel.h>
-
 @interface ContactEditViewModel : MTEditViewModel
-//@property (nonatomic, retain) NSString *name;
-//@property (nonatomic, retain) NSString *email;
-//@property (nonatomic, assign) NSInteger banned;
 @end

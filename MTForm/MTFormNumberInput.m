@@ -48,7 +48,7 @@
 - (NSNumber *)value {
 	if(_mode == MTFormNumberInputCellModeFloat)
 		return @(_valueFloat);
-	else if(_mode == MTFormNumberInputCellModeInteger)
+	else if(_mode == MTFormNumberInputCellModeInteger || _mode == MTFormNumberInputCellModeUnsigned)
 		return @(_valueInteger);
 	else
 		return nil;
@@ -59,6 +59,8 @@
 		_valueFloat = [value floatValue];
 	} else if(_mode == MTFormNumberInputCellModeInteger) {
 		_valueInteger = [value integerValue];
+	} else if(_mode == MTFormNumberInputCellModeUnsigned) {
+		_valueInteger = [value unsignedIntegerValue];
 	}
 
 	_hasChanged = NO;
