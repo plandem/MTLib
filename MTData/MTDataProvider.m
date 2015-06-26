@@ -55,7 +55,7 @@
 }
 
 -(void)moveFromIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-	if(_moveBlock) {
+	if(_moveBlock && ![fromIndexPath isEqual:toIndexPath]) {
 		id<MTDataObject>fromModel = [self modelAtIndexPath:fromIndexPath];
 		id<MTDataObject>toModel = [self modelAtIndexPath:toIndexPath];
 		_moveBlock(self, fromIndexPath, fromModel, toIndexPath, toModel);
