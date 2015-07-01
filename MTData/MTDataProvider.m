@@ -28,7 +28,7 @@
 	return self;
 }
 
-// creates and return ViewModel for model at thread. if no thread is provided
+// creates and return ViewModel for model at indexPath. if no indexPath is provided then new model will be created
 -(id)createViewModel:(Class)viewModelClass forIndexPath:(NSIndexPath *)indexPath {
 	id viewModel = [viewModelClass alloc];
 	NSAssert([viewModel respondsToSelector:@selector(initWithModel:)], @"You must implement the 'initWithModel:' selector for '%@'", NSStringFromClass(viewModelClass));
@@ -111,6 +111,6 @@
 }
 
 -(void)setupWatcher {
-	//by default do nothing, specific to implementation. override to add specific behavior.
+	//by default do nothing. override to add specific behavior.
 }
 @end
