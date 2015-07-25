@@ -23,7 +23,8 @@ Pod::Spec.new do |s|
 
   s.subspec 'MTLogger+Crashlytics' do |ss|
     ss.dependency 'MTLib/MTLogger'
-    ss.dependency 'CrashlyticsFramework'
+    ss.dependency 'Fabric'
+    ss.dependency 'Crashlytics'
     ss.dependency 'CrashlyticsLumberjack'
     ss.source_files = 'MTLogger+Crashlytics/**/*.{h,m}'
   end
@@ -84,8 +85,8 @@ Pod::Spec.new do |s|
   end
 
   s.subspec 'MTViewModel' do |ss|
-    ss.dependency 'ReactiveCocoa'
-    ss.dependency 'ReactiveViewModel'
+    ss.dependency 'ReactiveCocoa', '2.5'
+    ss.dependency 'ReactiveViewModel', '0.3'
     ss.dependency 'MTLib/MTLogger'
     ss.dependency 'MTLib/MTRouter'
     ss.dependency 'MTLib/MTData'

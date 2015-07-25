@@ -4,6 +4,7 @@
 //
 
 #import <objc/runtime.h>
+#import <ReactiveCocoa/ReactiveCocoa.h>
 #import "MTDataRepository.h"
 #import "MTListViewModel+Cache.h"
 

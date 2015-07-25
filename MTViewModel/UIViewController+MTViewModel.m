@@ -4,6 +4,7 @@
 //
 
 #import <objc/runtime.h>
+#import <ReactiveCocoa/ReactiveCocoa.h>
 #import "MTLib/NSObject+Swizzle.h"
 #import "MTRouterProtocol.h"
 #import "UIViewController+MTViewModel.h"
