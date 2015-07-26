@@ -7,6 +7,5 @@
 #import <MTLib/MTStyleKit.h>
 
 @interface FXFormBaseCell (MTStyleKit)
--(id<MTStyleKit>)styleKit;
 //-(void)applyStyles; //implement it, if needed
 @end

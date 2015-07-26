@@ -7,47 +7,88 @@
 #import "NSObject+Swizzle.h"
 #import "UIViewController+MTStyleKit.h"
 
-@implementation UIViewController (MTStyleKit)
-@dynamic styleKit;
+@interface MTStyleKitObserver : NSObject
+@property (nonatomic, weak) UIViewController *viewController;
+-(instancetype)initWithViewController:(UIViewController *)viewController;
+@end
 
+@implementation UIViewController (MTStyleKit)
 + (void)load {
 	[self swizzleInstanceSelector:@selector(viewWillAppear:) withNewSelector:@selector(swizzle_viewWillAppearStyleKit:)];
 }
 
--(id<MTStyleKit>)styleKit {
-	//has already attached styleKit?
-	id<MTStyleKit> styleKit = objc_getAssociatedObject(self, @selector(styleKit));
-	if(styleKit) {
-		return styleKit;
-	}
-
-	//ok, let's try to get styleKit from UIApplication
-	id application = [[UIApplication sharedApplication] delegate];
-	if([application respondsToSelector:@selector(styleKit)]) {
-		styleKit = [application performSelector:@selector(styleKit)];
-		[self setStyleKit:styleKit];
-	}
-
-	return styleKit;
+-(BOOL)isStyleKitApplied {
+	return [objc_getAssociatedObject(self, @selector(isStyleKitApplied)) boolValue];
 }
 
-- (void)setStyleKit:(id<MTStyleKit>)styleKit {
-	if(styleKit && styleKit != objc_getAssociatedObject(self, @selector(styleKit))) {
-		objc_setAssociatedObject(self, @selector(styleKit), styleKit, OBJC_ASSOCIATION_ASSIGN);
-		objc_setAssociatedObject(self, @selector(applyStyles), @(NO), OBJC_ASSOCIATION_ASSIGN);
-	}
+-(void)setIsStyleKitApplied:(BOOL)applied {
+	objc_setAssociatedObject(self, @selector(isStyleKitApplied), @(applied), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 -(void)swizzle_viewWillAppearStyleKit:(BOOL)animated {
 	[self swizzle_viewWillAppearStyleKit:animated];
 
-	if(!([objc_getAssociatedObject(self, @selector(applyStyles)) boolValue])) {
-		[self applyStyles];
-		objc_setAssociatedObject(self, @selector(applyStyles), @(YES), OBJC_ASSOCIATION_ASSIGN);
+	//attach observer for updates of style kit
+	if(!objc_getAssociatedObject(self, @selector(refreshStyles))) {
+		objc_setAssociatedObject(self, @selector(refreshStyles), [[MTStyleKitObserver alloc] initWithViewController:self], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+	}
+
+	//used only to prevent applyStyles at each viewWillAppear - we must call it only once and we can't call it at viewDidLoad
+	if(!self.isStyleKitApplied) {
+		self.isStyleKitApplied = YES;
+
+		if([self respondsToSelector:@selector(applyStyles)]) {
+			[self performSelector:@selector(applyStyles)];
+		}
 	}
 }
 
--(void)applyStyles {
-	// Nothing to do by default. Put any code that will style UIViewController here.
+-(void)refreshStyles {
+	if([self respondsToSelector:@selector(applyStyles)]) {
+		[self performSelector:@selector(applyStyles)];
+	}
+
+	if([self isKindOfClass:[UITableViewController class]]) {
+		[((UITableViewController *)self).tableView reloadData];
+	} else if([self isKindOfClass:[UICollectionViewController class]]) {
+		[((UICollectionViewController *)self).collectionView reloadData];
+	} else {
+		[self.view setNeedsDisplay];
+
+		for(UIView *child in self.view.subviews) {
+			if([child isKindOfClass:[UITableView class]]) {
+				[(UITableView *)child reloadData];
+			} else if([child isKindOfClass:[UICollectionView class]]) {
+				[(UICollectionView *)child reloadData];
+			}
+		}
+	}
 }
+
+@end
+
+@implementation MTStyleKitObserver
+-(instancetype)initWithViewController:(UIViewController *)viewController {
+	if((self = [super init])) {
+		self.viewController = viewController;
+
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(handleStyleKitChangeNotification:)
+													 name:(NSString *)MTStyleKitChangedNotification
+												   object:nil];
+	}
+
+	return self;
+}
+
+-(void)handleStyleKitChangeNotification:(NSNotification *)notification {
+	[self.viewController refreshStyles];
+}
+
+-(void)dealloc {
+	[[NSNotificationCenter defaultCenter] removeObserver:self
+													name:(NSString *) MTStyleKitChangedNotification
+												  object:nil];
+}
+
 @end

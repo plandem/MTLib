@@ -7,6 +7,12 @@
 #import "MTStyleKit.h"
 
 @interface UIViewController (MTStyleKit)
-@property(nonatomic, weak) id<MTStyleKit> styleKit;
--(void)applyStyles;
+//this method (if implemented) will be called once at 'viewWillAppear'
+//-(void)applyStyles;
+
+//this method is called each time after setting a new style kit for UIApplication
+-(void)refreshStyles;
+
+//implement it if you use FXForms and want to style fields
+//-(void)applyStylesForFieldCell:(FXFormBaseCell *)fieldCell;
 @end

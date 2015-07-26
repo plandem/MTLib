@@ -5,5 +5,7 @@
 
 #import <Foundation/Foundation.h>
 
+extern const NSString *MTStyleKitChangedNotification;
+
 @protocol MTStyleKit <NSObject>
 @end

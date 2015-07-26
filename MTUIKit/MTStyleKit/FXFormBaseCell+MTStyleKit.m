@@ -13,16 +13,6 @@
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
--(id<MTStyleKit>)styleKit {
-	FXFormController *controller = [self.field performSelector:@selector(formController)];
-
-	if([controller.delegate respondsToSelector:@selector(styleKit)]) {
-		return (id<MTStyleKit>)[controller.delegate performSelector:@selector(styleKit)];
-	}
-
-	return nil;
-}
-
 - (void)swizzle_setField:(FXFormField *)field {
 	[self swizzle_setField:field];
 
@@ -30,8 +20,9 @@
 		//if subclass cell has own style - use it
 		[self performSelector:@selector(applyStyles)];
 	} else {
-		//if viewController has global styles for cell - use it
 		FXFormController *controller = [self.field performSelector:@selector(formController)];
+
+		//if viewController has global styles for cell - use it
 		if ([controller.delegate respondsToSelector:@selector(applyStylesForFieldCell:)]) {
 			[controller.delegate performSelector:@selector(applyStylesForFieldCell:) withObject:self];
 		}
