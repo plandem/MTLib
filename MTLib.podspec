@@ -35,12 +35,6 @@ Pod::Spec.new do |s|
     ss.source_files = 'MTUIKit/**/*.{h,m}'
   end
 
-  s.subspec 'MTUIKit' do |ss|
-    ss.framework = 'UIKit'
-    ss.dependency 'MTLib/MTCore'
-    ss.source_files = 'MTUIKit/**/*.{h,m}'
-  end
-
   s.subspec 'MTRouter' do |ss|
     ss.framework = 'UIKit'
     ss.dependency 'MTLib/MTCore'
@@ -92,5 +86,16 @@ Pod::Spec.new do |s|
     ss.dependency 'MTLib/MTData'
     ss.dependency 'MTLib/MTForm'
     ss.source_files = 'MTViewModel/**/*.{h,m}'
+  end
+
+  s.subspec 'MTSlider' do |ss|
+    ss.source_files = 'MTSlider/**/*.{h,m}'
+  end
+
+  s.subspec 'MTTagView' do |ss|
+    ss.dependency 'AtkDragAndDrop'
+    ss.dependency 'MTLib/MTLogger'
+    ss.dependency 'MTLib/MTUIKit'
+    ss.source_files = 'MTTagView/**/*.{h,m}'
   end
 end

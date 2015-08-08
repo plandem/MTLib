@@ -1,9 +1,6 @@
 //
-//  MTSliderItemContainerView.h
-//  Slider
-//
-//  Created by Alexey Bukhtin on 01.04.15.
-//  Copyright (c) 2015 MT. All rights reserved.
+// Created by Alexey Bukhtin on 01.04.15.
+// Copyright (c) 2015 Melatonin LLC. All rights reserved.
 //
 
 #import "MTSlider.h"
