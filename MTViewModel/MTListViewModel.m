@@ -76,11 +76,15 @@ id modelGetterForIndexPath(id self, SEL _cmd, id indexPath) {
 }
 
 -(void)deleteAtIndexPath:(NSIndexPath *)indexPath {
-	[self.dataProvider deleteAtIndexPath:indexPath];
+	[self.dataProvider.repository withTransaction:^(MTDataRepository *dataRepository){
+		[self.dataProvider deleteAtIndexPath:indexPath];
+	}];
 }
 
 -(void)moveFromIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-	[self.dataProvider moveFromIndexPath:fromIndexPath toIndexPath:toIndexPath];
+	[self.dataProvider.repository withTransaction:^(MTDataRepository *dataRepository){
+		[self.dataProvider moveFromIndexPath:fromIndexPath toIndexPath:toIndexPath];
+	}];
 }
 
 -(id)createViewModel:(Class)viewModelClass forIndexPath:(NSIndexPath *)indexPath {
