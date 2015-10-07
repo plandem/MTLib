@@ -41,7 +41,6 @@
 }
 
 - (void)autoResignTextFieldTap:(UITapGestureRecognizer *)recognizer {
-	NSLog(@"autoResignTextFieldTap");
 	NSMutableArray *fields = objc_getAssociatedObject(self, (@selector(autoResignTextField:process:)));
 	for (UITextField *textField in fields) {
 		if ([textField isFirstResponder]) {
