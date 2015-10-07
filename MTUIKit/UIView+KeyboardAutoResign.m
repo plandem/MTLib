@@ -7,30 +7,20 @@
 #import "UIView+KeyboardAutoResign.h"
 
 @implementation UIView (KeyboardAutoResign)
-
--(void)autoResignStart {
-	UITapGestureRecognizer *recognizer = objc_getAssociatedObject(self, (@selector(autoResignSubviewsTap:)));
-
-	if(!(recognizer)) {
-		recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(autoResignSubviewsTap:)];
-		[recognizer setCancelsTouchesInView:NO];
-		objc_setAssociatedObject(self, @selector(autoResignSubviewsTap:), recognizer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-		[self addGestureRecognizer:recognizer];
-	}
-}
-
--(void)autoResignStop {
-	UITapGestureRecognizer *recognizer = objc_getAssociatedObject(self, (@selector(autoResignSubviewsTap:)));
-	if(recognizer) {
-		[self removeGestureRecognizer:recognizer];
-	}
-}
-
 - (void)setAutoResignSubviews:(BOOL)state {
+	UITapGestureRecognizer *recognizer = objc_getAssociatedObject(self, (@selector(autoResignSubviewsTap:)));
+
 	if(state) {
-		[self autoResignStart];
+		if(!(recognizer)) {
+			recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(autoResignSubviewsTap:)];
+			[recognizer setCancelsTouchesInView: NO];
+			objc_setAssociatedObject(self, @selector(autoResignSubviewsTap:), recognizer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+			[self addGestureRecognizer:recognizer];
+		}
 	} else {
-		[self autoResignStop];
+		if(recognizer) {
+			[self removeGestureRecognizer:recognizer];
+		}
 	}
 
 	objc_setAssociatedObject(self, @selector(autoResignSubviews), @(state), OBJC_ASSOCIATION_COPY_NONATOMIC);
@@ -51,7 +41,7 @@
 }
 
 - (void)autoResignTextFieldTap:(UITapGestureRecognizer *)recognizer {
-	NSLog(@"!!!! MTLib/UIView+autoresign, tap !!!!");
+	NSLog(@"autoResignTextFieldTap");
 	NSMutableArray *fields = objc_getAssociatedObject(self, (@selector(autoResignTextField:process:)));
 	for (UITextField *textField in fields) {
 		if ([textField isFirstResponder]) {
@@ -68,9 +58,16 @@
 		objc_setAssociatedObject(self, @selector(autoResignTextField:process:), fields, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 	}
 
-	[self autoResignStart];
+	UITapGestureRecognizer *recognizer = objc_getAssociatedObject(self, (@selector(autoResignTextFieldTap:)));
+	if(!(recognizer)) {
+		recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(autoResignTextFieldTap:)];
+		[recognizer setCancelsTouchesInView: NO];
+		objc_setAssociatedObject(self, @selector(autoResignTextFieldTap:), recognizer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+		[self addGestureRecognizer:recognizer];
+	}
 
-	if([fields indexOfObject:textField] == NSNotFound) {
+	NSInteger index = [fields indexOfObject:textField];
+	if(index == NSNotFound) {
 		if(process) {
 			[fields addObject:textField];
 		}
