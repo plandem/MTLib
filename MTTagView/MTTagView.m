@@ -195,7 +195,7 @@ const NSInteger TAG_FLAG_ID		= 0x200000;
 	//TODO: cancel animations
 }*/
 
--(void)setDelegate:(id <TagsViewDelegate>)delegate {
+-(void)setDelegate:(id <MTTagViewDelegate>)delegate {
 	if(delegate == nil)
 		return;
 
@@ -578,8 +578,9 @@ const NSInteger TAG_FLAG_ID		= 0x200000;
 - (id<AtkDragSourceProtocol>)findDragSource:(AtkDragAndDropManager *)manager recognizer:(UIGestureRecognizer *)recognizer {
 	UIView *hitView = [manager.rootView hitTest:[recognizer locationInView:manager.rootView] withEvent:nil];
 
-	if(!(hitView.tag & TAG_FLAG_ID))
+	if(!(hitView.tag & TAG_FLAG_ID)) {
 		return nil;
+	}
 
 	MTTagViewSourceWrapper *ret = [[MTTagViewSourceWrapper alloc] initWithView:hitView];
 	self.indexPathForDragSource = [NSIndexPath indexPathForRow:(hitView.tag & ~TAG_FLAG_ID) inSection:_selectedSection];

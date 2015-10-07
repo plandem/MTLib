@@ -315,8 +315,7 @@ enum {
 		if (selected) {
 			label.textColor = [UIColor whiteColor];
 
-			MTSliderItemContainerView *container = [[MTSliderItemContainerView alloc] initWithItemView:label edgeInsets:UIEdgeInsetsMake(4.f, 6.f, 0.f, 6.f)];
-			container.backgroundColor = self.tintColor;
+			MTSliderItemContainerView *container = [[MTSliderItemContainerView alloc] initWithItemView:label edgeInsets:UIEdgeInsetsMake(4.f, 6.f, 0.f, 6.f) color:self.tintColor];
 			container.layer.cornerRadius = 3.f;
 			return container;
 		}

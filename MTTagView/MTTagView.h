@@ -8,7 +8,7 @@
 
 @class MTTagView;
 
-@protocol TagsViewDelegate <NSObject>
+@protocol MTTagViewDelegate <NSObject>
 @required
 -(NSUInteger)numberOfSectionInTagView:(MTTagView *)tagView; //return number of sections
 -(NSUInteger)tagView:(MTTagView *)tagView numberOfTagsInSection:(NSUInteger)section; //return number of tags in section
@@ -33,19 +33,21 @@
 
 //IB_DESIGNABLE
 @interface MTTagView : UIView
-@property (nonatomic, weak) IBOutlet id<TagsViewDelegate> delegate;
-@property (nonatomic) IBInspectable CGFloat minHeight; //height for collapsed state. default 38.0
-@property (nonatomic) IBInspectable CGFloat maxHeight; //height for expanded state. default 260.0
-@property (nonatomic) IBInspectable BOOL showSections; //default YES
-@property (nonatomic) IBInspectable BOOL collapseOnDragStart; //default NO
-@property (nonatomic) IBInspectable BOOL expandOnDragEnd; //default YES
-@property (nonatomic) IBInspectable BOOL expandOnDragDrop; //default NO
-@property (nonatomic) IBInspectable CGFloat selectAnimationDuration; //default 0.1
-@property (nonatomic) BOOL isActive; //default NO
-@property (nonatomic, readonly) NSInteger selectedSection;
-@property (nonatomic, readonly) NSArray *dropZones;
-@property (nonatomic) UIEdgeInsets marginSection;
-@property (nonatomic) UIEdgeInsets marginTag;
+@property (nonatomic, weak) IBOutlet id<MTTagViewDelegate> delegate;
+@property (nonatomic, assign) IBInspectable CGFloat minHeight; //height for collapsed state. default 38.0
+@property (nonatomic, assign) IBInspectable CGFloat maxHeight; //height for expanded state. default 260.0
+@property (nonatomic, assign) IBInspectable BOOL showSections; //default YES
+@property (nonatomic, assign) IBInspectable BOOL collapseOnDragStart; //default NO
+@property (nonatomic, assign) IBInspectable BOOL expandOnDragEnd; //default YES
+@property (nonatomic, assign) IBInspectable BOOL expandOnDragDrop; //default NO
+@property (nonatomic, assign) IBInspectable CGFloat selectAnimationDuration; //default 0.1
+@property (nonatomic, assign) BOOL isActive; //default NO
+@property (nonatomic, assign, readonly) NSInteger selectedSection;
+@property (nonatomic, strong, readonly) NSArray *dropZones;
+@property (nonatomic, assign) UIEdgeInsets marginSection;
+@property (nonatomic, assign) UIEdgeInsets marginTag;
+@property (nonatomic, strong, readonly) UIScrollView *sectionTitleView;
+@property (nonatomic, strong, readonly) UIScrollView *sectionTagsViews;
 
 -(void)reloadData;
 -(void)addDropZone:(UIView *)dropZone;

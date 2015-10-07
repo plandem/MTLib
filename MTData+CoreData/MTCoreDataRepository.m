@@ -38,7 +38,6 @@
 	[_context performBlockAndWait:^{
 		@strongify(self);
 		[self.context deleteObject:(NSManagedObject *)model];
-		[self.context saveNested];
 	}];
 }
 
@@ -109,10 +108,7 @@
 		for(MTCoreDataObject *model in models) {
 			[self.context deleteObject:model];
 		}
-
-		[self.context saveNested];
 	}];
-
 }
 
 -(void)undoModel:(id<MTDataObject>)model {

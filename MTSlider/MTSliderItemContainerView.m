@@ -13,7 +13,7 @@
 
 @synthesize pointerCenterX = _pointerCenterX;
 
-- (instancetype)initWithItemView:(UIView *)itemView edgeInsets:(UIEdgeInsets)edgeInsets
+- (instancetype)initWithItemView:(UIView *)itemView edgeInsets:(UIEdgeInsets)edgeInsets color:(UIColor *)color
 {
     // Increase container frame with item view size and edgeInsets.
     CGRect frame = CGRectInset(itemView.frame,
@@ -23,6 +23,7 @@
     self = [super initWithFrame:frame];
     
     if (self) {
+        self.backgroundColor = color;
         [self addItemView:itemView edgeInsets:edgeInsets];
         self.pointerSize = CGSizeMake(10.f, 5.f);
     }
@@ -71,7 +72,7 @@
     
     _pointerLayer = [CAShapeLayer layer];
     _pointerLayer.path = trianglePath.CGPath;
-    _pointerLayer.fillColor = [UIColor blackColor].CGColor;
+    _pointerLayer.fillColor = self.backgroundColor.CGColor;
     _pointerLayer.position = CGPointMake((self.bounds.size.width - _pointerSize.width) / 2.f, self.frame.size.height);
     [self.layer addSublayer:_pointerLayer];
 }

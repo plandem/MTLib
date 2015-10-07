@@ -11,6 +11,6 @@
 @property (nonatomic) BOOL pointerHidden;
 @property (nonatomic) CGSize pointerSize;
 
-- (instancetype)initWithItemView:(UIView *)itemView edgeInsets:(UIEdgeInsets)edgeInsets;
+- (instancetype)initWithItemView:(UIView *)itemView edgeInsets:(UIEdgeInsets)edgeInsets color:(UIColor *)color;
 
 @end
