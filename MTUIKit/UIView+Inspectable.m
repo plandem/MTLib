@@ -34,3 +34,6 @@
 	return self.layer.cornerRadius;
 }
 @end
+
+@implementation MTLiveView
+@end

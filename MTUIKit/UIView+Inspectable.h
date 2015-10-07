@@ -10,3 +10,6 @@
 @property (nonatomic, assign) IBInspectable CGFloat borderWidth UI_APPEARANCE_SELECTOR;
 @property (nonatomic, strong) IBInspectable UIColor *borderColor UI_APPEARANCE_SELECTOR;
 @end
+
+IB_DESIGNABLE @interface MTLiveView: UIView
+@end
