@@ -369,4 +369,9 @@ enum {
 		[self sendActionsForControlEvents:UIControlEventApplicationReserved & MTSliderControlEventDragging];
 	}
 }
+
+-(void)setBounds:(CGRect)bounds {
+    [super setBounds:bounds];
+    [self updateItemViews];
+}
 @end
