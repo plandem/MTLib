@@ -43,7 +43,7 @@ Pod::Spec.new do |s|
 
   s.subspec 'MTForm' do |ss|
     ss.framework = 'UIKit'
-    ss.dependency 'FXForms'
+    ss.dependency 'FXForms', '1.2.13'
     ss.dependency 'MTLib/MTUIKit'
     ss.source_files = 'MTForm/**/*.{h,m}'
   end
