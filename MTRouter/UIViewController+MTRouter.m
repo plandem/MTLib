@@ -49,6 +49,10 @@
 -(void)performSegueWithIdentifier:(NSString *)identifier sender:(id)sender preparationBlock:(MTRouterPreparationBlock)block {
 	[self setPreparationBlock:block forSegueWithIdentifier:identifier];
 	[self performSegueWithIdentifier:identifier sender:sender];
+
+	dispatch_async(dispatch_get_main_queue(), ^{
+		//FIX FOR EVENT LOOP LAG ISSUE: http://openradar.appspot.com/19563577
+	});
 }
 
 -(MTRouterPreparationBlock)preparationBlockForSegue:(UIStoryboardSegue *)segue {
