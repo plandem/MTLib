@@ -19,5 +19,5 @@
 -(NSInteger)numberOfSections;
 -(NSInteger)numberOfItemsInSection:(NSInteger)section;
 
--(void)reload;
+-(void)reloadIfNeeded;
 @end
