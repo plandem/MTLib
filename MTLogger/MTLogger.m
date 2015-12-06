@@ -5,12 +5,6 @@
 #import <libgen.h>
 #import "MTLogger.h"
 
-#ifndef DEBUG
-	#if TARGET_IPHONE_SIMULATOR == 0
-		#define MTLOGGER_PRODUCTION_BUILD 1
-	#endif
-#endif
-
 #if DEBUG
 	static const DDLogLevel ddLogLevel = DDLogLevelVerbose;
 #else
