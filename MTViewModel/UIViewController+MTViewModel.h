@@ -7,6 +7,6 @@
 #import <ReactiveViewModel/ReactiveViewModel.h>
 
 @interface UIViewController (MTViewModel)
-@property (nonatomic, strong, readonly) RVMViewModel *viewModel;
+@property (nonatomic, strong, readonly) id viewModel;
 -(void)reload;
 @end

@@ -55,6 +55,14 @@
 	}
 }
 
+- (void)setObject:(id)value forKeyedSubscript:(id <NSCopying>)key {
+	if (value) {
+		_values[key] = value;
+	} else {
+		[_values removeObjectForKey:key];
+	}
+}
+
 -(void)removeObjectForKeyPath:(NSString *)keyPath {
 	NSArray *keyPathElements = [keyPath componentsSeparatedByString:@"."];
 	NSUInteger numElements = [keyPathElements count];
@@ -68,6 +76,10 @@
 }
 
 - (id)valueForUndefinedKey:(NSString *)key {
+	return _values[key];
+}
+
+- (id)objectForKeyedSubscript:(id)key {
 	return _values[key];
 }
 

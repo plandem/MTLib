@@ -22,7 +22,7 @@
 -(void)swizzle_viewWillAppearViewModel:(BOOL)animated {
 	[self swizzle_viewWillAppearViewModel:animated];
 
-	if([self viewModel]) {
+	if([self viewModel] && [[self viewModel] respondsToSelector:@selector(setActive:)]) {
 		[[self viewModel] setActive:YES];
 	}
 }
@@ -30,7 +30,7 @@
 -(void)swizzle_viewWillDisappearViewModel:(BOOL)animated {
 	[self swizzle_viewWillDisappearViewModel:animated];
 
-	if([self viewModel]) {
+	if([self viewModel] && [[self viewModel] respondsToSelector:@selector(setActive:)]) {
 		[[self viewModel] setActive:NO];
 	}
 }
@@ -54,11 +54,11 @@
 	// Nothing to do by default. Put any code that will refresh UIViewController when viewModel had been changed.
 }
 
--(RVMViewModel *)viewModel {
+-(id)viewModel {
 	return objc_getAssociatedObject(self, @selector(viewModel));
 }
 
-- (void)setViewModel:(RVMViewModel *)viewModel {
+- (void)setViewModel:(id)viewModel {
 	objc_setAssociatedObject(self, @selector(viewModel), viewModel, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 
 	if(viewModel && [viewModel isKindOfClass:[MTListViewModel class]]) {

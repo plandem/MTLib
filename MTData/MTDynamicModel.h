@@ -12,4 +12,6 @@
 - (id)initWithValues:(NSDictionary *)values;
 - (void)encodeWithCoder:(NSCoder *)encoder;
 - (void)removeObjectForKeyPath:(NSString *)keyPath;
+- (id)objectForKeyedSubscript:(id)key;
+- (void)setObject:(id)obj forKeyedSubscript:(id <NSCopying>)key;
 @end
