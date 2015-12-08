@@ -10,7 +10,7 @@
 #import "NSObject+MTDataObjectQuery.h"
 
 @implementation MTCoreDataObject {
-	NSMutableDictionary *_transformableUpdated;
+	NSMutableSet *_transformableUpdated;
 }
 
 +(Class)repositoryClass {
@@ -25,32 +25,26 @@
 	return [MTDataQuery class];
 }
 
-- (NSMutableDictionary *)transformableUpdated {
-	if(_transformableUpdated == nil) {
-		_transformableUpdated = [NSMutableDictionary dictionary];
-	}
-
-	return _transformableUpdated;
-}
-
-- (void)transformableUpdate:(NSString *)key {
-	self.transformableUpdated[key] = @(YES);
-
+-(void)transformableRefreshForKey:(NSString *)key {
 	//trick KVO about changes, we need to initiate willSave
 	[self willChangeValueForKey:key];
+
+	if(_transformableUpdated == nil) {
+		_transformableUpdated = [NSMutableSet set];
+	}
+
+	[_transformableUpdated addObject:key];
 	[self didChangeValueForKey:key];
 }
 
 - (void)willSave {
-	NSDictionary *keys = self.transformableUpdated;
-
-	if([keys count]) {
+	if(_transformableUpdated && [_transformableUpdated count]) {
 		NSDictionary *attributes = [[self entity] attributesByName];
 
-		for (NSString *key in keys) {
+		[_transformableUpdated enumerateObjectsUsingBlock:^(id key, BOOL *stop) {
 			//skip any non-transformable attributes, because they already updated
 			if ([attributes[key] attributeType] != NSTransformableAttributeType)
-				continue;
+				return;
 
 			id current = [self primitiveValueForKey:key];
 			id refreshed = nil;
@@ -63,7 +57,10 @@
 			}
 
 			[self setPrimitiveValue:refreshed forKey:key];
-		}
+		}];
+
+		//'willSave' will be calling each update, so we must prevent it
+		[_transformableUpdated removeAllObjects];
 	}
 
 	[super willSave];

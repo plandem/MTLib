@@ -13,6 +13,10 @@
 +(Class)dataProviderClass;
 +(Class)queryClass;
 +(MTDataQuery *)query;
+
+@optional
++(NSArray *)transformable;
+-(void)transformableRefreshForKey:(NSString *)key;
 @end
 
 @protocol MTDataObjectCollection <NSFastEnumeration>

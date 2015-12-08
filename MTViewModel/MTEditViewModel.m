@@ -50,9 +50,35 @@
 	[self.dataRepository withTransaction:^(MTDataRepository *repository) {
 		@strongify(self);
 
+		NSMutableSet *transformable = [NSMutableSet setWithArray:[[self.model class] respondsToSelector:@selector(transformable)] ? [[self.model class] transformable] : @[]];
+		BOOL canTransform = [self.model respondsToSelector:@selector(transformableRefreshForKey:)];
+
+		//TODO: think about 'dirty' values. Right now we ALWAYS consider model as changed for any attribute in _modelValues
+		//in case of 'transformable' it's ok, but model actually can have no changes for common attributes.
 		[_modelValues enumerateKeysAndObjectsUsingBlock:^(id key, id value, BOOL *stop) {
 			if ([value isEqual:[NSNull null]]) {
 				value = nil;
+			}
+
+			//if attribute is transformable, then force model to refresh it
+			if(canTransform) {
+				NSRange relation;
+				NSString *transformableKey = nil;
+
+				if([transformable containsObject:key]) {
+					transformableKey = key;
+				} else if((relation = [key rangeOfString:@"."]).location != NSNotFound) {
+					//in case of relation we want to refresh transformable value only once
+					transformableKey = [key substringToIndex:relation.location];
+					if(![transformable containsObject:transformableKey]) {
+						transformableKey = nil;
+					}
+				}
+
+				if(transformableKey) {
+					[self.model transformableRefreshForKey:transformableKey];
+					[transformable removeObject:transformableKey];
+				}
 			}
 
 			//we are using keyPath, because in some cases it can be required to set value to related object
