@@ -9,10 +9,12 @@
 
 @interface MTEditViewModel : RVMViewModel <FXForm>
 @property (nonatomic, strong, readonly) MTDataRepository *dataRepository;
-@property (nonatomic, strong, readonly) id<MTDataObject> model;
+@property (nonatomic, strong, readonly) id model;
 @property (nonatomic, assign, readonly) BOOL isValid;
 
--(id)initWithModel:(id<MTDataObject>)model fromRepository:(MTDataRepository *)repository;
+-(id)initWithModel:(id)model;
+-(id)initWithModel:(id)model fromRepository:(MTDataRepository *)repository;
+-(BOOL)sync;
 -(void)save;
 -(void)cancel;
 -(void)setup;

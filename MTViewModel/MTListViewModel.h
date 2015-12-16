@@ -5,8 +5,9 @@
 
 #import <ReactiveViewModel/ReactiveViewModel.h>
 #import "MTDataProvider.h"
+#import "MTViewModelRefreshProtocol.h"
 
-@interface MTListViewModel : RVMViewModel
+@interface MTListViewModel : RVMViewModel <MTViewModelRefreshProtocol>
 @property (nonatomic, readonly) RACSignal *updatedContentSignal;
 @property (nonatomic, readonly) MTDataProvider *dataProvider;
 @property (nonatomic, assign) BOOL refreshOnChanges;

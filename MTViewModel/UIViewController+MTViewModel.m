@@ -7,8 +7,8 @@
 #import <ReactiveCocoa/ReactiveCocoa.h>
 #import "MTLib/NSObject+Swizzle.h"
 #import "MTRouterProtocol.h"
+#import "MTViewModelRefreshProtocol.h"
 #import "UIViewController+MTViewModel.h"
-#import "MTListViewModel.h"
 
 @implementation UIViewController (MTViewModel)
 @dynamic viewModel;
@@ -61,9 +61,9 @@
 - (void)setViewModel:(id)viewModel {
 	objc_setAssociatedObject(self, @selector(viewModel), viewModel, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 
-	if(viewModel && [viewModel isKindOfClass:[MTListViewModel class]]) {
+	if(viewModel && [viewModel conformsToProtocol:@protocol(MTViewModelRefreshProtocol)]) {
 		@weakify(self);
-		[[(MTListViewModel *)viewModel updatedContentSignal] subscribeNext:^(id x) {
+		[[(id<MTViewModelRefreshProtocol>)viewModel updatedContentSignal] subscribeNext:^(id x) {
 			@strongify(self);
 			[self reload];
 		}];
