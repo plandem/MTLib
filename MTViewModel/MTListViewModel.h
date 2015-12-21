@@ -20,5 +20,9 @@
 -(NSInteger)numberOfSections;
 -(NSInteger)numberOfItemsInSection:(NSInteger)section;
 
+//if there are any changes, will clear any cache and 'reload' data
 -(void)reloadIfNeeded;
+
+//will mark data as changed and 'reloadIfNeeded'
+-(void)reset;
 @end

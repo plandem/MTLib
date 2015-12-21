@@ -71,6 +71,11 @@ id modelGetterForIndexPath(id self, SEL _cmd, id indexPath) {
 	}
 }
 
+-(void)reset {
+	_hasChanges = YES;
+	[self reloadIfNeeded];
+}
+
 -(void)reload {
 	[_dataProvider refresh];
 }
