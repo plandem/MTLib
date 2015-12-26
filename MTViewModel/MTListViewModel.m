@@ -51,9 +51,15 @@ id modelGetterForIndexPath(id self, SEL _cmd, id indexPath) {
 			@strongify(self);
 			[self reloadIfNeeded];
 		}];
+
+		[self setup];
 	}
 
 	return self;
+}
+
+-(void)setup {
+
 }
 
 -(void)reloadIfNeeded {

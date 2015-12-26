@@ -23,8 +23,8 @@
 -(instancetype)initWithModelClass:(Class)modelClass withRealm:(NSString *)realmName {
 	if((self = [super initWithModelClass:modelClass])) {
 		_realmName = realmName;
-		_realmPath = [NSString stringWithFormat:@"%@.realm", [[[RLMRealm defaultRealmPath] stringByDeletingLastPathComponent] stringByAppendingPathComponent:_realmName]];
-		_realm = [RLMRealm realmWithPath:_realmPath readOnly:NO error:nil];
+		_realmPath = [NSString stringWithFormat:@"%@.realm", [[[[RLMRealmConfiguration defaultConfiguration] path] stringByDeletingLastPathComponent] stringByAppendingPathComponent:_realmName]];
+		_realm = [RLMRealm realmWithPath:_realmPath];
 	}
 
 	return self;
@@ -37,10 +37,12 @@
 }
 
 -(void)commitTransaction {
+	NSAssert([self inTransaction], MTDataErrorNoActiveTransaction);
 	[_realm commitWriteTransaction];
 }
 
 -(void)rollbackTransaction {
+	NSAssert([self inTransaction], MTDataErrorNoActiveTransaction);
 	[_realm cancelWriteTransaction];
 }
 
@@ -49,52 +51,27 @@
 }
 
 -(void)saveModel:(id<MTDataObject>)model {
+	NSAssert([self inTransaction], MTDataErrorNoActiveTransaction);
 	[self ensureModelType:model];
 
 	RLMObjectSchema *schema = ((MTRealmDataObject *)model).objectSchema;
-	BOOL inTransaction = [self inTransaction];
-
-	if(!(inTransaction)) {
-		[self beginTransaction];
-	}
 
 	if (schema.primaryKeyProperty) {
 		[self.modelClass createOrUpdateInRealm:_realm withValue:(id) model];
 	} else {
 		[_realm addObject:(id) model];
 	}
-
-	if(!(inTransaction)) {
-		[self commitTransaction];
-	}
 }
 
 -(void)deleteModel:(id <MTDataObject>)model {
+	NSAssert([self inTransaction], MTDataErrorNoActiveTransaction);
 	[self ensureModelType:model];
-
-	BOOL inTransaction = [self inTransaction];
-	if(!(inTransaction)) {
-		[self beginTransaction];
-	}
-
 	[_realm deleteObject:(MTRealmDataObject *)model];
-
-	if(!(inTransaction)) {
-		[self commitTransaction];
-	}
 }
 
 -(void)deleteAllWithQuery:(MTDataQuery *)query {
-	BOOL inTransaction = [self inTransaction];
-	if(!(inTransaction)) {
-		[self beginTransaction];
-	}
-
+	NSAssert([self inTransaction], MTDataErrorNoActiveTransaction);
 	[_realm deleteObjects:[self fetchAllWithQuery:query]];
-
-	if(!(inTransaction)) {
-		[self commitTransaction];
-	}
 }
 
 -(void)undoModel:(id<MTDataObject>)model {

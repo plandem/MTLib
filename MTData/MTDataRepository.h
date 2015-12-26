@@ -8,6 +8,7 @@
 
 @class MTDataRepository;
 
+extern NSString *MTDataErrorNoActiveTransaction;
 typedef void (^MTDataRepositoryTransactionBlock)(MTDataRepository *dataRepository);
 
 @interface MTDataRepository : NSObject

@@ -6,6 +6,8 @@
 #import "MTDataRepository.h"
 #import "MTLogger.h"
 
+NSString *MTDataErrorNoActiveTransaction = @"There is no any active transaction.";
+
 @implementation MTDataRepository
 
 -(instancetype)initWithModelClass:(Class)modelClass {
@@ -48,13 +50,23 @@
 }
 
 -(void)withTransaction:(MTDataRepositoryTransactionBlock)transactionBlock {
+	BOOL inTransaction = [self inTransaction];
+
 	@try {
-		[self beginTransaction];
+		if(!(inTransaction)) {
+			[self beginTransaction];
+		}
+
 		transactionBlock(self);
-		[self commitTransaction];
+
+		if(!(inTransaction)) {
+			[self commitTransaction];
+		}
 	} @catch(NSException *e) {
 		DDLogError(@"%@", e.reason);
-		[self rollbackTransaction];
+		if(!(inTransaction)) {
+			[self rollbackTransaction];
+		}
 	}
 }
 

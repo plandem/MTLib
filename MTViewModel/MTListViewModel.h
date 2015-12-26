@@ -25,4 +25,6 @@
 
 //will mark data as changed and 'reloadIfNeeded'
 -(void)reset;
+
+-(void)setup;
 @end

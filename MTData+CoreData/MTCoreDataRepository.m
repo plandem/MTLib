@@ -32,6 +32,7 @@
 }
 
 -(void)deleteModel:(id<MTDataObject>)model {
+	NSAssert([self inTransaction], MTDataErrorNoActiveTransaction);
 	[self ensureModelType:model];
 
 	@weakify(self);
@@ -66,6 +67,8 @@
 }
 
 -(void)commitTransaction {
+	NSAssert([self inTransaction], MTDataErrorNoActiveTransaction);
+
 	[_context.undoManager endUndoGrouping];
 
 	if(![_context saveNested]) {
@@ -77,6 +80,8 @@
 }
 
 -(void)rollbackTransaction {
+	NSAssert([self inTransaction], MTDataErrorNoActiveTransaction);
+
 	[_context.undoManager endUndoGrouping];
 	[_context.undoManager undo];
 	_context.undoEnabled = NO;
@@ -87,19 +92,30 @@
 }
 
 -(void)withTransaction:(MTDataRepositoryTransactionBlock)transaction {
+	BOOL inTransaction = [self inTransaction];
+
 	@try {
-		[self beginTransaction];
+		if(!(inTransaction)) {
+			[self beginTransaction];
+		}
+
 		[_context performBlockAndWait:^{
 			transaction(self);
 		}];
-		[self commitTransaction];
+
+		if(!(inTransaction)) {
+			[self commitTransaction];
+		}
 	} @catch(NSException *e) {
 		DDLogError(@"%@", e.reason);
-		[self rollbackTransaction];
+		if(!(inTransaction)) {
+			[self rollbackTransaction];
+		}
 	}
 }
 
 -(void)deleteAllWithQuery:(MTDataQuery *)query {
+	NSAssert([self inTransaction], MTDataErrorNoActiveTransaction);
 	id<MTDataObjectCollection> models = [self fetchAllWithQuery:query];
 
 	@weakify(self);
@@ -112,6 +128,7 @@
 }
 
 -(void)undoModel:(id<MTDataObject>)model {
+	NSAssert([self inTransaction], MTDataErrorNoActiveTransaction);
 	[self ensureModelType:model];
 
 	@weakify(self);
