@@ -51,7 +51,6 @@
 }
 
 -(void)saveModel:(id<MTDataObject>)model {
-	NSAssert([self inTransaction], MTDataErrorNoActiveTransaction);
 	[self ensureModelType:model];
 
 	RLMObjectSchema *schema = ((MTRealmDataObject *)model).objectSchema;
@@ -64,13 +63,11 @@
 }
 
 -(void)deleteModel:(id <MTDataObject>)model {
-	NSAssert([self inTransaction], MTDataErrorNoActiveTransaction);
 	[self ensureModelType:model];
 	[_realm deleteObject:(MTRealmDataObject *)model];
 }
 
 -(void)deleteAllWithQuery:(MTDataQuery *)query {
-	NSAssert([self inTransaction], MTDataErrorNoActiveTransaction);
 	[_realm deleteObjects:[self fetchAllWithQuery:query]];
 }
 

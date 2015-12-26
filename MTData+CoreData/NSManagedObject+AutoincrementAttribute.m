@@ -9,10 +9,17 @@
 
 @implementation NSManagedObject (AutoincrementAttribute)
 -(void)autoincrement:(NSString *)attribute {
-	[self autoincrement:attribute groupBy:nil];
+	[self autoincrement:attribute groupBy:nil byStep:1];
+}
+
+-(void)autoincrement:(NSString *)attribute byStep:(NSInteger)step {
+	[self autoincrement:attribute groupBy:nil byStep:step];
 }
 
 -(void)autoincrement:(NSString *)attribute groupBy:(NSString *)groupAttribute {
+	[self autoincrement:attribute groupBy:groupAttribute byStep:1];
+}
+-(void)autoincrement:(NSString *)attribute groupBy:(NSString *)groupAttribute byStep:(NSInteger)step {
 	// to use 'groupBy' feature we must call it on 'willSave', but 'wilLSave' can be called multiply times, so we must 'imitate' afterInsert and check for '0' value also.
 	if(!self.isInserted || [[self valueForKey:attribute] unsignedIntegerValue] > 0) {
 		return;
@@ -35,7 +42,14 @@
 		DDLogError(@"Error %@, %@", [error localizedDescription], [error userInfo]);
 	} else {
 		if([result count] > 0) {
-			sequenceID = [[result[0] valueForKey:attribute] unsignedIntegerValue] + 1;
+			sequenceID = [[result[0] valueForKey:attribute] unsignedIntegerValue];
+
+			//normalize sequenceID if required, E.g. with step 1000: 1000, 2000, 3001 and 3001 must be considered as 3000),
+			if(step > 1) {
+				sequenceID = (sequenceID / step) * step;
+			}
+
+			sequenceID += step;
 		}
 	}
 

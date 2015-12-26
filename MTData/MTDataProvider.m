@@ -46,7 +46,9 @@
 
 -(id<MTDataObject>)modelAtIndexPath:(NSIndexPath *)indexPath {
 	id<MTDataObjectCollection>models = [self models];
-	return ((models && (indexPath.row < [models count])) ? models[(NSUInteger)indexPath.row] : nil);
+	//this implementation IS NOT supporting sections
+	NSUInteger index = [indexPath indexAtPosition:1];
+	return ((models && (index < [models count])) ? models[index] : nil);
 }
 
 -(void)deleteAtIndexPath:(NSIndexPath *)indexPath {
@@ -54,11 +56,13 @@
 	[_repository deleteModel:model];
 }
 
--(void)moveFromIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
+-(BOOL)moveFromIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
 	if(_moveBlock && ![fromIndexPath isEqual:toIndexPath]) {
 		id<MTDataObject>fromModel = [self modelAtIndexPath:fromIndexPath];
 		id<MTDataObject>toModel = [self modelAtIndexPath:toIndexPath];
-		_moveBlock(self, fromIndexPath, fromModel, toIndexPath, toModel);
+		return _moveBlock(self, fromIndexPath, fromModel, toIndexPath, toModel);
+	} else {
+		return NO;
 	}
 }
 
@@ -112,5 +116,55 @@
 
 -(void)setupWatcher {
 	//by default do nothing. override to add specific behavior.
+}
+@end
+
+/**
+ * return block for basic sorting via dedicated integer attribute (E.g., instead of 1,2,3,4 -> 1000,2000,3000,4000 so we can divide it by 2)
+ */
+@implementation MTDataProvider(MTDataProviderBlocks)
+-(MTDataProviderMoveBlock)sortingMoveBlock:(NSString *)attribute withStep:(NSInteger)step {
+	//this implementation IS NOT supporting sections
+	id sortingBlock = ^BOOL(MTDataProvider *dataProvider, NSIndexPath *fromIndexPath, id<MTDataObject>fromModel, NSIndexPath *toIndexPath, id<MTDataObject>toModel) {
+		BOOL insert = NO;
+
+		NSUInteger fromIndex = [fromIndexPath indexAtPosition:1];
+		NSUInteger toIndex = [toIndexPath indexAtPosition:1];
+
+		NSInteger toSorting = [[(NSObject *)toModel valueForKey:attribute] integerValue];
+		NSInteger direction = 1;
+		NSInteger newSorting;
+
+		if(fromIndex < toIndex) {
+			if([toIndexPath indexAtPosition:1] < [[dataProvider models] count] - 1) {
+				insert = YES;
+			}
+		} else {
+			if(toIndex > 0) {
+				insert = YES;
+			}
+
+			direction = -1;
+		}
+
+		if(insert) {
+			NSUInteger indexes[] = {[toIndexPath indexAtPosition:0], toIndex + direction};
+			id<MTDataObject>nextModel = [dataProvider modelAtIndexPath:[NSIndexPath indexPathWithIndexes:indexes length:2]];
+			NSInteger nextSorting = [[(NSObject *)nextModel valueForKey:attribute] integerValue];
+			newSorting = toSorting + nextSorting;
+			newSorting /= 2;
+		} else {
+			//normalize last/first sorting
+			newSorting = (toSorting / step) * step;
+
+			//increase/decrease by step
+			newSorting += step * direction;
+		}
+
+		[(NSObject *)fromModel setValue:@(newSorting) forKey:attribute];
+		return YES;
+	};
+
+	return sortingBlock;
 }
 @end

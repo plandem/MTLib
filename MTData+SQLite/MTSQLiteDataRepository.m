@@ -127,7 +127,6 @@ const NSString *MTSQLiteDataRepositoryUpdateNotification = @"MTSQLiteDataReposit
 }
 
 -(void)deleteAllWithQuery:(MTDataQuery *)query {
-	NSAssert([self inTransaction], MTDataErrorNoActiveTransaction);
 	FMDatabase *db = self.db;
 
 	NSMutableString *sql = [NSMutableString stringWithFormat:@"DELETE FROM %@", [self.modelClass tableName]];
@@ -150,7 +149,6 @@ const NSString *MTSQLiteDataRepositoryUpdateNotification = @"MTSQLiteDataReposit
 }
 
 -(void)deleteModel:(id<MTDataObject>)model {
-	NSAssert([self inTransaction], MTDataErrorNoActiveTransaction);
 	[self ensureModelType:model];
 
 	NSString *primaryKeyName = [self.modelClass primaryKey];
@@ -178,7 +176,6 @@ const NSString *MTSQLiteDataRepositoryUpdateNotification = @"MTSQLiteDataReposit
 }
 
 -(void)saveModel:(id<MTDataObject>)model {
-	NSAssert([self inTransaction], MTDataErrorNoActiveTransaction);
 	[self ensureModelType:model];
 
 	NSString *primaryKeyName = [self.modelClass primaryKey];

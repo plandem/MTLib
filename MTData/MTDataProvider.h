@@ -10,7 +10,7 @@
 @class MTDataRepository;
 
 typedef void (^MTDataProviderRefreshBlock)(MTDataProvider *dataProvider);
-typedef void (^MTDataProviderMoveBlock)(MTDataProvider *dataProvider, NSIndexPath *fromIndexPath, id<MTDataObject>fromModel, NSIndexPath *toIndexPath, id<MTDataObject>toModel);
+typedef BOOL (^MTDataProviderMoveBlock)(MTDataProvider *dataProvider, NSIndexPath *fromIndexPath, id<MTDataObject>fromModel, NSIndexPath *toIndexPath, id<MTDataObject>toModel);
 
 @interface MTDataProvider : NSObject
 @property (nonatomic, strong) MTDataRepository *repository;
@@ -27,8 +27,13 @@ typedef void (^MTDataProviderMoveBlock)(MTDataProvider *dataProvider, NSIndexPat
 -(id)createViewModel:(Class)viewModelClass forIndexPath:(NSIndexPath *)indexPath;
 -(void)deleteAtIndexPath:(NSIndexPath *)indexPath;
 -(id<MTDataObject>)modelAtIndexPath:(NSIndexPath *)indexPath;
--(void)moveFromIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath;
+-(BOOL)moveFromIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath;
 
 -(MTDataProvider *)makeQuery:(void(^)(MTDataQuery *query, MTDataSort *sort))block;
 //-(void)setupWatcher;
 @end
+
+@interface MTDataProvider(MTDataProviderBlocks)
+-(MTDataProviderMoveBlock)sortingMoveBlock:(NSString *)attribute withStep:(NSInteger)step;
+@end
+

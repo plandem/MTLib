@@ -8,5 +8,7 @@
 @interface NSManagedObject (AutoincrementAttribute)
 // Will not work correctly if some models will be in process of creation at another context.
 -(void)autoincrement:(NSString *)attribute;
+-(void)autoincrement:(NSString *)attribute byStep:(NSInteger)step;
 -(void)autoincrement:(NSString *)attribute groupBy:(NSString *)groupAttribute;
+-(void)autoincrement:(NSString *)attribute groupBy:(NSString *)groupAttribute byStep:(NSInteger)step;
 @end

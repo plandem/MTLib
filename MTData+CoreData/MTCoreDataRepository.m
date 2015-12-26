@@ -32,7 +32,6 @@
 }
 
 -(void)deleteModel:(id<MTDataObject>)model {
-	NSAssert([self inTransaction], MTDataErrorNoActiveTransaction);
 	[self ensureModelType:model];
 
 	@weakify(self);
@@ -115,7 +114,6 @@
 }
 
 -(void)deleteAllWithQuery:(MTDataQuery *)query {
-	NSAssert([self inTransaction], MTDataErrorNoActiveTransaction);
 	id<MTDataObjectCollection> models = [self fetchAllWithQuery:query];
 
 	@weakify(self);
@@ -128,7 +126,6 @@
 }
 
 -(void)undoModel:(id<MTDataObject>)model {
-	NSAssert([self inTransaction], MTDataErrorNoActiveTransaction);
 	[self ensureModelType:model];
 
 	@weakify(self);
