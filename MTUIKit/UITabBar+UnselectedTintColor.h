@@ -6,5 +6,5 @@
 #import <UIKit/UIKit.h>
 
 @interface UITabBar (UnselectedTintColor)
-@property (nonatomic, copy) IBInspectable UIColor *unselectedTintColor UI_APPEARANCE_SELECTOR;
+@property (nonatomic, copy) IBInspectable UIColor *unselectedTintColor;
 @end

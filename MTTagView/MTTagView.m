@@ -466,6 +466,7 @@ const NSInteger TAG_FLAG_ID		= 0x200000;
 
 	for(NSUInteger i = 0; i < _totalTags; i++) {
 		UIView *tagItem = [_delegate tagView:self tagItemForIndexPath:[NSIndexPath indexPathForRow:i inSection:section]];
+		[tagItem sizeToFit];
 		tagItem.tag = TAG_FLAG_ID | i;
 		[_sectionTagsViews addSubview:tagItem];
 	}

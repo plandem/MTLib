@@ -6,5 +6,5 @@
 #import <UIKit/UIKit.h>
 
 @interface UILabel (EdgeInsets)
-@property (nonatomic, assign) IBInspectable UIEdgeInsets edgeInsets UI_APPEARANCE_SELECTOR;
+@property (nonatomic, assign) IBInspectable UIEdgeInsets edgeInsets;
 @end

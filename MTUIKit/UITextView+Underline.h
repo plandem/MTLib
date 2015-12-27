@@ -6,6 +6,6 @@
 #import <UIKit/UIKit.h>
 
 @interface UITextView (Underline)
-@property (nonatomic, assign) IBInspectable BOOL underlineText UI_APPEARANCE_SELECTOR;
-@property (nonatomic, copy) IBInspectable UIColor *underlineColor UI_APPEARANCE_SELECTOR;
+@property (nonatomic, assign) IBInspectable BOOL underlineText;
+@property (nonatomic, copy) IBInspectable UIColor *underlineColor;
 @end

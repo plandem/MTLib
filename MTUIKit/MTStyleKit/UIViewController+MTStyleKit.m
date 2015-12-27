@@ -5,6 +5,7 @@
 
 #import <objc/runtime.h>
 #import "NSObject+Swizzle.h"
+#import "UIApplication+MTStyleKit.h"
 #import "UIViewController+MTStyleKit.h"
 
 @interface MTStyleKitObserver : NSObject
@@ -29,40 +30,57 @@
 	[self swizzle_viewWillAppearStyleKit:animated];
 
 	//attach observer for updates of style kit
-	if(!objc_getAssociatedObject(self, @selector(refreshStyles))) {
-		objc_setAssociatedObject(self, @selector(refreshStyles), [[MTStyleKitObserver alloc] initWithViewController:self], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+	if(!objc_getAssociatedObject(self, @selector(refreshStyles:))) {
+		objc_setAssociatedObject(self, @selector(refreshStyles:), [[MTStyleKitObserver alloc] initWithViewController:self], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 	}
 
-	//used only to prevent applyStyles at each viewWillAppear - we must call it only once and we can't call it at viewDidLoad
-	if(!self.isStyleKitApplied) {
-		self.isStyleKitApplied = YES;
-
-		if([self respondsToSelector:@selector(applyStyles)]) {
-			[self performSelector:@selector(applyStyles)];
-		}
-	}
+	[self refreshStyles:NO];
 }
 
--(void)refreshStyles {
-	if([self respondsToSelector:@selector(applyStyles)]) {
-		[self performSelector:@selector(applyStyles)];
+-(void)refreshStylesOfViewInHierarchy:(UIView *)view {
+	UIView *superview = [view superview];
+	[view removeFromSuperview];
+	[superview addSubview:view];
+}
+
+-(void)setNeedsRefreshStyles {
+	self.isStyleKitApplied = NO;
+}
+
+-(void)refreshStyles:(BOOL)reload {
+	if(self.isStyleKitApplied) {
+		return;
 	}
 
-	if([self isKindOfClass:[UITableViewController class]]) {
-		[((UITableViewController *)self).tableView reloadData];
-	} else if([self isKindOfClass:[UICollectionViewController class]]) {
-		[((UICollectionViewController *)self).collectionView reloadData];
-	} else {
-		[self.view setNeedsDisplay];
+	self.isStyleKitApplied = YES;
 
-		for(UIView *child in self.view.subviews) {
-			if([child isKindOfClass:[UITableView class]]) {
-				[(UITableView *)child reloadData];
-			} else if([child isKindOfClass:[UICollectionView class]]) {
-				[(UICollectionView *)child reloadData];
+	if([self respondsToSelector:@selector(applyStyles:)]) {
+		id<MTStyleKit>styleKit = [[UIApplication sharedApplication] styleKit];
+
+		//reset 'isStyleKitApplied' flag if needed
+		self.isStyleKitApplied = [self applyStyles:styleKit];
+	}
+
+	if(reload) {
+		if ([self isKindOfClass:[UITableViewController class]]) {
+			[((UITableViewController *) self).tableView reloadData];
+		} else if ([self isKindOfClass:[UICollectionViewController class]]) {
+			[((UICollectionViewController *) self).collectionView reloadData];
+		} else {
+			[self.view setNeedsDisplay];
+
+			for (UIView *child in self.view.subviews) {
+				if ([child isKindOfClass:[UITableView class]]) {
+					[(UITableView *) child reloadData];
+				} else if ([child isKindOfClass:[UICollectionView class]]) {
+					[(UICollectionView *) child reloadData];
+				}
 			}
 		}
 	}
+
+	[self refreshStylesOfViewInHierarchy:[[self navigationController] navigationBar]];
+	[self setNeedsStatusBarAppearanceUpdate];
 }
 
 @end
@@ -82,7 +100,8 @@
 }
 
 -(void)handleStyleKitChangeNotification:(NSNotification *)notification {
-	[self.viewController refreshStyles];
+	[self.viewController setNeedsRefreshStyles];
+	[self.viewController refreshStyles:YES];
 }
 
 -(void)dealloc {

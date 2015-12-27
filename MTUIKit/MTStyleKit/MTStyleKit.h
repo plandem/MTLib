@@ -4,8 +4,11 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MTStyleKitAppearancePatch.h"
 
 extern const NSString *MTStyleKitChangedNotification;
 
 @protocol MTStyleKit <NSObject>
+@optional
+-(BOOL)applyStyles:(id<MTStyleKit>)styleKit;
 @end
