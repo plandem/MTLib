@@ -15,10 +15,13 @@
 const NSInteger SECTION_FLAG_ID	= 0x100000;
 const NSInteger TAG_FLAG_ID		= 0x200000;
 
-@interface TagScrollView: UIScrollView
+@implementation MTTagViewSectionTitleView
+- (BOOL)touchesShouldCancelInContentView:(UIView *)view {
+	return YES;
+}
 @end
 
-@implementation TagScrollView
+@implementation MTTagViewSectionTagsView
 - (BOOL)touchesShouldCancelInContentView:(UIView *)view {
 	return YES;
 }
@@ -29,8 +32,8 @@ const NSInteger TAG_FLAG_ID		= 0x200000;
 @property (nonatomic, strong) AtkDragAndDropManager *dragAndDropManager;
 @property (nonatomic, strong) UIView *headerView;
 @property (nonatomic, strong) UIView *footerView;
-@property (nonatomic, strong) UIScrollView *sectionTitleView;
-@property (nonatomic, strong) UIScrollView *sectionTagsViews;
+@property (nonatomic, strong) MTTagViewSectionTitleView *sectionTitleView;
+@property (nonatomic, strong) MTTagViewSectionTagsView *sectionTagsView;
 @property (nonatomic) NSUInteger totalSection;
 @property (nonatomic) NSUInteger totalTags;
 @property (nonatomic) BOOL sectionMustBeShown;
@@ -87,7 +90,7 @@ const NSInteger TAG_FLAG_ID		= 0x200000;
 	_minHeight = 38.0f;
 	_maxHeight = 260.0f;
 
-	_sectionTitleView = [[TagScrollView alloc] initWithFrame:CGRectZero];
+	_sectionTitleView = [[MTTagViewSectionTitleView alloc] initWithFrame:CGRectZero];
 	_sectionTitleView.backgroundColor = [UIColor blackColor];
 	_sectionTitleView.canCancelContentTouches = YES;
 	_sectionTitleView.scrollEnabled = YES;
@@ -95,14 +98,14 @@ const NSInteger TAG_FLAG_ID		= 0x200000;
 	_sectionTitleView.showsVerticalScrollIndicator = NO;
 	_sectionTitleView.translatesAutoresizingMaskIntoConstraints = NO;
 
-	_sectionTagsViews = [[TagScrollView alloc] initWithFrame:CGRectZero];
-	_sectionTagsViews.backgroundColor = [UIColor whiteColor];
-	_sectionTagsViews.canCancelContentTouches = YES;
-	_sectionTagsViews.scrollEnabled = YES;
-	_sectionTagsViews.showsHorizontalScrollIndicator = NO;
-	_sectionTagsViews.showsVerticalScrollIndicator = YES;
-	_sectionTagsViews.translatesAutoresizingMaskIntoConstraints = NO;
-	_sectionTagsViews.userInteractionEnabled = YES;
+	_sectionTagsView = [[MTTagViewSectionTagsView alloc] initWithFrame:CGRectZero];
+	_sectionTagsView.backgroundColor = [UIColor whiteColor];
+	_sectionTagsView.canCancelContentTouches = YES;
+	_sectionTagsView.scrollEnabled = YES;
+	_sectionTagsView.showsHorizontalScrollIndicator = NO;
+	_sectionTagsView.showsVerticalScrollIndicator = YES;
+	_sectionTagsView.translatesAutoresizingMaskIntoConstraints = NO;
+	_sectionTagsView.userInteractionEnabled = YES;
 
 	_sectionSwipe = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onSectionSwipe:)];
 	_sectionSwipe.delegate = self;
@@ -110,7 +113,7 @@ const NSInteger TAG_FLAG_ID		= 0x200000;
 	[_sectionTitleView addGestureRecognizer:_sectionSwipe];
 
 	[self addSubview:_sectionTitleView];
-	[self addSubview:_sectionTagsViews];
+	[self addSubview:_sectionTagsView];
 
 	_dragAndDropManager = [[AtkDragAndDropManager alloc] init];
 	_dragAndDropManager.delegate = self;
@@ -244,7 +247,6 @@ const NSInteger TAG_FLAG_ID		= 0x200000;
 	}
 
 	_selectedSection = 0;
-	[self reloadData];
 }
 
 -(void)setSelectedSection:(NSInteger)selectedSection {
@@ -279,13 +281,13 @@ const NSInteger TAG_FLAG_ID		= 0x200000;
 
 -(void)layoutTags {
 	CGFloat contentY = _sectionTitleView.frame.size.height;
-	_sectionTagsViews.frame = CGRectMake(0, contentY, self.bounds.size.width, self.bounds.size.height - contentY);
+	_sectionTagsView.frame = CGRectMake(0, contentY, self.bounds.size.width, self.bounds.size.height - contentY);
 
 	UIEdgeInsets padding = self.marginTag;
 	CGFloat offsetX = 0;
 	CGFloat offsetY = 0;
-	CGFloat width = _sectionTagsViews.frame.size.width;
-	for(UIView *tagItem in _sectionTagsViews.subviews) {
+	CGFloat width = _sectionTagsView.frame.size.width;
+	for(UIView *tagItem in _sectionTagsView.subviews) {
 		if(!(tagItem.tag & TAG_FLAG_ID))
 			continue;
 
@@ -323,12 +325,12 @@ const NSInteger TAG_FLAG_ID		= 0x200000;
 	}
 
 	contentHeight -= contentY;
-	_sectionTagsViews.frame = CGRectMake(0, contentY, _sectionTagsViews.frame.size.width, contentHeight);
+	_sectionTagsView.frame = CGRectMake(0, contentY, _sectionTagsView.frame.size.width, contentHeight);
 
 	[self layoutTags];
-	UIView *lastTag = [_sectionTagsViews viewWithTag:((_totalTags - 1) | TAG_FLAG_ID)];
+	UIView *lastTag = [_sectionTagsView viewWithTag:((_totalTags - 1) | TAG_FLAG_ID)];
 	if(lastTag)
-		_sectionTagsViews.contentSize = CGSizeMake(_sectionTagsViews.frame.size.width, lastTag.frame.origin.y + lastTag.frame.size.height + self.marginTag.bottom);
+		_sectionTagsView.contentSize = CGSizeMake(_sectionTagsView.frame.size.width, lastTag.frame.origin.y + lastTag.frame.size.height + self.marginTag.bottom);
 
 	[super layoutSubviews];
 }
@@ -458,7 +460,7 @@ const NSInteger TAG_FLAG_ID		= 0x200000;
 	[invocation invoke];
 	[invocation getReturnValue:&_totalTags];
 
-	NSArray *subviewsCopy = [[_sectionTagsViews subviews] copy];
+	NSArray *subviewsCopy = [[_sectionTagsView subviews] copy];
 	for(UIView *view in subviewsCopy) {
 		if(view.tag & TAG_FLAG_ID)
 			[view removeFromSuperview];
@@ -468,7 +470,7 @@ const NSInteger TAG_FLAG_ID		= 0x200000;
 		UIView *tagItem = [_delegate tagView:self tagItemForIndexPath:[NSIndexPath indexPathForRow:i inSection:section]];
 		[tagItem sizeToFit];
 		tagItem.tag = TAG_FLAG_ID | i;
-		[_sectionTagsViews addSubview:tagItem];
+		[_sectionTagsView addSubview:tagItem];
 	}
 
 	[self setNeedsLayout];
@@ -495,6 +497,8 @@ const NSInteger TAG_FLAG_ID		= 0x200000;
 			NSString *title = (__bridge_transfer NSString *)result;
 			control = [self sectionForTitle:title];
 		}
+
+		[control sizeToFit];
 	}
 
 	return control;
@@ -508,7 +512,6 @@ const NSInteger TAG_FLAG_ID		= 0x200000;
 	button.titleLabel.font = [UIFont systemFontOfSize:14.0f];
 
 	[button setTitle:title forState:UIControlStateNormal];
-	[button sizeToFit];
 	[button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
 	[button setTitleColor:button.tintColor forState:UIControlStateSelected];
 	[button setBackgroundImage:[UIImage backgroundImageWithColor:[UIColor whiteColor]] forState:UIControlStateSelected];

@@ -83,6 +83,33 @@
 	[self setNeedsStatusBarAppearanceUpdate];
 }
 
+-(NSMutableDictionary *)registeredStylesForCells {
+	NSMutableDictionary *styles = objc_getAssociatedObject(self, @selector(registeredStylesForCells));
+	if(styles == nil) {
+		styles = [NSMutableDictionary dictionary];
+		objc_setAssociatedObject(self, @selector(registeredStylesForCells), styles, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+	}
+
+	return styles;
+}
+
+-(void)registerStylesForCell:(Class)className withCallback:(MTStyleKitForCellCallback)callback {
+	NSString *key = NSStringFromClass(className);
+	NSMutableDictionary *styles = [self registeredStylesForCells];
+	if(!styles[key]) {
+		styles[key] = [callback copy];
+	}
+}
+
+-(void)applyStylesForCell:(id)view atIndexPath:(NSIndexPath *)indexPath {
+	NSString *key = NSStringFromClass([view class]);
+	MTStyleKitForCellCallback callback = [self registeredStylesForCells][key];
+	if(callback) {
+		id<MTStyleKit>styleKit = [[UIApplication sharedApplication] styleKit];
+		callback(styleKit, view, indexPath);
+	}
+};
+
 @end
 
 @implementation MTStyleKitObserver

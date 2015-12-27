@@ -7,6 +7,8 @@
 @import UIKit;
 
 @class MTTagView;
+@class MTTagViewSectionTitleView;
+@class MTTagViewSectionTagsView;
 
 @protocol MTTagViewDelegate <NSObject>
 @required
@@ -31,6 +33,12 @@
 -(void)didCollapseTagView:(MTTagView *)tagView;
 @end
 
+@interface MTTagViewSectionTitleView: UIScrollView
+@end
+
+@interface MTTagViewSectionTagsView: UIScrollView
+@end
+
 //IB_DESIGNABLE
 @interface MTTagView : UIView
 @property (nonatomic, weak) IBOutlet id<MTTagViewDelegate> delegate;
@@ -44,10 +52,10 @@
 @property (nonatomic, assign) BOOL isActive; //default NO
 @property (nonatomic, assign, readonly) NSInteger selectedSection;
 @property (nonatomic, strong, readonly) NSArray *dropZones;
-@property (nonatomic, assign) UIEdgeInsets marginSection;
-@property (nonatomic, assign) UIEdgeInsets marginTag;
-@property (nonatomic, strong, readonly) UIScrollView *sectionTitleView;
-@property (nonatomic, strong, readonly) UIScrollView *sectionTagsViews;
+@property (nonatomic, assign) UIEdgeInsets marginSection UI_APPEARANCE_SELECTOR;
+@property (nonatomic, assign) UIEdgeInsets marginTag UI_APPEARANCE_SELECTOR;
+@property (nonatomic, strong, readonly) MTTagViewSectionTitleView *sectionTitleView;
+@property (nonatomic, strong, readonly) MTTagViewSectionTagsView *sectionTagsView;
 
 -(void)reloadData;
 -(void)addDropZone:(UIView *)dropZone;
