@@ -6,12 +6,16 @@
 #import <UIKit/UIKit.h>
 #import "MTStyleKit.h"
 
-typedef void(^MTStyleKitForCellCallback)(id<MTStyleKit>styleKit, id cell, NSIndexPath *indexPath);
+typedef void(^MTStyleKitForViewCallback0)(id viewController, id<MTStyleKit>styleKit, id view);
+typedef void(^MTStyleKitForViewCallback1)(id viewController, id<MTStyleKit>styleKit, id view, id object);
+typedef void(^MTStyleKitForViewCallback2)(id viewController, id<MTStyleKit>styleKit, id view, id object1, id object2);
 
 @interface UIViewController (MTStyleKit) <MTStyleKit>
 //implement it if you use FXForms and want to style fields
 //-(void)applyStylesForFieldCell:(FXFormBaseCell *)fieldCell;
 
--(void)registerStylesForCell:(Class)className withCallback:(MTStyleKitForCellCallback)callback;
--(void)applyStylesForCell:(UIView *)cell atIndexPath:(NSIndexPath *)indexPath;
+-(void)registerStylesForView:(Class)className withCallback:(id)callback;
+-(void)applyStylesForView:(UIView *)view;
+-(void)applyStylesForView:(UIView *)view withObject:(id)object;
+-(void)applyStylesForView:(UIView *)view withObject:(id)object1 withObject:(id)object2;
 @end

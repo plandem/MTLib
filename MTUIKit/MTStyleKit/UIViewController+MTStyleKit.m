@@ -93,7 +93,7 @@
 	return styles;
 }
 
--(void)registerStylesForCell:(Class)className withCallback:(MTStyleKitForCellCallback)callback {
+-(void)registerStylesForView:(Class)className withCallback:(id)callback {
 	NSString *key = NSStringFromClass(className);
 	NSMutableDictionary *styles = [self registeredStylesForCells];
 	if(!styles[key]) {
@@ -101,14 +101,29 @@
 	}
 }
 
--(void)applyStylesForCell:(id)view atIndexPath:(NSIndexPath *)indexPath {
-	NSString *key = NSStringFromClass([view class]);
-	MTStyleKitForCellCallback callback = [self registeredStylesForCells][key];
+-(void)applyStylesForView:(UIView *)view {
+	MTStyleKitForViewCallback0 callback = [self registeredStylesForCells][NSStringFromClass([view class])];
 	if(callback) {
 		id<MTStyleKit>styleKit = [[UIApplication sharedApplication] styleKit];
-		callback(styleKit, view, indexPath);
+		callback(self, styleKit, view);
 	}
-};
+}
+
+-(void)applyStylesForView:(UIView *)view withObject:(id)object {
+	MTStyleKitForViewCallback1 callback = [self registeredStylesForCells][NSStringFromClass([view class])];
+	if(callback) {
+		id<MTStyleKit>styleKit = [[UIApplication sharedApplication] styleKit];
+		callback(self, styleKit, view, object);
+	}
+}
+
+-(void)applyStylesForView:(UIView *)view withObject:(id)object1 withObject:(id)object2 {
+	MTStyleKitForViewCallback2 callback = [self registeredStylesForCells][NSStringFromClass([view class])];
+	if(callback) {
+		id<MTStyleKit>styleKit = [[UIApplication sharedApplication] styleKit];
+		callback(self, styleKit, view, object1, object2);
+	}
+}
 
 @end
 
