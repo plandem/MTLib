@@ -88,7 +88,7 @@ const NSString *MTSQLiteDataRepositoryUpdateNotification = @"MTSQLiteDataReposit
 
 +(NSString *)defaultDbName {
 	static NSString *defaultName = nil;
-	static dispatch_once_t onceToken;
+	static dispatch_once_t onceToken = 0;
 	dispatch_once(&onceToken, ^{
 		defaultName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
 	});

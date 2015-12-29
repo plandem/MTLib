@@ -18,7 +18,7 @@
 @implementation MTLogger
 + (MTLogger *)start {
 	static MTLogger *logger = nil;
-	static dispatch_once_t onceToken;
+	static dispatch_once_t onceToken = 0;
 	dispatch_once(&onceToken, ^{
 		logger = [[MTLogger alloc] init];
 

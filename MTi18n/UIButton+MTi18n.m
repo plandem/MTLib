@@ -10,7 +10,7 @@
 
 -(void)i18nFromNib {
 	static NSArray *states;
-	static dispatch_once_t onceToken;
+	static dispatch_once_t onceToken = 0;
 	dispatch_once(&onceToken, ^{
 		states = @[
 				@(UIControlStateHighlighted),
