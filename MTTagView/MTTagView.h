@@ -50,6 +50,7 @@
 @property (nonatomic, assign) IBInspectable BOOL expandOnDragDrop; //default NO
 @property (nonatomic, assign) IBInspectable CGFloat selectAnimationDuration; //default 0.1
 @property (nonatomic, assign) BOOL isActive; //default NO
+@property (nonatomic, assign, readonly) BOOL isExpanded;
 @property (nonatomic, assign, readonly) NSInteger selectedSection;
 @property (nonatomic, strong, readonly) NSArray *dropZones;
 @property (nonatomic, assign) UIEdgeInsets marginSection UI_APPEARANCE_SELECTOR;

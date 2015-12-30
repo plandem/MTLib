@@ -45,6 +45,7 @@ const NSInteger TAG_FLAG_ID		= 0x200000;
 @property (strong, nonatomic) UIPanGestureRecognizer *sectionSwipe;
 @property (nonatomic) NSIndexPath *indexPathForDragSource;
 @property (nonatomic) CGPoint pointForDragSource;
+@property (nonatomic, assign) BOOL isExpanded;
 @end
 
 @implementation MTTagView
@@ -70,6 +71,7 @@ const NSInteger TAG_FLAG_ID		= 0x200000;
 }
 
 - (void)setup {
+	_isExpanded = NO;
 	_collapseOnDragStart = NO;
 	_expandOnDragEnd = YES;
 	_expandOnDragDrop = NO;
@@ -338,11 +340,13 @@ const NSInteger TAG_FLAG_ID		= 0x200000;
 -(void)collapsePanel {
 	@synchronized (self.delegate) {
 		CGFloat currentHeight = self.frame.size.height;
-		if(currentHeight <= _minHeight)
+		if(currentHeight <= _minHeight) {
 			return;
+		}
 
-		if(self.delegate && [self.delegate respondsToSelector:@selector(willCollapseTagView:)])
+		if(self.delegate && [self.delegate respondsToSelector:@selector(willCollapseTagView:)]) {
 			[self.delegate willCollapseTagView:self];
+		}
 
 		[self layoutIfNeeded];
 		@weakify(self);
@@ -358,8 +362,11 @@ const NSInteger TAG_FLAG_ID		= 0x200000;
 						 }
 						 completion:^(BOOL finished) {
 							 @strongify(self);
-							 if(self.delegate && [self.delegate respondsToSelector:@selector(didCollapseTagView:)])
+							 self.isExpanded = NO;
+
+							 if(self.delegate && [self.delegate respondsToSelector:@selector(didCollapseTagView:)]) {
 								 [self.delegate didCollapseTagView:self];
+							 }
 						 }
 		];
 	}
@@ -368,11 +375,13 @@ const NSInteger TAG_FLAG_ID		= 0x200000;
 -(void)expandPanel {
 	@synchronized (self.delegate) {
 		CGFloat currentHeight = self.frame.size.height;
-		if(currentHeight >= _maxHeight)
+		if(currentHeight >= _maxHeight) {
 			return;
+		}
 
-		if(self.delegate && [self.delegate respondsToSelector:@selector(willExpandTagView:)])
+		if(self.delegate && [self.delegate respondsToSelector:@selector(willExpandTagView:)]) {
 			[self.delegate willExpandTagView:self];
+		}
 
 		@weakify(self);
 		[UIView animateWithDuration:0.3f
@@ -387,8 +396,11 @@ const NSInteger TAG_FLAG_ID		= 0x200000;
 						 }
 						 completion:^(BOOL finished) {
 							 @strongify(self);
-							 if(self.delegate && [self.delegate respondsToSelector:@selector(didExpandTagView:)])
-								[self.delegate didExpandTagView:self];
+							 self.isExpanded = YES;
+
+							 if(self.delegate && [self.delegate respondsToSelector:@selector(didExpandTagView:)]) {
+								 [self.delegate didExpandTagView:self];
+							 }
 						 }
 		];
 
