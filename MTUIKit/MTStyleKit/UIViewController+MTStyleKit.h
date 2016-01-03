@@ -11,11 +11,13 @@ typedef void(^MTStyleKitForViewCallback1)(id viewController, id<MTStyleKit>style
 typedef void(^MTStyleKitForViewCallback2)(id viewController, id<MTStyleKit>styleKit, id view, id object1, id object2);
 
 @interface UIViewController (MTStyleKit) <MTStyleKit>
-//implement it if you use FXForms and want to style fields
-//-(void)applyStylesForFieldCell:(FXFormBaseCell *)fieldCell;
-
--(void)registerStylesForView:(Class)className withCallback:(id)callback;
+-(void)registerStylesForClass:(Class)className withCallback:(id)callback;
 -(void)applyStylesForView:(UIView *)view;
 -(void)applyStylesForView:(UIView *)view withObject:(id)object;
 -(void)applyStylesForView:(UIView *)view withObject:(id)object1 withObject:(id)object2;
+
+//same as 'applyStylesForView' but 'className' will be used instead of class of 'view'
+-(void)applyStylesForClass:(Class)className view:(UIView *)view;
+-(void)applyStylesForClass:(Class)className view:(UIView *)view withObject:(id)object;
+-(void)applyStylesForClass:(Class)className view:(UIView *)view withObject:(id)object1 withObject:(id)object2;
 @end

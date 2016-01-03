@@ -4,8 +4,7 @@
 //
 
 #import <FXForms/FXForms.h>
-#import <MTLib/MTStyleKit.h>
 
 @interface FXFormBaseCell (MTStyleKit)
-//-(void)applyStyles; //implement it, if needed
+//for styling we will call 'applyStylesForClass' as FXFormBaseCell as class and cell as view
 @end

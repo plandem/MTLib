@@ -16,16 +16,14 @@
 - (void)swizzle_setField:(FXFormField *)field {
 	[self swizzle_setField:field];
 
-	if([self respondsToSelector:@selector(applyStyles)]) {
-		//if subclass cell has own style - use it
-		[self performSelector:@selector(applyStyles)];
-	} else {
-		FXFormController *controller = [self.field performSelector:@selector(formController)];
+	FXFormController *controller = [self.field performSelector:@selector(formController)];
 
-		//if viewController has global styles for cell - use it
-		if ([controller.delegate respondsToSelector:@selector(applyStylesForFieldCell:)]) {
-			[controller.delegate performSelector:@selector(applyStylesForFieldCell:) withObject:self];
-		}
+	if ([controller.delegate respondsToSelector:@selector(applyStylesForClass:view:)]) {
+		//apply 'general' styles for any fields
+		[controller.delegate performSelector:@selector(applyStylesForClass:view:) withObject:[FXFormBaseCell class] withObject:self];
+
+		//apply styles cell's class
+		[controller.delegate performSelector:@selector(applyStylesForView:) withObject:self];
 	}
 };
 
